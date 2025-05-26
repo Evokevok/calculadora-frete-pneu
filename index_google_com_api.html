@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Frete de Pneus</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    label, input, select, button { display: block; margin-top: 10px; width: 100%; }
+    button { padding: 10px; margin-top: 20px; }
+    .resultado { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
+  </style>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBqlyrFEKa5_ePhYx5uZv-_BLp0GUmrxI"></script>
+</head>
+<body>
+  <h2>Calculadora de Frete de Pneus</h2>
+
+  <label for="medida">Selecione a Medida do Pneu:</label>
+  <select id="medida"></select>
+
+  <label for="origem">CEP de Origem:</label>
+  <input type="text" id="origem" value="01001-000" placeholder="00000-000">
+
+  <label for="destino">CEP de Destino:</label>
+  <input type="text" id="destino" value="20040-020" placeholder="00000-000">
+
+  <button onclick="calcularFrete()">Calcular Frete</button>
+
+  <div class="resultado" id="resultado"></div>
+
+  <script>
+    const medidas = ["175/70 R14", "185/60 R15", "205/50 R16", "650/65R38", "710/70R38"];
+    const select = document.getElementById("medida");
+
+    medidas.forEach(medida => {
+      const option = document.createElement("option");
+      option.value = medida.replace(/\s+/g, "").replace(/-/g, "R");
+      option.textContent = medida;
+      select.appendChild(option);
+    });
+
+    function calcularDistanciaReal(origem, destino, callback) {
+      const service = new google.maps.DistanceMatrixService();
+      service.getDistanceMatrix({
+        origins: [origem],
+        destinations: [destino],
+        travelMode: 'DRIVING',
+        unitSystem: google.maps.UnitSystem.METRIC,
+      }, function(response, status) {
+        if (status === 'OK') {
+          const distanceKm = response.rows[0].elements[0].distance.value / 1000;
+          callback(distanceKm);
+        } else {
+          alert('Erro ao calcular distância: ' + status);
+        }
+      });
+    }
+
+    function calcularFrete() {
+      const medida = document.getElementById("medida").value;
+      const origem = document.getElementById("origem").value;
+      const destino = document.getElementById("destino").value;
+      const resultado = document.getElementById("resultado");
+
+      const match = medida.match(/(\d{3})\/(\d{2})R(\d{2})/);
+      if (!match) {
+        resultado.innerHTML = "Formato inválido para cálculo automático.";
+        return;
+      }
+
+      const largura = parseInt(match[1]);
+      const perfil = parseInt(match[2]);
+      const aro = parseInt(match[3]);
+
+      const altura = (largura * (perfil / 100));
+      const diametroTotal = ((2 * altura) + (aro * 25.4)) / 10;
+      const larguraCm = largura / 10;
+
+      const volume = Math.PI * Math.pow((diametroTotal / 2), 2) * larguraCm / 1000;
+      const pesoEstimado = largura * 0.02;
+      const pesoCubado = (diametroTotal * diametroTotal * larguraCm) / 6000;
+      const pesoParaCobranca = Math.max(pesoEstimado, pesoCubado);
+
+      calcularDistanciaReal(origem, destino, function(distancia) {
+        const taxaPorKm = 0.03;
+        const frete = (pesoParaCobranca * distancia * taxaPorKm).toFixed(2);
+
+        resultado.innerHTML = `
+          <strong>Dimensões do pneu:</strong><br>
+          Largura: ${larguraCm.toFixed(1)} cm<br>
+          Altura: ${altura.toFixed(1)} mm<br>
+          Diâmetro: ${diametroTotal.toFixed(1)} cm<br>
+          Volume: ${volume.toFixed(2)} L<br>
+          Peso estimado: ${pesoEstimado.toFixed(1)} kg<br>
+          Peso cubado: ${pesoCubado.toFixed(1)} kg<br><br>
+          <strong>Distância real:</strong> ${distancia.toFixed(1)} km<br>
+          <strong>Frete estimado:</strong> R$ ${frete}
+        `;
+      });
+    }
+  </script>
+</body>
+</html>
