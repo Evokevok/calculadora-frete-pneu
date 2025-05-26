@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Frete de Pneus (Distância Real)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    .resultado {
+      margin-top: 20px;
+      background: #ecf0f1;
+      border-left: 5px solid #3498db;
+      padding: 15px;
+      font-size: 14px;
+    }
+    .erro {
+      color: red;
+    }
+  </style>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKCV0EeLhjGGkio1-FrkBTbVBk-rP3Q74"></script>
+</head>
+<body>
+  <h2>Calculadora de Frete de Pneus</h2>
+  <div class="card">
+    <label for="tipoOrigem">Origem do Frete:</label>
+    <select id="tipoOrigem">
+      <option value="fixo">Endereço fixo (Navegantes - SC)</option>
+      <option value="manual">Inserir outro CEP</option>
+    </select>
+
+    <div id="origemManualContainer" style="display: none;">
+      <label for="origem">CEP de Origem (manual):</label>
+      <input type="text" id="origem" placeholder="00000000" maxlength="9">
+    </div>
+
+    <label for="destino">CEP de Destino:</label>
+    <input type="text" id="destino" placeholder="00000000" maxlength="9">
+
+    <label for="medida">Selecione a Medida do Pneu:</label>
+    <select id="medida">
+      <option value="">-- Escolha uma medida --</option>
+      <option>185/70R13</option>
+      <option>195/65R15</option>
+      <option>205/70R15</option>
+    </select>
+
+    <button id="btnCalcular">Calcular Frete</button>
+
+    <div class="resultado" id="resultado"></div>
+  </div>
+
+  <script>
+    document.getElementById('tipoOrigem').addEventListener('change', function() {
+      document.getElementById('origemManualContainer').style.display = this.value === 'manual' ? 'block' : 'none';
+    });
+
+    function calcularDistanciaReal(origem, destino, callback) {
+      const service = new google.maps.DistanceMatrixService();
+      service.getDistanceMatrix({
+        origins: [origem],
+        destinations: [destino],
+        travelMode: 'DRIVING',
+        unitSystem: google.maps.UnitSystem.METRIC,
+      }, function(response, status) {
+        if (status === 'OK') {
+          const elemento = response.rows[0].elements[0];
+          if (elemento.status === 'OK') {
+            const distanceKm = elemento.distance.value / 1000;
+            callback(null, distanceKm);
+          } else {
+            callback('Distância não encontrada.', null);
+          }
+        } else {
+          callback('Erro na API: ' + status, null);
+        }
+      });
+    }
+
+    function calcularFrete() {
+      const tipoOrigem = document.getElementById('tipoOrigem').value;
+      const origem = tipoOrigem === 'manual' ? document.getElementById('origem').value + ', Brasil' : "R. Santos Maccarini, 650 - Machados, Navegantes - SC, 88375-000";
+      const destino = document.getElementById('destino').value + ', Brasil';
+      const medida = document.getElementById('medida').value;
+      const resultado = document.getElementById('resultado');
+
+      if (!medida || !destino || (tipoOrigem === 'manual' && !document.getElementById('origem').value)) {
+        resultado.innerHTML = '<span class="erro">Preencha todos os campos corretamente.</span>';
+        return;
+      }
+
+      const match = medida.match(/(\d{3})\/(\d{2})R(\d{2})/);
+      if (!match) {
+        resultado.innerHTML = '<span class="erro">Medida inválida.</span>';
+        return;
+      }
+
+      const largura = parseInt(match[1]);
+      const perfil = parseInt(match[2]);
+      const aro = parseInt(match[3]);
+      const altura = (largura * (perfil / 100));
+      const diametroTotal = ((2 * altura) + (aro * 25.4)) / 10;
+      const larguraCm = largura / 10;
+      const volume = Math.PI * Math.pow((diametroTotal / 2), 2) * larguraCm / 1000;
+      const pesoEstimado = largura * 0.02;
+      const pesoCubado = (diametroTotal * diametroTotal * larguraCm) / 6000;
+      const pesoParaCobranca = Math.max(pesoEstimado, pesoCubado);
+      const pesoTotal = pesoParaCobranca * 4;
+
+      calcularDistanciaReal(origem, destino, function(erro, distancia) {
+        if (erro) {
+          resultado.innerHTML = '<span class="erro"><strong>Erro:</strong> ' + erro + '</span>';
+          return;
+        }
+
+        const custoTotal = pesoTotal * distancia * 0.03;
+        const custoUnitario = (custoTotal / 4).toFixed(2);
+
+        resultado.innerHTML = `
+          <strong>Medida:</strong> ${medida}<br>
+          <strong>Distância:</strong> ${distancia.toFixed(1)} km<br>
+          <strong>Peso total (cubado):</strong> ${pesoTotal.toFixed(1)} kg<br>
+          <strong>Frete total (4 pneus):</strong> R$ ${custoTotal.toFixed(2)}<br>
+          <strong>Frete unitário por pneu:</strong> R$ ${custoUnitario}
+        `;
+      });
+    }
+
+    document.getElementById('btnCalcular').addEventListener('click', calcularFrete);
+  </script>
+</body>
+</html>
