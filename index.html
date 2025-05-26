@@ -4,10 +4,26 @@
   <meta charset="UTF-8">
   <title>Calculadora de Frete de Pneus</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
-    label, input, select, button { display: block; margin-top: 10px; width: 100%; }
-    button { padding: 10px; margin-top: 20px; }
-    .resultado { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    label, input, select, button {
+      display: block;
+      margin-top: 10px;
+      width: 100%;
+    }
+    button {
+      padding: 10px;
+      margin-top: 20px;
+    }
+    .resultado {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
   </style>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBqlyrFEKa5_ePhYx5uZv-_BLp0GUmrxI"></script>
 </head>
@@ -34,7 +50,7 @@
   <label for="destino">CEP de Destino:</label>
   <input type="text" id="destino" placeholder="00000000" maxlength="9">
 
-  <button onclick="calcularFrete()">Calcular Frete</button>
+  <button id="btnCalcular">Calcular Frete</button>
 
   <div class="resultado" id="resultado"></div>
 
@@ -76,7 +92,7 @@
         return;
       }
 
-      const match = medida.match(/(\\d{3})\\/(\\d{2})R(\\d{2})/);
+      const match = medida.match(/(\d{3})\/(\d{2})R(\d{2})/);
       if (!match) {
         resultado.innerHTML = 'Medida inválida.';
         return;
@@ -118,6 +134,8 @@
         `;
       });
     }
+
+    document.getElementById('btnCalcular').addEventListener('click', calcularFrete);
   </script>
 </body>
 </html>
