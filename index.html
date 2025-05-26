@@ -28,12 +28,15 @@
   <div class="resultado" id="resultado"></div>
 
   <script>
-    const medidas = ["175/70 R14", "185/60 R15", "205/50 R16", "650/65R38", "710/70R38"];
-    const select = document.getElementById("medida");
+    const medidas = [
+      "175/70 R14", "185/60 R15", "195/65 R15", "205/55 R16",
+      "215/65 R16", "225/45 R17", "235/40 R18", "650/65R38", "710/70R38"
+    ];
 
+    const select = document.getElementById("medida");
     medidas.forEach(medida => {
       const option = document.createElement("option");
-      option.value = medida.replace(/\\s+/g, "").replace(/-/g, "R");
+      option.value = medida.replace(/\s+/g, "").replace(/-/g, "R");
       option.textContent = medida;
       select.appendChild(option);
     });
