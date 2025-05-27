@@ -207,10 +207,17 @@
     }
 
     async function calcularFrete() {
+      const modelo = document.getElementById('pneuSelect').value;
+
+if (!modelo || !pneus[modelo]) {
+  alert('Selecione um modelo de pneu válido.');
+  return;
+}
+
+const qtd = parseInt(document.getElementById('quantidade').value);
       const origem = document.getElementById('cepOrigem').value;
       const destino = document.getElementById('cepDestino').value;
       const modelo = document.getElementById('pneuSelect').value;
-      const qtd = parseInt(document.getElementById('quantidade').value);
       const custoUn = parseFloat(document.getElementById('custoPneu').value);
 
       const pneu = pneus[modelo];
