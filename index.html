@@ -91,7 +91,7 @@
       <option>175/65R14</option>
       <option>195/60R15</option>
       <option>205/55R16</option>
-      <!-- Adicione outras opções conforme necessário -->
+      <option>225/75R16</option>
     </select>
 
     <label for="quantidade">Quantidade de Pneus:</label>
@@ -108,19 +108,15 @@
 
   <script>
     const tabelaFrete = {
-      faixa: [30, 50, 70, 100],
-      valores: [58.96, 67.05, 87.79, 115.61],
-      excedente: 1019.20
+      minimo: 280.00,
+      trt: 82.00,
+      pedagio: 4.69,
+      despacho: 17.45,
+      tas: 4.70,
+      gris: { percentual: 0.002, minimo: 4.97 },
+      freteValor: 0.0051,
+      cubagem: 300
     };
-
-    function getFretePeso(peso) {
-      for (let i = 0; i < tabelaFrete.faixa.length; i++) {
-        if (peso <= tabelaFrete.faixa[i]) {
-          return tabelaFrete.valores[i];
-        }
-      }
-      return tabelaFrete.valores[tabelaFrete.valores.length - 1] + ((peso - 100) / 1000) * tabelaFrete.excedente;
-    }
 
     function calcularFreteLogdi() {
       const tipoOrigem = document.getElementById('tipoOrigem').value;
@@ -142,29 +138,30 @@
           return;
         }
 
-        const pesoTotal = 11.2 * qtd;
-        const fretePeso = getFretePeso(pesoTotal);
-        const despacho = 17.45;
-        const tas = 4.70;
-        const pedagio = Math.ceil(pesoTotal / 100) * 4.69;
-        const gris = Math.max(0.002 * valorNF, 4.97);
-        const freteValor = 0.0049 * valorNF;
-        const coletaEntrega = 280.00;
-        const trt = 82.00;
-        const total = fretePeso + despacho + tas + pedagio + gris + freteValor + coletaEntrega + trt;
+        const volumeUnitario = 0.74 * 0.74 * 0.225;
+        const pesoReal = 17.7 * qtd;
+        const pesoCubado = volumeUnitario * tabelaFrete.cubagem * qtd;
+        const pesoTarifado = Math.max(pesoReal, pesoCubado);
+
+        const fretePeso = Math.max(tabelaFrete.minimo, (pesoTarifado / 1000) * 1892.80);
+        const pedagio = Math.ceil(pesoTarifado / 100) * tabelaFrete.pedagio;
+        const gris = Math.max(tabelaFrete.gris.percentual * valorNF, tabelaFrete.gris.minimo);
+        const freteValor = tabelaFrete.freteValor * valorNF;
+        const total = fretePeso + tabelaFrete.trt + tabelaFrete.despacho + tabelaFrete.tas + pedagio + gris + freteValor;
 
         resultado.innerHTML = `
           <strong>Medida:</strong> ${medida}<br>
           <strong>Distância:</strong> ${distancia.toFixed(1)} km<br>
-          <strong>Peso Total:</strong> ${pesoTotal.toFixed(1)} kg<br>
-          <strong>Frete Peso:</strong> R$ ${fretePeso.toFixed(2)}<br>
-          <strong>Despacho:</strong> R$ ${despacho.toFixed(2)}<br>
-          <strong>TAS:</strong> R$ ${tas.toFixed(2)}<br>
+          <strong>Peso Real Total:</strong> ${pesoReal.toFixed(1)} kg<br>
+          <strong>Peso Cubado:</strong> ${pesoCubado.toFixed(1)} kg<br>
+          <strong>Peso Tarifado:</strong> ${pesoTarifado.toFixed(1)} kg<br>
+          <strong>Frete (mínimo ou por peso):</strong> R$ ${fretePeso.toFixed(2)}<br>
+          <strong>Despacho:</strong> R$ ${tabelaFrete.despacho.toFixed(2)}<br>
+          <strong>TAS:</strong> R$ ${tabelaFrete.tas.toFixed(2)}<br>
           <strong>Pedágio:</strong> R$ ${pedagio.toFixed(2)}<br>
           <strong>GRIS:</strong> R$ ${gris.toFixed(2)}<br>
           <strong>Frete Valor:</strong> R$ ${freteValor.toFixed(2)}<br>
-          <strong>Coleta/Entrega:</strong> R$ ${coletaEntrega.toFixed(2)}<br>
-          <strong>TRT:</strong> R$ ${trt.toFixed(2)}<br>
+          <strong>TRT:</strong> R$ ${tabelaFrete.trt.toFixed(2)}<br>
           <strong>Total com Taxas:</strong> <strong style="color:#2c3e50;">R$ ${total.toFixed(2)}</strong>
         `;
       });
