@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Frete de Pneus com Origem Navegantes SC</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    .resultado {
+      margin-top: 20px;
+      background: #ecf0f1;
+      border-left: 5px solid #3498db;
+      padding: 15px;
+      font-size: 14px;
+    }
+    .erro {
+      color: red;
+    }
+  </style>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKCV0EeLhjGGkio1-FrkBTbVBk-rP3Q74"></script>
+</head>
+<body>
+  <h2>Calculadora de Frete de Pneus</h2>
+  <div class="card">
+    <label for="tipoOrigem">Escolha a Origem do Frete:</label>
+    <select id="tipoOrigem">
+      <option value="fixo">Usar endereço fixo (Navegantes - SC)</option>
+      <option value="manual">Inserir outro CEP</option>
+    </select>
+
+    <div id="origemManualContainer" style="display: none;">
+      <label for="origem">CEP de Origem (manual):</label>
+      <input type="text" id="origem" placeholder="00000000" maxlength="9">
+    </div>
+
+    <label for="destino">CEP de Destino:</label>
+    <input type="text" id="destino" placeholder="00000000" maxlength="9">
+    <div id="localidade" style="margin-top: 5px; font-weight: bold;"></div>
+
+    <label for="medida">Selecione a Medida do Pneu:</label>
+    <select id="medida">
+      <option value="">-- Escolha uma medida --</option>
+      <option>195/65R15</option>
+      <option>205/70R15</option>
+    </select>
+
+    <button id="btnCalcular">Calcular Frete</button>
+
+    <div class="resultado" id="resultado"></div>
+  </div>
+
+  <script>
+    document.getElementById('tipoOrigem').addEventListener('change', function () {
+      document.getElementById('origemManualContainer').style.display = this.value === 'manual' ? 'block' : 'none';
+    });
+
+    document.getElementById('destino').addEventListener('blur', function () {
+      const cep = this.value.replace(/[^0-9]/g, '');
+      if (cep.length === 8) {
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+          .then(res => res.json())
+          .then(data => {
+            if (!data.erro) {
+              document.getElementById('localidade').textContent = `Destino: ${data.localidade} - ${data.uf}`;
+            } else {
+              document.getElementById('localidade').textContent = 'CEP inválido.';
+            }
+          })
+          .catch(() => {
+            document.getElementById('localidade').textContent = 'Erro ao buscar CEP.';
+          });
+      }
+    });
+  </script>
+</body>
+</html>
