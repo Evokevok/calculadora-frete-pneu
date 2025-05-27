@@ -1,4 +1,3 @@
-<!-- Código completo com múltiplas tabelas de frete por estado -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -28,114 +27,25 @@
     <option value="fixo">Usar endereço fixo (Navegantes - SC)</option>
     <option value="manual">Inserir outro CEP</option>
   </select>
-
   <div id="origemManualContainer" style="display:none;">
     <label for="origemManual">CEP de Origem:</label>
     <input type="text" id="origemManual" placeholder="00000000" maxlength="9">
   </div>
-
   <label for="destino">CEP de Destino:</label>
   <input type="text" id="destino" placeholder="00000000" maxlength="9">
-
   <label for="medida">Medida do Pneu:</label>
   <select id="medida">
     <option value="">-- Escolha uma medida --</option>
     <option>165/70R13</option>
-<option>165/70R14</option>
-<option>175/70R13</option>
-<option>175/65R14</option>
-<option>185/70R14</option>
-<option>175/70R14</option>
-<option>175/80R14</option>
-<option>185R14C</option>
-<option>185/65R15</option>
-<option>185/65R14</option>
-<option>195/55R15</option>
-<option>195/60R15</option>
-<option>195/65R15</option>
-<option>185/60R15</option>
-<option>195/55R16</option>
-<option>205/60R16</option>
-<option>205/60R15</option>
-<option>225/75R16</option>
-<option>215/75R16</option>
-<option>215/75R17.5</option>
-<option>235/75R17.5</option>
-<option>12.5/80-18</option>
-<option>10.16.5</option>
-<option>1300/24</option>
-<option>1000X20</option>
-<option>265/70R16</option>
-<option>275/80R22.5</option>
-<option>205/75R16</option>
-<option>295/80R22.5</option>
-<option>205/75R16C</option>
-<option>90/90-19</option>
-<option>195/70R15</option>
-<option>195/75R16</option>
-<option>215/80R16</option>
-<option>225/65R17</option>
-<option>225/65R16C</option>
-<option>245/70R16</option>
-<option>255/70R16</option>
-<option>205/70R15C</option>
-<option>900/20</option>
-<option>205/55R16</option>
-<option>14.00x24</option>
-<option>12.4-24</option>
-<option>14.9-26</option>
-<option>14.9-28</option>
-<option>14.9-24</option>
-<option>19.5-24</option>
-<option>17.5/25</option>
-<option>18.4-34</option>
-<option>18.04/30</option>
-<option>12.16-5</option>
-<option>235/75R15</option>
-<option>245/75R16</option>
-<option>16.9-24</option>
-<option>23.1-26</option>
-<option>23.1-30</option>
-<option>10.16-5</option>
-<option>6.00-16</option>
-<option>700-16</option>
-<option>750-16</option>
-<option>16.9-28</option>
-<option>285/70R19.5</option>
-<option>235/55R18</option>
-<option>235/65R16</option>
-<option>235/85R16</option>
-<option>13.6-38</option>
-<option>265/65R17</option>
-<option>225/70R16</option>
-<option>225/55R18</option>
-<option>225/60R18</option>
-<option>110/90-17 (Moto)</option>
-<option>16.9-30</option>
-<option>185/60R14</option>
-<option>23.5-25</option>
-<option>265/70R17</option>
-<option>265/75R16</option>
-<option>235/70R16</option>
-<option>10.5/80-18</option>
-<option>185/70R13</option>
-<option>13.00-24</option>
-<option>1100-22</option>
-<option>265/60R18</option>
-<option>205/55R17</option>
-<option>12.00R20</option>
-<option>750-18</option>
-<option>900-16</option>
-<option>20.5-25</option>
-<option>195/60R16</option>
+    <option>175/65R14</option>
+    <option>195/60R15</option>
+    <option>205/55R16</option>
+    <option>225/75R16</option>
   </select>
-
   <label for="quantidade">Quantidade de Pneus:</label>
   <input type="number" id="quantidade" value="4" min="1">
-
   <label for="valorUnitario">Valor Unitário (R$) do Pneu:</label>
   <input type="number" id="valorUnitario" placeholder="Ex: 250" step="0.01" min="0">
-
   <button onclick="calcularFreteLogdi()">Calcular Frete</button>
   <button onclick="gerarPDF()">Gerar PDF</button>
   <div class="resultado" id="resultado"></div>
@@ -143,27 +53,27 @@
 
 <script>
 const tabelasFrete = {
-  "BA": { excedente: 1892.80, freteValor: 0.0051 },
-  "CE": { excedente: 2049.60, freteValor: 0.0051 },
-  "DF": { excedente: 1075.20, freteValor: 0.0042 },
-  "ES": { excedente: 1366.40, freteValor: 0.0049 },
-  "GO": { excedente: 1276.80, freteValor: 0.0049 },
-  "MA": { excedente: 2318.40, freteValor: 0.0057 },
-  "MG": { excedente: 1243.20, freteValor: 0.0049 },
-  "MS": { excedente: 1579.20, freteValor: 0.0063 },
-  "MT": { excedente: 1960.00, freteValor: 0.0063 },
-  "PA": { excedente: 1713.60, freteValor: 0.0051 },
-  "PB": { excedente: 2016.00, freteValor: 0.0051 },
-  "PE": { excedente: 1982.40, freteValor: 0.0051 },
-  "PI": { excedente: 2318.40, freteValor: 0.0057 },
-  "PR": { excedente: 1019.20, freteValor: 0.0049 },
-  "RJ": { excedente: 1243.20, freteValor: 0.0049 },
-  "RN": { excedente: 1971.20, freteValor: 0.0051 },
-  "RS": { excedente: 1243.20, freteValor: 0.0049 },
-  "SC": { excedente: 1008.00, freteValor: 0.0049 },
-  "SE": { excedente: 1780.80, freteValor: 0.0051 },
-  "SP": { excedente: 1411.20, freteValor: 0.0049 },
-  "TO": { excedente: 1982.40, freteValor: 0.009 }
+  "PA": { faixas: [30, 50, 70, 100], valores: [99.10, 112.69, 143.79, 194.30], excedente: 1713.60 },
+  "BA": { faixas: [30, 50, 70, 100], valores: [113.47, 129.04, 164.64, 222.49], excedente: 1892.80 },
+  "CE": { faixas: [30, 50, 70, 100], valores: [130.86, 148.83, 189.88, 256.59], excedente: 2049.60 },
+  "DF": { faixas: [30, 50, 70, 100], valores: [71.86, 81.73, 104.27, 140.91], excedente: 1075.20 },
+  "ES": { faixas: [30, 50, 70, 100], valores: [76.71, 87.24, 111.29, 150.39], excedente: 1366.40 },
+  "GO": { faixas: [30, 50, 70, 100], valores: [76.71, 87.24, 111.29, 150.39], excedente: 1276.80 },
+  "MA": { faixas: [30, 50, 70, 100], valores: [148.27, 168.62, 215.13, 290.71], excedente: 2318.40 },
+  "MG": { faixas: [30, 50, 70, 100], valores: [76.71, 87.24, 111.29, 150.39], excedente: 1243.20 },
+  "MS": { faixas: [30, 50, 70, 100], valores: [85.48, 97.22, 124.03, 167.61], excedente: 1579.20 },
+  "MT": { faixas: [30, 50, 70, 100], valores: [113.47, 129.04, 164.64, 222.49], excedente: 1960.00 },
+  "PB": { faixas: [30, 50, 70, 100], valores: [120.28, 136.79, 174.52, 235.83], excedente: 2016.00 },
+  "PE": { faixas: [30, 50, 70, 100], valores: [118.00, 134.20, 171.23, 231.38], excedente: 1982.40 },
+  "PI": { faixas: [30, 50, 70, 100], valores: [148.27, 168.62, 215.13, 290.71], excedente: 2318.40 },
+  "PR": { faixas: [30, 50, 70, 100], valores: [58.96, 67.05, 87.79, 115.61], excedente: 1019.20 },
+  "RJ": { faixas: [30, 50, 70, 100], valores: [63.24, 71.92, 91.76, 124.00], excedente: 1243.20 },
+  "RN": { faixas: [30, 50, 70, 100], valores: [117.25, 133.35, 170.13, 229.90], excedente: 1971.20 },
+  "RS": { faixas: [30, 50, 70, 100], valores: [76.70, 87.24, 111.29, 150.39], excedente: 1243.20 },
+  "SC": { faixas: [30, 50, 70, 100], valores: [64.90, 73.81, 94.17, 127.27], excedente: 1008.00 },
+  "SE": { faixas: [30, 50, 70, 100], valores: [113.47, 129.04, 164.64, 222.49], excedente: 1780.80 },
+  "SP": { faixas: [30, 50, 70, 100], valores: [76.71, 87.24, 111.29, 150.39], excedente: 1411.20 },
+  "TO": { faixas: [30, 50, 70, 100], valores: [118.00, 134.20, 171.23, 231.38], excedente: 1982.40 }
 };
 
 function calcularFreteLogdi() {
@@ -199,11 +109,18 @@ function calcularFreteLogdi() {
         const pesoCubado = volumeUnit * 300 * qtd;
         const pesoTarifado = Math.max(pesoReal, pesoCubado);
 
-        const excedente = tabelasFrete[estado].excedente;
-        const fretePeso = Math.max(280.00, (pesoTarifado / 1000) * excedente);
+        const tabela = tabelasFrete[estado];
+        let fretePeso = 0;
+        if (pesoTarifado <= tabela.faixas[0]) fretePeso = tabela.valores[0] * pesoTarifado;
+        else if (pesoTarifado <= tabela.faixas[1]) fretePeso = tabela.valores[1] * pesoTarifado;
+        else if (pesoTarifado <= tabela.faixas[2]) fretePeso = tabela.valores[2] * pesoTarifado;
+        else if (pesoTarifado <= tabela.faixas[3]) fretePeso = tabela.valores[3] * pesoTarifado;
+        else fretePeso = (pesoTarifado / 1000) * tabela.excedente;
+
+        fretePeso = Math.max(fretePeso, 280);
         const pedagio = Math.ceil(pesoTarifado / 100) * 4.69;
         const gris = Math.max(0.002 * valorNF, 4.97);
-        const freteValor = tabelasFrete[estado].freteValor * valorNF;
+        const freteValor = 0.0051 * valorNF;
         const total = fretePeso + 82 + 17.45 + 4.70 + pedagio + gris + freteValor;
 
         resultado.innerHTML = `
@@ -213,7 +130,7 @@ function calcularFreteLogdi() {
           <strong>Peso Real:</strong> ${pesoReal.toFixed(1)} kg<br>
           <strong>Peso Cubado:</strong> ${pesoCubado.toFixed(1)} kg<br>
           <strong>Peso Tarifado:</strong> ${pesoTarifado.toFixed(1)} kg<br>
-          <strong>Frete:</strong> R$ ${fretePeso.toFixed(2)}<br>
+          <strong>Frete Peso:</strong> R$ ${fretePeso.toFixed(2)}<br>
           <strong>Pedágio:</strong> R$ ${pedagio.toFixed(2)}<br>
           <strong>GRIS:</strong> R$ ${gris.toFixed(2)}<br>
           <strong>Frete Valor:</strong> R$ ${freteValor.toFixed(2)}<br>
