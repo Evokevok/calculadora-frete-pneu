@@ -1,4 +1,3 @@
-<!-- Código completo com base na tabela Logdi e cálculo real por medida do pneu -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -125,10 +124,10 @@ function calcularFreteLogdi() {
 
         const tabela = tabelasFrete[estado];
         let fretePeso = 0;
-        if (pesoTarifado <= tabela.faixas[0]) fretePeso = tabela.valores[0] * pesoTarifado;
-        else if (pesoTarifado <= tabela.faixas[1]) fretePeso = tabela.valores[1] * pesoTarifado;
-        else if (pesoTarifado <= tabela.faixas[2]) fretePeso = tabela.valores[2] * pesoTarifado;
-        else if (pesoTarifado <= tabela.faixas[3]) fretePeso = tabela.valores[3] * pesoTarifado;
+        if (pesoTarifado <= tabela.faixas[0]) fretePeso = tabela.valores[0] * (pesoTarifado / 1000);
+        else if (pesoTarifado <= tabela.faixas[1]) fretePeso = tabela.valores[1] * (pesoTarifado / 1000);
+        else if (pesoTarifado <= tabela.faixas[2]) fretePeso = tabela.valores[2] * (pesoTarifado / 1000);
+        else if (pesoTarifado <= tabela.faixas[3]) fretePeso = tabela.valores[3] * (pesoTarifado / 1000);
         else fretePeso = (pesoTarifado / 1000) * tabela.excedente;
 
         fretePeso = Math.max(fretePeso, 280);
