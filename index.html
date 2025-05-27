@@ -350,34 +350,34 @@
     }
 
     document.getElementById('btnCalcular').addEventListener('click', calcularFrete);
-  </script>
-  document.getElementById('destino').addEventListener('blur', function () {
-    const cep = this.value.replace(/[^0-9]/g, '');
-    if (cep.length === 8) {
-      fetch(`https://viacep.com.br/ws/${cep}/json/`)
-        .then(res => res.json())
-        .then(data => {
-          if (!data.erro) {
-            let info = `Destino: ${data.localidade} - ${data.uf}`;
-            const localidadeEl = document.getElementById('localidade');
-            if (localidadeEl) {
-              localidadeEl.textContent = info;
-            } else {
-              const novoEl = document.createElement('div');
-              novoEl.id = 'localidade';
-              novoEl.style.marginTop = '10px';
-              novoEl.textContent = info;
-              document.getElementById('destino').insertAdjacentElement('afterend', novoEl);
-            }
+document.getElementById('btnCalcular').addEventListener('click', calcularFrete);
+
+document.getElementById('destino').addEventListener('blur', function () {
+  const cep = this.value.replace(/[^0-9]/g, '');
+  if (cep.length === 8) {
+    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+      .then(res => res.json())
+      .then(data => {
+        if (!data.erro) {
+          let info = `Destino: ${data.localidade} - ${data.uf}`;
+          const localidadeEl = document.getElementById('localidade');
+          if (localidadeEl) {
+            localidadeEl.textContent = info;
           } else {
-            alert('CEP inválido.');
+            const novoEl = document.createElement('div');
+            novoEl.id = 'localidade';
+            novoEl.style.marginTop = '10px';
+            novoEl.textContent = info;
+            document.getElementById('destino').insertAdjacentElement('afterend', novoEl);
           }
-        })
-        .catch(() => {
-          alert('Erro ao buscar o CEP.');
-        });
-    }
-  });
+        } else {
+          alert('CEP inválido.');
+        }
+      })
+      .catch(() => {
+        alert('Erro ao buscar o CEP.');
+      });
+  }
+});
 </script>
-</body>
-</html>
+
