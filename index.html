@@ -87,6 +87,265 @@
     <label for="medida">Medida do Pneu:</label>
     <select id="medida">
       <option value="">-- Escolha uma medida --</option>
+      <option>165/70R13</option>
+      <option>175/65R14</option>
+      <option>195/60R15</option>
+      <option>205/55R16</option>
+      <!-- Adicione outras opções conforme necessário -->
+    </select>
+
+    <label for="quantidade">Quantidade de Pneus:</label>
+    <input type="number" id="quantidade" value="4" min="1">
+
+    <label for="valorUnitario">Valor Unitário (R$) do Pneu:</label>
+    <input type="number" id="valorUnitario" placeholder="Ex: 250" step="0.01" min="0">
+
+    <button onclick="calcularFreteLogdi()">Calcular Frete</button>
+    <button onclick="gerarPDF()">Gerar PDF</button>
+
+    <div class="resultado" id="resultado"></div>
+  </div>
+
+  <script>
+    const tabelaFrete = {
+      faixa: [30, 50, 70, 100],
+      valores: [58.96, 67.05, 87.79, 115.61],
+      excedente: 1019.20
+    };
+
+    function getFretePeso(peso) {
+      for (let i = 0; i < tabelaFrete.faixa.length; i++) {
+        if (peso <= tabelaFrete.faixa[i]) {
+          return tabelaFrete.valores[i];
+        }
+      }
+      return tabelaFrete.valores[tabelaFrete.valores.length - 1] + ((peso - 100) / 1000) * tabelaFrete.excedente;
+    }
+
+    function calcularFreteLogdi() {
+      const tipoOrigem = document.getElementById('tipoOrigem').value;
+      const origem = tipoOrigem === 'manual' ? document.getElementById('origemManual').value + ', Brasil' : 'R. Santos Maccarini, 650 - Machados, Navegantes - SC, 88375-000';
+      const destino = document.getElementById('destino').value + ', Brasil';
+      const medida = document.getElementById('medida').value;
+      const qtd = parseInt(document.getElementById('quantidade').value);
+      const valorUnit = parseFloat(document.getElementById('valorUnitario').value);
+      const valorNF = qtd * valorUnit;
+
+      if (!medida || !destino || qtd <= 0 || !valorUnit || (tipoOrigem === 'manual' && !document.getElementById('origemManual').value)) {
+        resultado.innerHTML = '<span class="erro">Preencha todos os campos corretamente.</span>';
+        return;
+      }
+
+      calcularDistancia(origem, destino, (erro, distancia) => {
+        if (erro) {
+          resultado.innerHTML = '<span class="erro">' + erro + '</span>';
+          return;
+        }
+
+        const pesoTotal = 11.2 * qtd;
+        const fretePeso = getFretePeso(pesoTotal);
+        const despacho = 17.45;
+        const tas = 4.70;
+        const pedagio = Math.ceil(pesoTotal / 100) * 4.69;
+        const gris = Math.max(0.002 * valorNF, 4.97);
+        const freteValor = 0.0049 * valorNF;
+        const coletaEntrega = 280.00;
+        const trt = 82.00;
+        const total = fretePeso + despacho + tas + pedagio + gris + freteValor + coletaEntrega + trt;
+
+        resultado.innerHTML = `
+          <strong>Medida:</strong> ${medida}<br>
+          <strong>Distância:</strong> ${distancia.toFixed(1)} km<br>
+          <strong>Peso Total:</strong> ${pesoTotal.toFixed(1)} kg<br>
+          <strong>Frete Peso:</strong> R$ ${fretePeso.toFixed(2)}<br>
+          <strong>Despacho:</strong> R$ ${despacho.toFixed(2)}<br>
+          <strong>TAS:</strong> R$ ${tas.toFixed(2)}<br>
+          <strong>Pedágio:</strong> R$ ${pedagio.toFixed(2)}<br>
+          <strong>GRIS:</strong> R$ ${gris.toFixed(2)}<br>
+          <strong>Frete Valor:</strong> R$ ${freteValor.toFixed(2)}<br>
+          <strong>Coleta/Entrega:</strong> R$ ${coletaEntrega.toFixed(2)}<br>
+          <strong>TRT:</strong> R$ ${trt.toFixed(2)}<br>
+          <strong>Total com Taxas:</strong> <strong style="color:#2c3e50;">R$ ${total.toFixed(2)}</strong>
+        `;
+      });
+    }
+
+    function calcularDistancia(origem, destino, callback) {
+      const service = new google.maps.DistanceMatrixService();
+      service.getDistanceMatrix({
+        origins: [origem],
+        destinations: [destino],
+        travelMode: 'DRIVING',
+        unitSystem: google.maps.UnitSystem.METRIC
+      }, function(response, status) {
+        if (status === 'OK') {
+          const dist = response.rows[0].elements[0];
+          if (dist.status === 'OK') {
+            callback(null, dist.distance.value / 1000);
+          } else {
+            callback('Distância não encontrada.', null);
+          }
+        } else {
+          callback('Erro na API.', null);
+        }
+      });
+    }
+
+    function gerarPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const content = document.getElementById('resultado').innerText;
+      doc.text(content, 10, 10);
+      doc.save('frete-pneus.pdf');
+    }
+
+    document.getElementById('destino').addEventListener('blur', function () {
+      const cep = this.value.replace(/[^0-9]/g, '');
+      if (cep.length === 8) {
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+          .then(res => res.json())
+          .then(data => {
+            if (!data.erro) {
+              let info = `Destino: ${data.localidade} - ${data.uf}`;
+              const localidadeEl = document.getElementById('localidade');
+              if (localidadeEl) {
+                localidadeEl.textContent = info;
+              } else {
+                const novoEl = document.createElement('div');
+                novoEl.id = 'localidade';
+                novoEl.style.marginTop = '10px';
+                novoEl.style.fontWeight = 'bold';
+                novoEl.style.color = 'red';
+                novoEl.textContent = info;
+                document.getElementById('destino').insertAdjacentElement('afterend', novoEl);
+              }
+            } else {
+              alert('CEP inválido.');
+            }
+          })
+          .catch(() => {
+            alert('Erro ao buscar o CEP.');
+          });
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Frete de Pneus</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKCV0EeLhjGGkio1-FrkBTbVBk-rP3Q74"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      padding: 20px;
+      margin: auto;
+      max-width: 800px;
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    .resultado {
+      margin-top: 20px;
+      background: #ecf0f1;
+      border-left: 5px solid #3498db;
+      padding: 15px;
+      font-size: 14px;
+    }
+    .erro {
+      color: red;
+    }
+    @media (max-width: 600px) {
+      .card {
+        padding: 10px;
+      }
+      input, select, button {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>Calculadora de Frete de Pneus</h2>
+  <div class="card">
+    <label for="tipoOrigem">Origem do Frete:</label>
+    <select id="tipoOrigem">
+      <option value="fixo">Usar endereço fixo (Navegantes - SC)</option>
+      <option value="manual">Inserir outro CEP</option>
+    </select>
+
+    <div id="origemManualContainer" style="display:none;">
+      <label for="origemManual">CEP de Origem:</label>
+      <input type="text" id="origemManual" placeholder="00000000" maxlength="9">
+    </div>
+
+    <label for="destino">CEP de Destino:</label>
+    <input type="text" id="destino" placeholder="00000000" maxlength="9">
+
+    <label for="medida">Medida do Pneu:</label>
+    <select id="medida">
+      <option value="">-- Escolha uma medida --</option>
     </select>
 
     <label for="quantidade">Quantidade de Pneus:</label>
@@ -114,6 +373,15 @@
       "1100-22", "265/60R18", "205/55R17", "12.00R20", "750-18", "900-16", "20.5-25", "195/60R16"
     ];
 
+    window.addEventListener('DOMContentLoaded', () => {
+  const select = document.getElementById('medida');
+  medidas.sort().forEach(medida => {
+    const option = document.createElement('option');
+    option.value = medida;
+    option.textContent = medida;
+    select.appendChild(option);
+  });
+});
     const pneus = {
       "165/70R13": { peso: 6.2, medidas: "54.9 x 54.9 x 16.5 cm" },
       "165/70R14": { peso: 7, medidas: "58 x 58 x 16.5 cm" },
