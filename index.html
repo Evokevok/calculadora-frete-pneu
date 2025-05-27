@@ -366,8 +366,10 @@ document.getElementById('destino').addEventListener('blur', function () {
           } else {
             const novoEl = document.createElement('div');
             novoEl.id = 'localidade';
-            novoEl.style.marginTop = '10px';
-            novoEl.textContent = info;
+           novoEl.style.marginTop = '10px';
+novoEl.style.fontWeight = 'bold';
+novoEl.style.color = 'red';
+novoEl.textContent = info;
             document.getElementById('destino').insertAdjacentElement('afterend', novoEl);
           }
         } else {
