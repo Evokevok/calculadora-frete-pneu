@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Frete de Pneus</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      padding: 20px;
+      margin: auto;
+      max-width: 800px;
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    .resultado {
+      margin-top: 20px;
+      background: #ecf0f1;
+      border-left: 5px solid #3498db;
+      padding: 15px;
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+    .erro {
+      color: red;
+    }
+    @media (max-width: 600px) {
+      .card {
+        padding: 10px;
+      }
+      input, select, button {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>Calculadora de Frete de Pneus</h2>
+  <div class="card">
+    <label for="cep">CEP de Destino:</label>
+    <input type="text" id="cep" placeholder="Digite o CEP" maxlength="9" />
+
+    <label for="medida">Medida do Pneu:</label>
+    <select id="medida">
+      <option>165/70R13</option>
+      <option>175/70R13</option>
+      <option>175/65R14</option>
+      <option>185/70R14</option>
+      <option>195/60R15</option>
+      <option>205/55R16</option>
+      <option>225/75R16</option>
+      <!-- Mais opções podem ser adicionadas aqui -->
+    </select>
+
+    <label for="quantidade">Quantidade de Pneus:</label>
+    <input type="number" id="quantidade" value="4" min="1" />
+
+    <label for="valorUnitario">Valor Unitário (R$) do Pneu:</label>
+    <input type="number" id="valorUnitario" placeholder="Ex: 250" step="0.01" min="0" />
+
+    <button onclick="calcularFrete()">Calcular Frete</button>
+    <button onclick="gerarPDF()">Gerar PDF</button>
+
+    <div class="resultado" id="resultado"></div>
+  </div>
+
+  <script>
+    function calcularFrete() {
+      document.getElementById('resultado').textContent = 'Simulação de cálculo...';
+    }
+    function gerarPDF() {
+      alert('Função PDF simulada.');
+    }
+  </script>
+</body>
+</html>
