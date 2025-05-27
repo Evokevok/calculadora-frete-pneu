@@ -278,9 +278,12 @@ async function calcularFrete() {
     valorKg = tabela.valorExcedente / 1000;
   }
 
-  let fretePeso = pesoFrete * (
-  valorKg === tabela.valorExcedente / 1000 ? valorKg : valorKg / 10
-);
+let fretePeso;
+if (valorKg === tabela.valorExcedente / 1000) {
+  fretePeso = pesoFrete * valorKg; // excedente: R$/kg
+} else {
+  fretePeso = valorKg; // faixa fixa, já é o valor total da faixa
+}
   const valor = custoUn * qtd;
   const gris = Math.max(tabela.grisMin, valor * tabela.gris);
 
