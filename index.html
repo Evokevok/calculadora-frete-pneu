@@ -288,7 +288,7 @@ async function calcularFrete() {
     usarFreteMinimo = true;
   }
 
-  const pedagio = tabela.pedagioPor100Kg * (pesoFrete / 100);
+  const pedagio = tabela.pedagioPor100Kg * Math.ceil(pesoFrete / 100);
 
   const freteTotal = (usarFreteMinimo ? (tabela.tde + tabela.trt) : fretePeso)
                    + tabela.despacho
