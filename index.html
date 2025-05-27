@@ -206,7 +206,8 @@
         .catch(() => {
           document.getElementById('cidadeDestino').value = 'Erro ao buscar CEP';
         });
-<script>
+      document.getElementById('cepDestino').addEventListener('blur', consultarCEP);
+      
 const tabelasFrete = {
   AL: { faixa: [{limite:30,valorKg:118.00},{limite:50,valorKg:134.20},{limite:70,valorKg:171.23},{limite:100,valorKg:231.38}], valorExcedente:1971.20, gris:0.002, grisMin:4.97, adVal:0.0051, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
   BA: { faixa: [{limite:30,valorKg:113.47},{limite:50,valorKg:129.04},{limite:70,valorKg:164.64},{limite:100,valorKg:222.49}], valorExcedente:1892.80, gris:0.002, grisMin:4.97, adVal:0.0051, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
