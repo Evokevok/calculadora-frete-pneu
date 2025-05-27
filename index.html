@@ -1,107 +1,232 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calculadora de Frete de Pneus</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Frete Logdi</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=geometry"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f8f9fa;
-      padding: 20px;
-      margin: auto;
-      max-width: 800px;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
-    h2 {
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+    h1 {
       text-align: center;
-      color: #2c3e50;
-    }
-    .card {
-      background: #fff;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      margin-top: 20px;
+      color: #333;
     }
     label {
       font-weight: bold;
       margin-top: 10px;
-      display: block;
     }
     input, select, button {
       width: 100%;
       padding: 10px;
-      margin-top: 5px;
-      border-radius: 4px;
+      margin: 5px 0 15px 0;
       border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
     }
     button {
-      background: #3498db;
+      background-color: #007BFF;
       color: white;
       border: none;
-      font-weight: bold;
-      margin-top: 15px;
+      cursor: pointer;
     }
     button:hover {
-      background: #2980b9;
+      background-color: #0056b3;
     }
-    .resultado {
-      margin-top: 20px;
-      background: #ecf0f1;
-      border-left: 5px solid #3498db;
+    pre {
+      background: #f0f0f0;
       padding: 15px;
-      font-size: 14px;
-      white-space: pre-wrap;
-    }
-    .erro {
-      color: red;
-    }
-    @media (max-width: 600px) {
-      .card {
-        padding: 10px;
-      }
-      input, select, button {
-        font-size: 14px;
-      }
+      border-radius: 8px;
     }
   </style>
 </head>
 <body>
-  <h2>Calculadora de Frete de Pneus</h2>
-  <div class="card">
-    <label for="cep">CEP de Destino:</label>
-    <input type="text" id="cep" placeholder="Digite o CEP" maxlength="9" />
+  <div class="container">
+    <h1>Calculadora de Frete Logdi</h1>
 
-    <label for="medida">Medida do Pneu:</label>
-    <select id="medida">
-      <option>165/70R13</option>
-      <option>175/70R13</option>
-      <option>175/65R14</option>
-      <option>185/70R14</option>
-      <option>195/60R15</option>
-      <option>205/55R16</option>
-      <option>225/75R16</option>
-      <!-- Mais opções podem ser adicionadas aqui -->
-    </select>
+    <label>CEP de destino:
+      <input type="text" id="cepDestino" placeholder="Digite o CEP">
+    </label>
+    <button onclick="consultarCEP()">Buscar Cidade</button>
 
-    <label for="quantidade">Quantidade de Pneus:</label>
-    <input type="number" id="quantidade" value="4" min="1" />
+    <label>Cidade detectada:
+      <input type="text" id="cidadeDestino" readonly>
+    </label>
 
-    <label for="valorUnitario">Valor Unitário (R$) do Pneu:</label>
-    <input type="number" id="valorUnitario" placeholder="Ex: 250" step="0.01" min="0" />
+    <label>CEP de origem:
+      <input type="text" id="cepOrigem" value="88375-000">
+    </label>
+
+    <label>Pneu:
+      <select id="pneuSelect"></select>
+    </label>
+
+    <label>Quantidade:
+      <input type="number" id="quantidade" value="1">
+    </label>
+
+    <label>Custo por unidade (R$):
+      <input type="number" id="custoPneu" value="100">
+    </label>
 
     <button onclick="calcularFrete()">Calcular Frete</button>
-    <button onclick="gerarPDF()">Gerar PDF</button>
 
-    <div class="resultado" id="resultado"></div>
+    <h2>Resultado:</h2>
+    <pre id="resultado"></pre>
   </div>
 
   <script>
-    function calcularFrete() {
-      document.getElementById('resultado').textContent = 'Simulação de cálculo...';
+    const pneus = {
+"165/70R13": { dimensoes: [0.549, 0.549, 0.165], peso: 6.2 },
+"165/70R14": { dimensoes: [0.58, 0.58, 0.165], peso: 7.0 },
+"175/70 Rr13": { dimensoes: [0.575, 0.575, 0.175], peso: 6.97 },
+"175/65 R14": { dimensoes: [0.6, 0.6, 0.177], peso: 6.5 },
+"185/70 R14": { dimensoes: [0.615, 0.615, 0.185], peso: 7.0 },
+"175/70 R14": { dimensoes: [0.6, 0.6, 0.17], peso: 6.5 },
+"175/80R14": { dimensoes: [0.63, 0.63, 0.17], peso: 8.75 },
+"185 r14c": { dimensoes: [0.66, 0.66, 0.2], peso: 8.0 },
+"185/65 r15": { dimensoes: [0.62, 0.62, 0.185], peso: 7.7 },
+"185/65r14": { dimensoes: [0.596, 0.596, 0.185], peso: 7.8 },
+"195/55R15": { dimensoes: [0.59, 0.59, 0.195], peso: 8.0 },
+"195/60R15": { dimensoes: [0.615, 0.615, 0.195], peso: 7.8 },
+"195/65 R15": { dimensoes: [0.634, 0.634, 0.195], peso: 8.4 },
+"185/60 r15": { dimensoes: [0.603, 0.603, 0.185], peso: 7.0 },
+"195/55R16": { dimensoes: [0.62, 0.62, 0.195], peso: 8.4 },
+"205/60r16": { dimensoes: [0.65, 0.65, 0.205], peso: 9.6 },
+"205/60R15": { dimensoes: [0.6, 0.6, 0.21], peso: 12.0 },
+"215/75R16": { dimensoes: [0.73, 0.73, 0.215], peso: 14.3 },
+"12.5/80-18": { dimensoes: [0.01, 0.01, 0.31], peso: 40.0 },
+"10.16.5": { dimensoes: [0.71, 0.71, 0.27], peso: 25.0 },
+"1300/24": { dimensoes: [0.013, 0.013, 0.24], peso: 73.0 },
+"215/65 R16": { dimensoes: [0.68, 0.21, 0.68], peso: 10.05 },
+"1000X20": { dimensoes: [0.01, 0.01, 0.26], peso: 46.0 },
+"215/65R16": { dimensoes: [0.69, 0.69, 0.22], peso: 10.3 },
+"265/70 r16": { dimensoes: [0.777, 0.265, 0.777], peso: 17.49 },
+"275/80 R22,5": { dimensoes: [0.01, 0.01, 0.28], peso: 48.55 },
+"205/75 R16": { dimensoes: [0.72, 0.72, 0.2], peso: 15.0 },
+"295/80 R22.5": { dimensoes: [0.011, 0.011, 0.3], peso: 54.0 },
+"205/75 r16c": { dimensoes: [0.714, 0.714, 0.205], peso: 15.7 },
+"90/90-19": { dimensoes: [0.64, 0.64, 0.09], peso: 3.67 },
+"195/70 R15": { dimensoes: [0.69, 0.69, 0.19], peso: 10.9 },
+"195/75 R16": { dimensoes: [0.698, 0.698, 0.095], peso: 14.9 },
+"215/80R16": { dimensoes: [0.75, 0.75, 0.21], peso: 15.9 },
+"225/65R17": { dimensoes: [0.72, 0.72, 0.23], peso: 13.0 },
+"225/65 R16C": { dimensoes: [0.7, 0.7, 0.23], peso: 15.8 },
+"225/75R16": { dimensoes: [0.74, 0.74, 0.225], peso: 17.7 },
+"245/70 R16": { dimensoes: [0.75, 0.75, 0.245], peso: 15.5 },
+"255/70R16": { dimensoes: [0.75, 0.75, 0.255], peso: 17.0 },
+"205/70 R15C": { dimensoes: [0.668, 0.668, 0.205], peso: 13.0 },
+"900/20": { dimensoes: [0.965, 0.965, 0.228], peso: 38.2 },
+"205/55r16": { dimensoes: [0.63, 0.63, 0.205], peso: 9.0 },
+"14.00x24": { dimensoes: [0.013, 0.013, 0.3], peso: 82.0 },
+"12.4-24": { dimensoes: [0.012, 0.012, 0.31], peso: 49.0 },
+"14.9-26": { dimensoes: [1.32, 1.32, 0.378], peso: 60.0 },
+"14.9-28": { dimensoes: [1.38, 1.38, 0.378], peso: 75.58 },
+"14.9-24": { dimensoes: [1.253, 1.253, 0.396], peso: 54.7 },
+"19.5-24": { dimensoes: [1.308, 1.308, 0.495], peso: 86.6 },
+"17.5/25": { dimensoes: [1.25, 1.25, 0.37], peso: 90.0 },
+"18.4-34": { dimensoes: [0.016, 0.016, 0.47], peso: 115.0 },
+"18.04/30": { dimensoes: [0.015, 0.015, 0.477], peso: 101.0 },
+"12.16-5": { dimensoes: [0.715, 0.715, 0.275], peso: 35.0 },
+"235/75 r15": { dimensoes: [0.734, 0.734, 0.235], peso: 14.47 },
+"245/75R16": { dimensoes: [0.774, 0.774, 0.245], peso: 16.5 },
+"16.9-24": { dimensoes: [1.332, 1.332, 0.449], peso: 77.8 },
+"23.1-26": { dimensoes: [1.605, 0.587, 1.605], peso: 155.95 },
+"23.1-30": { dimensoes: [1.7, 1.7, 0.57], peso: 148.0 },
+"10.16-5": { dimensoes: [0.92, 0.92, 0.254], peso: 28.3 },
+"6.00-16": { dimensoes: [0.72, 0.72, 0.16], peso: 11.0 },
+"700-16": { dimensoes: [0.76, 0.76, 0.18], peso: 16.8 },
+"750-16": { dimensoes: [0.79, 0.79, 0.2], peso: 20.0 },
+"265/70R16": { dimensoes: [0.777, 0.777, 0.265], peso: 17.0 },
+"16.9-28": { dimensoes: [1.42, 0.43, 1.42], peso: 86.0 },
+"285/70R19,5": { dimensoes: [0.89, 0.89, 0.28], peso: 62.0 },
+"235/55 R18": { dimensoes: [0.72, 0.72, 0.24], peso: 19.0 },
+"235/65R16": { dimensoes: [0.76, 0.76, 0.24], peso: 16.5 },
+"235/85 r16": { dimensoes: [0.81, 0.81, 0.23], peso: 20.0 },
+"13.6-38": { dimensoes: [1.57, 1.57, 0.36], peso: 77.0 },
+"265/65R17": { dimensoes: [0.74, 0.74, 0.21], peso: 19.1 },
+"225/70R16": { dimensoes: [0.72, 0.72, 0.22], peso: 13.5 },
+"225/55 R18": { dimensoes: [0.75, 0.75, 0.3], peso: 11.96 },
+"225/60 R18": { dimensoes: [0.74, 0.74, 0.24], peso: 13.0 },
+"110/90-17 (Moto)": { dimensoes: [0.635, 0.635, 0.113], peso: 4.3 },
+"16.9-30": { dimensoes: [1.621, 1.621, 0.429], peso: 61.0 },
+"185/60R14": { dimensoes: [0.6, 0.6, 0.185], peso: 7.7 },
+"23.5-25": { dimensoes: [1.617, 0.597, 1.617], peso: 386.0 },
+"265/70 r17": { dimensoes: [0.8, 0.8, 0.265], peso: 19.0 },
+"265/75R16": { dimensoes: [0.8, 0.8, 0.26], peso: 23.0 },
+"235/70R16": { dimensoes: [0.74, 0.74, 0.235], peso: 20.0 },
+"10.5/80-18": { dimensoes: [0.883, 0.883, 0.266], peso: 21.0 },
+"185/70R13": { dimensoes: [0.6, 0.6, 0.18], peso: 7.0 },
+"13.00-24": { dimensoes: [1.23, 1.23, 0.74], peso: 74.0 },
+"1100-22": { dimensoes: [1.07, 1.07, 0.27], peso: 50.0 },
+"265/60 R18": { dimensoes: [0.78, 0.78, 0.27], peso: 17.4 },
+"205/55 R17": { dimensoes: [0.65, 0.65, 0.21], peso: 11.0 },
+"12.00R20": { dimensoes: [0.011, 0.011, 0.3], peso: 74.6 },
+"750-18": { dimensoes: [0.838, 0.838, 0.19], peso: 25.0 },
+"900-16": { dimensoes: [0.855, 0.855, 0.256], peso: 23.0 },
+"20.5-25": { dimensoes: [1.32, 1.32, 0.5], peso: 132.0 },
+"195/60R16": { dimensoes: [0.64, 0.64, 0.19], peso: 8.6 },
+      
+    };
+
+    for (const [modelo, dados] of Object.entries(pneus)) {
+      const option = document.createElement('option');
+      option.value = modelo;
+      option.textContent = modelo;
+      document.getElementById('pneuSelect').appendChild(option);
     }
-    function gerarPDF() {
-      alert('Função PDF simulada.');
+
+    function consultarCEP() {
+      const cep = document.getElementById('cepDestino').value.replace(/\D/g, '');
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(res => res.json())
+        .then(data => document.getElementById('cidadeDestino').value = data.localidade);
+    }
+
+    async function calcularFrete() {
+      const origem = document.getElementById('cepOrigem').value;
+      const destino = document.getElementById('cepDestino').value;
+      const modelo = document.getElementById('pneuSelect').value;
+      const qtd = parseInt(document.getElementById('quantidade').value);
+      const custoUn = parseFloat(document.getElementById('custoPneu').value);
+
+      const pneu = pneus[modelo];
+      const pesoRealTotal = pneu.peso * qtd;
+      const volume = pneu.dimensoes.reduce((acc, val) => acc * val, 1) * qtd;
+      const pesoCubadoTotal = volume * 300;
+      const pesoFrete = Math.max(pesoRealTotal, pesoCubadoTotal);
+
+      const cidade = document.getElementById('cidadeDestino').value;
+      let faixa = pesoFrete <= 30 ? 118 : pesoFrete <= 50 ? 134.2 : 171.23;
+      let freteBase = faixa * (pesoFrete / 10);
+      let gris = Math.max(4.97, custoUn * qtd * 0.002);
+      let valor = custoUn * qtd;
+
+      const freteTotal = freteBase + 280 + 82 + 17.45 + 4.7 + gris + (valor * 0.0051);
+
+      document.getElementById('resultado').textContent = `
+Modelo: ${modelo}
+Peso total: ${pesoRealTotal.toFixed(2)} kg
+Peso cubado: ${pesoCubadoTotal.toFixed(2)} kg
+Peso considerado: ${pesoFrete.toFixed(2)} kg
+Valor do frete estimado: R$ ${freteTotal.toFixed(2)}
+Cidade destino: ${cidade}
+      `;
     }
   </script>
 </body>
