@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora de Frete Logdi</title>
+  <title>Calculadora de Frete Evok</title>
   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=geometry"></script>
   <style>
     body {
@@ -26,10 +26,12 @@
     h1 {
       text-align: center;
       color: #333;
+      margin-top: 30px;
     }
     label {
       font-weight: bold;
       margin-top: 10px;
+      display: block;
     }
     input, select, button {
       width: 100%;
@@ -59,26 +61,28 @@
   <div class="container">
     <h1>Calculadora de Frete Evok</h1>
 
-  <input type="text" id="cidadeOrigem" value="R2 Logística - Navegantes - SC">
-</label>
-</label>
+    <label><strong>Origem:</strong>
+      <input type="text" id="cidadeOrigem" value="R2 Logística - Navegantes - SC">
+    </label>
 
-<label><strong>CEP de destino:</strong>
-  <input type="text" id="cepDestino" placeholder="Digite o CEP">
-</label>
-<button onclick="consultarCEP()">Buscar Cidade</button>
+    <label><strong>CEP de destino:</strong>
+      <input type="text" id="cepDestino" placeholder="Digite o CEP">
+    </label>
+    <button onclick="consultarCEP()">Buscar Cidade</button>
 
-<label><strong>Cidade detectada:</strong>
-  <input type="text" id="cidadeDestino" readonly>
-<label><strong>Pneu:</strong>
-  <select id="pneuSelect"></select>
-</label>
+    <label><strong>Cidade detectada:</strong>
+      <input type="text" id="cidadeDestino" readonly>
+    </label>
 
-    <label>Quantidade:
+    <label><strong>Pneu:</strong>
+      <select id="pneuSelect"></select>
+    </label>
+
+    <label><strong>Quantidade:</strong>
       <input type="number" id="quantidade" value="1">
     </label>
 
-    <label>Custo por unidade (R$):
+    <label><strong>Custo por unidade (R$):</strong>
       <input type="number" id="custoPneu" value="100">
     </label>
 
@@ -90,7 +94,7 @@
 
   <script>
     const pneus = {
-"165/70R13": { dimensoes: [0.549, 0.549, 0.165], peso: 6.2 },
+      "165/70R13": { dimensoes: [0.549, 0.549, 0.165], peso: 6.2 },
 "165/70R14": { dimensoes: [0.58, 0.58, 0.165], peso: 7.0 },
 "175/70 Rr13": { dimensoes: [0.575, 0.575, 0.175], peso: 6.97 },
 "175/65 R14": { dimensoes: [0.6, 0.6, 0.177], peso: 6.5 },
@@ -179,7 +183,6 @@
 "900-16": { dimensoes: [0.855, 0.855, 0.256], peso: 23.0 },
 "20.5-25": { dimensoes: [1.32, 1.32, 0.5], peso: 132.0 },
 "195/60R16": { dimensoes: [0.64, 0.64, 0.19], peso: 8.6 },
-      
     };
 
     for (const [modelo, dados] of Object.entries(pneus)) {
@@ -190,34 +193,32 @@
     }
 
     function consultarCEP() {
-  const cep = document.getElementById('cepDestino').value.replace(/\D/g, '');
-  fetch(`https://viacep.com.br/ws/${cep}/json/`)
-    .then(res => res.json())
-    .then(data => {
-      if (data.erro) {
-        document.getElementById('cidadeDestino').value = 'CEP inválido';
-      } else {
-        document.getElementById('cidadeDestino').value = `${data.localidade} - ${data.uf}`;
-      }
-    })
-    .catch(() => {
-      document.getElementById('cidadeDestino').value = 'Erro ao buscar CEP';
-    });
-
+      const cep = document.getElementById('cepDestino').value.replace(/\D/g, '');
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.erro) {
+            document.getElementById('cidadeDestino').value = 'CEP inválido';
+          } else {
+            document.getElementById('cidadeDestino').value = `${data.localidade} - ${data.uf}`;
+          }
+        })
+        .catch(() => {
+          document.getElementById('cidadeDestino').value = 'Erro ao buscar CEP';
+        });
     }
 
     async function calcularFrete() {
       const modelo = document.getElementById('pneuSelect').value;
 
-if (!modelo || !pneus[modelo]) {
-  alert('Selecione um modelo de pneu válido.');
-  return;
-}
+      if (!modelo || !pneus[modelo]) {
+        alert('Selecione um modelo de pneu válido.');
+        return;
+      }
 
-const qtd = parseInt(document.getElementById('quantidade').value);
-      const origem = document.getElementById('cepOrigem').value;
+      const qtd = parseInt(document.getElementById('quantidade').value);
+      const origem = document.getElementById('cidadeOrigem').value;
       const destino = document.getElementById('cepDestino').value;
-      const modelo = document.getElementById('pneuSelect').value;
       const custoUn = parseFloat(document.getElementById('custoPneu').value);
 
       const pneu = pneus[modelo];
@@ -236,28 +237,14 @@ const qtd = parseInt(document.getElementById('quantidade').value);
 
       document.getElementById('resultado').textContent = `
 Modelo: ${modelo}
+Origem: ${origem}
+Destino: ${cidade}
 Peso total: ${pesoRealTotal.toFixed(2)} kg
 Peso cubado: ${pesoCubadoTotal.toFixed(2)} kg
 Peso considerado: ${pesoFrete.toFixed(2)} kg
 Valor do frete estimado: R$ ${freteTotal.toFixed(2)}
-Cidade destino: ${cidade}
       `;
     }
-    function consultarCEPorigem() {
-  const cep = document.getElementById('cepOrigem').value.replace(/\D/g, '');
-  fetch(`https://viacep.com.br/ws/${cep}/json/`)
-    .then(res => res.json())
-    .then(data => {
-      if (data.erro) {
-        document.getElementById('cidadeOrigem').value = 'CEP inválido';
-      } else {
-        document.getElementById('cidadeOrigem').value = `${data.localidade} - ${data.uf}`;
-      }
-    })
-    .catch(() => {
-      document.getElementById('cidadeOrigem').value = 'Erro ao buscar CEP';
-    });
-}
   </script>
 </body>
 </html>
