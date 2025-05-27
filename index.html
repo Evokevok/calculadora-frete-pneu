@@ -339,17 +339,17 @@
           resultado.innerHTML = '<span class="erro"><strong>Erro:</strong> ' + erro + '</span>';
           return;
         }
-        resultado.innerHTML = `
+          resultado.innerHTML = `
           <strong>Medida:</strong> ${medida}<br>
-          <strong>Peso por pneu:</strong> ${pneus[medida].peso.toFixed(2)} kg<br>
-          <strong>Dimensões:</strong> ${pneus[medida].medidas} cm<br>
           <strong>Distância:</strong> ${distancia.toFixed(1)} km<br>
-          <strong>Frete total (4 pneus):</strong> R$ ${freteTotal.toFixed(2)}<br>
-          <strong>Frete unitário por pneu:</strong> R$ ${freteUnit.toFixed(2)}<br>
-          <strong>Cubagem por pneu:</strong> ${cubagem.toFixed(3)} m³
+          <strong>Peso total (cubado):</strong> ${pesoTotal.toFixed(1)} kg<br>
+          <strong>Frete total (4 pneus):</strong> R$ ${custoTotal.toFixed(2)}<br>
+          <strong>Frete unitário por pneu:</strong> R$ ${custoUnitario}
         `;
       });
-    });
+    }
+
+    document.getElementById('btnCalcular').addEventListener('click', calcularFrete);
   </script>
 </body>
 </html>
