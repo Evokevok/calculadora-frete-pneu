@@ -273,23 +273,20 @@ const tabelasFrete = {
 };
 
 async function calcularFrete() {
-  const origem = document.getElementById('cepOrigem').value;
-      const destino = document.getElementById('cepDestino').value;
-      const modelo = document.getElementById('pneuSelect').value;
-      const qtd = parseInt(document.getElementById('quantidade').value);
-      const custoUn = parseFloat(document.getElementById('custoPneu').value);
+    document.getElementById('resultado').textContent = `
+Modelo: ${modelo}
+Origem: ${origem}
+Destino: ${cidade}
+Peso total: ${pesoRealTotal.toFixed(2)} kg
+Peso cubado: ${pesoCubadoTotal.toFixed(2)} kg
+Peso considerado: ${pesoFrete.toFixed(2)} kg
+Valor do frete estimado: R$ ${freteTotal.toFixed(2)}
+  `;
+} // 👈 ESSA chave fecha a função calcularFrete()
 
-      const pneu = pneus[modelo];
-      const pesoRealTotal = pneu.peso * qtd;
-      const volume = pneu.dimensoes.reduce((acc, val) => acc * val, 1) * qtd;
-      const pesoCubadoTotal = volume * 300;
-      const pesoFrete = Math.max(pesoRealTotal, pesoCubadoTotal);
-
-      const cidade = document.getElementById('cidadeDestino').value;
-      let faixa = pesoFrete <= 30 ? 118 : pesoFrete <= 50 ? 134.2 : 171.23;
-      let freteBase = faixa * (pesoFrete / 10);
-      let gris = Math.max(4.97, custoUn * qtd * 0.002);
-      let valor = custoUn * qtd;
+</script>
+</body>
+</html>
 
 const freteTotal = freteBase + 82 + 17.45 + 4.7 + gris + (valor * 0.0051);
 
