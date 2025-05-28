@@ -288,15 +288,9 @@ if (valorKg === tabela.valorExcedente / 1000) {
   const valor = custoUn * qtd;
   const gris = Math.max(tabela.grisMin, valor * tabela.gris);
 
-  let usarFreteMinimo = false;
-  if (fretePeso < (tabela.tde + tabela.trt)) {
-    fretePeso = 0;
-    usarFreteMinimo = true;
-  }
-
   const pedagio = tabela.pedagioPor100Kg * Math.ceil(pesoFrete / 100);
 
-  const freteTotal = (usarFreteMinimo ? (tabela.tde + tabela.trt) : fretePeso)
+  const freteTotal = fretePeso
                    + tabela.despacho
                    + tabela.tas
                    + gris
