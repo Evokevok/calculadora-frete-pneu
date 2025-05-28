@@ -316,27 +316,37 @@ if (estadoDestino === 'AL') {
     }
   }
 
-  if (valorKg === 0) {
-    valorKg = tabela.valorExcedente / 1000;
+const pneu = pneus[modelo];
+const pesoRealTotal = pneu.peso * qtd;
+const volume = pneu.dimensoes.reduce((acc, val) => acc * val, 1) * qtd;
+const pesoCubadoTotal = volume * 300;
+const pesoFrete = Math.max(pesoRealTotal, pesoCubadoTotal);
+
+let valorKg = 0;
+for (const faixa of tabela.faixa) {
+  if (pesoFrete <= faixa.limite) {
+    valorKg = faixa.valorKg;
+    break;
   }
+}
+if (valorKg === 0) {
+  valorKg = tabela.valorExcedente / 1000;
+}
 
-let fretePeso;
 const isExcedente = pesoFrete > 100;
-fretePeso = isExcedente
-  ? pesoFrete * (tabela.valorExcedente / 1000)
-  : valorKg;
-  const valor = custoUn * qtd;
-  
-  const gris = Math.max(tabela.grisMin, valor * tabela.gris);
+const valorPorKg = tabela.valorExcedente / 1000;
+const fretePeso = isExcedente ? pesoFrete * valorPorKg : valorKg;
 
-  const pedagio = tabela.pedagioPor100Kg * Math.ceil(pesoFrete / 100);
+const valor = custoUn * qtd;
+const gris = Math.max(tabela.grisMin, valor * tabela.gris);
+const pedagio = tabela.pedagioPor100Kg * Math.ceil(pesoFrete / 100);
 
-  const freteTotal = fretePeso
-                   + tabela.despacho
-                   + tabela.tas
-                   + gris
-                   + (valor * tabela.adVal)
-                   + pedagio;
+const freteTotal = fretePeso
+                 + tabela.despacho
+                 + tabela.tas
+                 + gris
+                 + (valor * tabela.adVal)
+                 + pedagio;
 
   document.getElementById('resultado').textContent = `
 Modelo: ${modelo}
