@@ -272,45 +272,34 @@ const tabelasFrete = {
   TO: { faixa: [{limite:30,valorKg:101.7}, {limite:50,valorKg:115.7}, {limite:70,valorKg:147.6}, {limite:100,valorKg:234.7}], valorExcedente: 1713.6, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 }
 };
 
-   function calcularFrete() {
+  async function calcularFrete() {
   const modelo = document.getElementById('pneuSelect').value;
-  const cidadeCompleta = document.getElementById('cidadeDestino').value;
-  const qtd = parseInt(document.getElementById('quantidade').value);
-  const custoUn = parseFloat(document.getElementById('custoPneu').value);
-  const origem = document.getElementById('cidadeOrigem').value;
-  const resultado = document.getElementById('resultado');
 
-  if (!modelo || !pneus[modelo] || !cidadeCompleta || isNaN(qtd) || isNaN(custoUn)) {
-    resultado.innerHTML = 'Preencha todos os campos corretamente.';
+  if (!modelo || !pneus[modelo]) {
+    alert('Selecione um modelo de pneu válido.');
+    return;
+  }
+
+  const qtd = parseInt(document.getElementById('quantidade').value);
+  const origem = document.getElementById('cidadeOrigem').value;
+  const destino = document.getElementById('cepDestino').value;
+  const custoUn = parseFloat(document.getElementById('custoPneu').value);
+  const cidade = document.getElementById('cidadeDestino').value;
+
+  const estadoDestino = cidade.split(' - ')[1];
+  const tabela = tabelasFrete[estadoDestino];
+
+  if (!tabela) {
+    alert("Tabela de frete não disponível para o estado: " + estadoDestino);
     return;
   }
 
   const pneu = pneus[modelo];
   const pesoRealTotal = pneu.peso * qtd;
-  const volume = pneu.dimensoes.reduce((a, b) => a * b) * qtd;
+  const volume = pneu.dimensoes.reduce((acc, val) => acc * val, 1) * qtd;
   const pesoCubadoTotal = volume * 300;
   const pesoFrete = Math.max(pesoRealTotal, pesoCubadoTotal);
 
-  // Detectar estado
-  const estadoDestino = cidadeCompleta.split(' - ')[1]?.trim().toUpperCase();
-  let tabela;
-
-  // Caso especial: AL1
-  if (estadoDestino === 'AL') {
-    const cidadeMatch = tabelasFrete.AL.AL1.cidades.find(c =>
-      cidadeCompleta.toLowerCase().includes(c.toLowerCase())
-    );
-    tabela = cidadeMatch ? tabelasFrete.AL.AL1 : tabelasFrete.AL.default;
-  } else {
-    tabela = tabelasFrete[estadoDestino];
-  }
-
-  if (!tabela) {
-    resultado.innerHTML = `Tabela de frete não disponível para o estado: ${estadoDestino}`;
-    return;
-  }
-
-  // Buscar valor por kg
   let valorKg = 0;
   for (const faixa of tabela.faixa) {
     if (pesoFrete <= faixa.limite) {
@@ -318,64 +307,40 @@ const tabelasFrete = {
       break;
     }
   }
+
   if (valorKg === 0) {
     valorKg = tabela.valorExcedente / 1000;
   }
 
-  const fretePeso = pesoFrete * valorKg;
-  const valorTotal = custoUn * qtd;
-  const gris = Math.max(tabela.grisMin, valorTotal * tabela.gris);
-  const adValorem = valorTotal * tabela.adVal;
-  const pedagio = tabela.pedagioPor100Kg * Math.ceil(pesoFrete / 100);
-  const total = fretePeso + tabela.despacho + tabela.tas + gris + adValorem + pedagio;
+  let fretePeso = pesoFrete * valorKg;
+  const valor = custoUn * qtd;
+  const gris = Math.max(tabela.grisMin, valor * tabela.gris);
 
-  resultado.innerHTML = `
-    <strong>Modelo:</strong> ${modelo}<br>
-    <strong>Origem:</strong> ${origem}<br>
-    <strong>Destino:</strong> ${cidadeCompleta}<br>
-    <strong>Peso real total:</strong> ${pesoRealTotal.toFixed(2)} kg<br>
-    <strong>Peso cubado:</strong> ${pesoCubadoTotal.toFixed(2)} kg<br>
-    <strong>Peso considerado:</strong> ${pesoFrete.toFixed(2)} kg<br><br>
-    <strong>Frete peso:</strong> R$ ${fretePeso.toFixed(2)}<br>
-    <strong>Ad valorem:</strong> R$ ${adValorem.toFixed(2)}<br>
-    <strong>GRIS:</strong> R$ ${gris.toFixed(2)}<br>
-    <strong>Despacho:</strong> R$ ${tabela.despacho.toFixed(2)}<br>
-    <strong>TAS:</strong> R$ ${tabela.tas.toFixed(2)}<br>
-    <strong>Pedágio:</strong> R$ ${pedagio.toFixed(2)}<br><br>
-    <strong><u>Frete total:</u></strong> <strong>R$ ${total.toFixed(2)}</strong>
+  let usarFreteMinimo = false;
+  if (fretePeso < (tabela.tde + tabela.trt)) {
+    fretePeso = 0;
+    usarFreteMinimo = true;
+  }
+
+  const pedagio = tabela.pedagioPor100Kg * (pesoFrete / 100);
+
+  const freteTotal = (usarFreteMinimo ? (tabela.tde + tabela.trt) : fretePeso)
+                   + tabela.despacho
+                   + tabela.tas
+                   + gris
+                   + (valor * tabela.adVal)
+                   + pedagio;
+
+  document.getElementById('resultado').textContent = `
+Modelo: ${modelo}
+Origem: ${origem}
+Destino: ${cidade}
+Peso total: ${pesoRealTotal.toFixed(2)} kg
+Peso cubado: ${pesoCubadoTotal.toFixed(2)} kg
+Peso considerado: ${pesoFrete.toFixed(2)} kg
+Valor do frete estimado: R$ ${freteTotal.toFixed(2)}
   `;
 }
-
-
-document.getElementById('btnCalcular').addEventListener('click', calcularFrete);
-
-document.getElementById('destino').addEventListener('blur', function () {
-  const cep = this.value.replace(/[^0-9]/g, '');
-  if (cep.length === 8) {
-    fetch(`https://viacep.com.br/ws/${cep}/json/`)
-      .then(res => res.json())
-      .then(data => {
-        if (!data.erro) {
-          let info = `Destino: ${data.localidade} - ${data.uf}`;
-          const localidadeEl = document.getElementById('localidade');
-          if (localidadeEl) {
-            localidadeEl.textContent = info;
-          } else {
-            const novoEl = document.createElement('div');
-            novoEl.id = 'localidade';
-           novoEl.style.marginTop = '10px';
-novoEl.style.fontWeight = 'bold';
-novoEl.style.color = 'red';
-novoEl.textContent = info;
-            document.getElementById('destino').insertAdjacentElement('afterend', novoEl);
-          }
-        } else {
-          alert('CEP inválido.');
-        }
-      })
-      .catch(() => {
-        alert('Erro ao buscar o CEP.');
-      });
-  }
-});
 </script>
+</body>
+</html>
