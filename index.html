@@ -273,11 +273,10 @@ const tabelasFrete = {
 };
 
     function calcularFrete() {
-      const tipoOrigem = document.getElementById('tipoOrigem').value;
-      const origem = tipoOrigem === 'manual' ? document.getElementById('origem').value + ', Brasil' : "R. Santos Maccarini, 650 - Machados, Navegantes - SC, 88375-000";
-      const destino = document.getElementById('destino').value + ', Brasil';
-      const medida = document.getElementById('medida').value;
-      const resultado = document.getElementById('resultado');
+      const origem = document.getElementById('cidadeOrigem').value;
+const destino = document.getElementById('cidadeDestino').value;
+const medida = document.getElementById('pneuSelect').value;
+const resultado = document.getElementById('resultado');
 
       if (!medida || !destino || (tipoOrigem === 'manual' && !document.getElementById('origem').value)) {
         resultado.innerHTML = '<span class="erro">Preencha todos os campos corretamente.</span>';
