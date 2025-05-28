@@ -301,19 +301,11 @@ if (estadoDestino === 'AL') {
     alert("Tabela de frete não disponível para o estado: " + estadoDestino);
     return;
   }
-
-  const pneu = pneus[modelo];
-  const pesoRealTotal = pneu.peso * qtd;
-  const volume = pneu.dimensoes.reduce((acc, val) => acc * val, 1) * qtd;
-  const pesoCubadoTotal = volume * 300;
-  const pesoFrete = Math.max(pesoRealTotal, pesoCubadoTotal);
-
-  let valorKg = 0;
-  for (const faixa of tabela.faixa) {
-    if (pesoFrete <= faixa.limite) {
-      valorKg = faixa.valorKg;
-      break;
-    }
+let valorKg = 0;
+for (const faixa of tabela.faixa) {
+  if (pesoFrete <= faixa.limite) {
+    valorKg = faixa.valorKg;
+    break;
   }
 }
 if (valorKg === 0) {
