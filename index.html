@@ -272,33 +272,93 @@ const tabelasFrete = {
   TO: { faixa: [{limite:30,valorKg:101.7}, {limite:50,valorKg:115.7}, {limite:70,valorKg:147.6}, {limite:100,valorKg:234.7}], valorExcedente: 1713.6, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 }
 };
 
-async function calcularFrete() {
-    document.getElementById('resultado').textContent = `
-Modelo: ${modelo}
-Origem: ${origem}
-Destino: ${cidade}
-Peso total: ${pesoRealTotal.toFixed(2)} kg
-Peso cubado: ${pesoCubadoTotal.toFixed(2)} kg
-Peso considerado: ${pesoFrete.toFixed(2)} kg
-Valor do frete estimado: R$ ${freteTotal.toFixed(2)}
-  `;
-} // 👈 ESSA chave fecha a função calcularFrete()
+function calcularFrete() {
+      const tipoOrigem = document.getElementById('tipoOrigem').value;
+      const origem = tipoOrigem === 'manual' ? document.getElementById('origem').value + ', Brasil' : "R. Santos Maccarini, 650 - Machados, Navegantes - SC, 88375-000";
+      const destino = document.getElementById('destino').value + ', Brasil';
+      const medida = document.getElementById('medida').value;
+      const resultado = document.getElementById('resultado');
 
-</script>
-</body>
-</html>
+      if (!medida || !destino || (tipoOrigem === 'manual' && !document.getElementById('origem').value)) {
+        resultado.innerHTML = '<span class="erro">Preencha todos os campos corretamente.</span>';
+        return;
+      }
 
-const freteTotal = freteBase + 82 + 17.45 + 4.7 + gris + (valor * 0.0051);
+      const pneuInfo = pneus[medida];
+      let pesoParaCobranca;
 
-  document.getElementById('resultado').textContent = `
-Modelo: ${modelo}
-Peso total: ${pesoRealTotal.toFixed(2)} kg
-Peso cubado: ${pesoCubadoTotal.toFixed(2)} kg
-Peso considerado: ${pesoFrete.toFixed(2)} kg
-Valor do frete estimado: R$ ${freteTotal.toFixed(2)}
-Cidade destino: ${cidade}
-      `;
+      if (pneuInfo) {
+        const dimensoes = pneuInfo.medidas.split(' x ').map(parseFloat);
+        const pesoCubado = (dimensoes[0] * dimensoes[1] * dimensoes[2]) / 6000;
+        pesoParaCobranca = Math.max(pneuInfo.peso, pesoCubado);
+      } else {
+        // fallback: estimativa
+        const match = medida.match(/(\d{3})\/(\d{2})R(\d{2})/);
+        if (!match) {
+          resultado.innerHTML = '<span class="erro">Medida inválida.</span>';
+          return;
+        }
+        const largura = parseInt(match[1]);
+        const perfil = parseInt(match[2]);
+        const aro = parseInt(match[3]);
+        const altura = (largura * (perfil / 100));
+        const diametroTotal = ((2 * altura) + (aro * 25.4)) / 10;
+        const larguraCm = largura / 10;
+        const volume = Math.PI * Math.pow((diametroTotal / 2), 2) * larguraCm / 1000;
+        const pesoEstimado = largura * 0.02;
+        const pesoCubado = (diametroTotal * diametroTotal * larguraCm) / 6000;
+        pesoParaCobranca = Math.max(pesoEstimado, pesoCubado);
+      }
+
+      const pesoTotal = pesoParaCobranca * 4;
+      const custoTotal = pesoTotal * 3;
+      const custoUnitario = (custoTotal / 4).toFixed(2);
+
+      calcularDistanciaReal(origem, destino, function(erro, distancia) {
+        if (erro) {
+          resultado.innerHTML = '<span class="erro"><strong>Erro:</strong> ' + erro + '</span>';
+          return;
+        }
+          resultado.innerHTML = `
+          <strong>Medida:</strong> ${medida}<br>
+          <strong>Distância:</strong> ${distancia.toFixed(1)} km<br>
+          <strong>Peso total (cubado):</strong> ${pesoTotal.toFixed(1)} kg<br>
+          <strong>Frete total (4 pneus):</strong> R$ ${custoTotal.toFixed(2)}<br>
+          <strong>Frete unitário por pneu:</strong> R$ ${custoUnitario}
+        `;
+      });
     }
-  </script>
-</body>
-</html>
+
+    document.getElementById('btnCalcular').addEventListener('click', calcularFrete);
+document.getElementById('btnCalcular').addEventListener('click', calcularFrete);
+
+document.getElementById('destino').addEventListener('blur', function () {
+  const cep = this.value.replace(/[^0-9]/g, '');
+  if (cep.length === 8) {
+    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+      .then(res => res.json())
+      .then(data => {
+        if (!data.erro) {
+          let info = `Destino: ${data.localidade} - ${data.uf}`;
+          const localidadeEl = document.getElementById('localidade');
+          if (localidadeEl) {
+            localidadeEl.textContent = info;
+          } else {
+            const novoEl = document.createElement('div');
+            novoEl.id = 'localidade';
+           novoEl.style.marginTop = '10px';
+novoEl.style.fontWeight = 'bold';
+novoEl.style.color = 'red';
+novoEl.textContent = info;
+            document.getElementById('destino').insertAdjacentElement('afterend', novoEl);
+          }
+        } else {
+          alert('CEP inválido.');
+        }
+      })
+      .catch(() => {
+        alert('Erro ao buscar o CEP.');
+      });
+  }
+});
+</script>
