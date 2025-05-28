@@ -321,12 +321,12 @@ if (estadoDestino === 'AL') {
   }
 
 let fretePeso;
-if (valorKg === tabela.valorExcedente / 1000) {
-  fretePeso = pesoFrete * valorKg; // excedente: R$/kg
-} else {
-  fretePeso = valorKg; // faixa fixa, já é o valor total da faixa
-}
+const isExcedente = pesoFrete > 100;
+fretePeso = isExcedente
+  ? pesoFrete * (tabela.valorExcedente / 1000)
+  : valorKg;
   const valor = custoUn * qtd;
+  
   const gris = Math.max(tabela.grisMin, valor * tabela.gris);
 
   const pedagio = tabela.pedagioPor100Kg * Math.ceil(pesoFrete / 100);
