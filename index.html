@@ -253,7 +253,7 @@ async function calcularFrete() {
   const custoUn = parseFloat(document.getElementById('custoPneu').value);
   const cidade = document.getElementById('cidadeDestino').value;
 
-  const estadoDestino = cidade.split(' - ')[1];
+ const estadoDestino = cidade.split(' - ')[1]?.trim().toUpperCase();
   const tabela = tabelasFrete[estadoDestino];
 
   if (!tabela) {
