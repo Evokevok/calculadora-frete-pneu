@@ -291,7 +291,7 @@ async function calcularFrete() {
       let gris = Math.max(4.97, custoUn * qtd * 0.002);
       let valor = custoUn * qtd;
 
-const freteTotal = freteBase + 280 + 82 + 17.45 + 4.7 + gris + (valor * 0.0051);
+const freteTotal = freteBase + 82 + 17.45 + 4.7 + gris + (valor * 0.0051);
 
   document.getElementById('resultado').textContent = `
 Modelo: ${modelo}
