@@ -273,52 +273,23 @@ const tabelasFrete = {
 };
 
 async function calcularFrete() {
-  const modelo = document.getElementById('pneuSelect').value;
+  const origem = document.getElementById('cepOrigem').value;
+      const destino = document.getElementById('cepDestino').value;
+      const modelo = document.getElementById('pneuSelect').value;
+      const qtd = parseInt(document.getElementById('quantidade').value);
+      const custoUn = parseFloat(document.getElementById('custoPneu').value);
 
-  if (!modelo || !pneus[modelo]) {
-    alert('Selecione um modelo de pneu válido.');
-    return;
-  }
+      const pneu = pneus[modelo];
+      const pesoRealTotal = pneu.peso * qtd;
+      const volume = pneu.dimensoes.reduce((acc, val) => acc * val, 1) * qtd;
+      const pesoCubadoTotal = volume * 300;
+      const pesoFrete = Math.max(pesoRealTotal, pesoCubadoTotal);
 
-  const qtd = parseInt(document.getElementById('quantidade').value);
-  const origem = document.getElementById('cidadeOrigem').value;
-  const destino = document.getElementById('cepDestino').value;
-  const custoUn = parseFloat(document.getElementById('custoPneu').value);
-  const cidade = document.getElementById('cidadeDestino').value;
-
- const estadoDestino = cidade.split(' - ')[1]?.trim().toUpperCase();
-  let tabela;
-if (estadoDestino === 'AL') {
-  const cidadeMatch = tabelasFrete.AL.AL1.cidades.find(c =>
-    cidade.toLowerCase().includes(c.toLowerCase())
-  );
-  tabela = cidadeMatch ? tabelasFrete.AL.AL1 : tabelasFrete.AL.default;
-} else {
-  tabela = tabelasFrete[estadoDestino];
-}
-
-  if (!tabela) {
-    alert("Tabela de frete não disponível para o estado: " + estadoDestino);
-    return;
-  }
-let valorKg = 0;
-for (const faixa of tabela.faixa) {
-  if (pesoFrete <= faixa.limite) {
-    valorKg = faixa.valorKg;
-    break;
-  }
-}
-if (valorKg === 0) {
-  valorKg = tabela.valorExcedente / 1000;
-}
-
-const isExcedente = pesoFrete > 100;
-const valorPorKg = tabela.valorExcedente / 1000;
-const fretePeso = isExcedente ? pesoFrete * valorPorKg : valorKg;
-
-const valor = custoUn * qtd;
-const gris = Math.max(tabela.grisMin, valor * tabela.gris);
-const pedagio = tabela.pedagioPor100Kg * Math.ceil(pesoFrete / 100);
+      const cidade = document.getElementById('cidadeDestino').value;
+      let faixa = pesoFrete <= 30 ? 118 : pesoFrete <= 50 ? 134.2 : 171.23;
+      let freteBase = faixa * (pesoFrete / 10);
+      let gris = Math.max(4.97, custoUn * qtd * 0.002);
+      let valor = custoUn * qtd;
 
 const freteTotal = freteBase + 280 + 82 + 17.45 + 4.7 + gris + (valor * 0.0051);
 
