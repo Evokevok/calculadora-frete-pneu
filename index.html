@@ -272,7 +272,7 @@ const tabelasFrete = {
   TO: { faixa: [{limite:30,valorKg:101.7}, {limite:50,valorKg:115.7}, {limite:70,valorKg:147.6}, {limite:100,valorKg:234.7}], valorExcedente: 1713.6, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 }
 };
 
-    document.getElementById('tipoOrigem').addEventListener('change', function() {
+   document.getElementById('tipoOrigem').addEventListener('change', function() {
       document.getElementById('origemManualContainer').style.display = this.value === 'manual' ? 'block' : 'none';
     });
 
@@ -297,7 +297,8 @@ const tabelasFrete = {
         }
       });
     }
-function calcularFrete() {
+
+    function calcularFrete() {
       const tipoOrigem = document.getElementById('tipoOrigem').value;
       const origem = tipoOrigem === 'manual' ? document.getElementById('origem').value + ', Brasil' : "R. Santos Maccarini, 650 - Machados, Navegantes - SC, 88375-000";
       const destino = document.getElementById('destino').value + ', Brasil';
