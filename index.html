@@ -287,7 +287,15 @@ async function calcularFrete() {
   const cidade = document.getElementById('cidadeDestino').value;
 
  const estadoDestino = cidade.split(' - ')[1]?.trim().toUpperCase();
-  const tabela = tabelasFrete[estadoDestino];
+  let tabela;
+if (estadoDestino === 'AL') {
+  const cidadeMatch = tabelasFrete.AL.AL1.cidades.find(c =>
+    cidade.toLowerCase().includes(c.toLowerCase())
+  );
+  tabela = cidadeMatch ? tabelasFrete.AL.AL1 : tabelasFrete.AL.default;
+} else {
+  tabela = tabelasFrete[estadoDestino];
+}
 
   if (!tabela) {
     alert("Tabela de frete não disponível para o estado: " + estadoDestino);
