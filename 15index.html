@@ -1,418 +1,367 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calculadora de Frete de Pneus</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Pneus Evok</title>
+  <script 
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKCV0EeLhjGGkio1-FrkBTbVBk-rP3Q74&libraries=geometry" 
+    async 
+    defer>
+  </script>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    label { font-weight: bold; display: block; margin-top: 10px; }
-    select, input { width: 100%; max-width: 400px; padding: 5px; margin: 5px 0 15px 0; }
-    button { padding: 10px 20px; margin: 5px; }
-    #resultado { margin-top: 20px; padding: 10px; border: 1px solid #ccc; background: #f9f9f9; width: 100%; max-width: 400px; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-top: 30px;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 15px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    pre {
+      background: #f0f0f0;
+      padding: 15px;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h1>Calculadora de Pneus Evok</h1>
 
-  <h1>Calculadora de Frete de Pneus</h1>
-  <p>Origem do frete: <strong>Navegantes – SC</strong> (fixo)</p>
-  
-  <label for="cep">CEP de Destino:</label>
-  <input type="text" id="cep" placeholder="Digite o CEP" maxlength="9" />
-  
-  <label for="medida">Medida do Pneu:</label>
-  <select id="medida">
-    <!-- Opções de medidas de pneus (ordenadas alfabeticamente ou logicamente) -->
-    <option>1100-20</option>
-    <option>11L16</option>
-    <option>12.4-24</option>
-    <option>12.4-28</option>
-    <option>12.4-32</option>
-    <option>12.4-36</option>
-    <option>14.9-24</option>
-    <option>14.9-28</option>
-    <option>14.9-30</option>
-    <option>15.5-38</option>
-    <option>16.9-28</option>
-    <option>16.9-30</option>
-    <option>16.9-34</option>
-    <option>165/70R13</option>
-    <option>165/70R14</option>
-    <option>175/65R14</option>
-    <option>175/70R13</option>
-    <option>175/70R14</option>
-    <option>175/75R16C</option>
-    <option>185/70R14</option>
-    <option>185/70R15</option>
-    <option>185/75R16C</option>
-    <option>185/80R14C</option>
-    <option>195/50R15</option>
-    <option>195/55R15</option>
-    <option>195/55R16</option>
-    <option>195/60R15</option>
-    <option>195/60R16</option>
-    <option>195/65R15</option>
-    <option>195/70R15C</option>
-    <option>205/40R17</option>
-    <option>205/55R16</option>
-    <option>205/60R15</option>
-    <option>205/60R16</option>
-    <option>205/65R15</option>
-    <option>205/65R16</option>
-    <option>205/70R15</option>
-    <option>205/75R16C</option>
-    <option>215/55R17</option>
-    <option>215/60R16</option>
-    <option>215/65R16</option>
-    <option>215/70R15</option>
-    <option>215/75R17.5</option>
-    <option>225/55R17</option>
-    <option>225/60R18</option>
-    <option>225/70R15</option>
-    <option>225/70R19.5</option>
-    <option>225/75R16</option>
-    <option>225/75R16C</option>
-    <option>235/55R19</option>
-    <option>235/60R16</option>
-    <option>235/70R16</option>
-    <option>235/75R17.5</option>
-    <option>235/85R16</option>
-    <option>245/70R16</option>
-    <option>25x8.50-14</option>
-    <option>265/60R18</option>
-    <option>265/65R17</option>
-    <option>265/70R16</option>
-    <option>265/75R16</option>
-    <option>275/80R22.5</option>
-    <option>285/50R20</option>
-    <option>285/70R17</option>
-    <option>295/80R22.5</option>
-    <option>300-15</option>
-    <option>30x9.5R15</option>
-    <option>31x10.5R15</option>
-    <option>32x11.5R15</option>
-    <option>33x12.5R15</option>
-    <option>35x12.5R15</option>
-    <option>600-9</option>
-    <option>650-10</option>
-    <option>700-12</option>
-    <option>700-15</option>
-    <option>700-16</option>
-    <option>750-16</option>
-    <option>7.50-18C</option>
-    <option>7.50-20</option>
-    <option>8.25-16</option>
-    <option>8.25-20</option>
-    <option>8.25-R16C</option>
-    <option>8.50-12</option>
-    <option>9.00-20</option>
-    <option>9.5L-15</option>
-    <option>900-16</option>
-    <option>900-20</option>
-    <option>9.00R20</option>
-    <option>9.5R17.5</option>
-    <option>90/90-18 (Moto)</option>
-    <!-- ... (todas as medidas fornecidas estão listadas) ... -->
-  </select>
-  
-  <label for="quantidade">Quantidade de Pneus:</label>
-  <input type="number" id="quantidade" value="1" min="1" />
-  
-  <label for="valorUnitario">Valor Unitário (R$) do Pneu:</label>
-  <input type="number" id="valorUnitario" placeholder="R$" step="0.01" min="0" />
-  
-  <button onclick="calcularFrete()">Calcular Frete</button>
-  <button onclick="gerarPDF()">Gerar PDF</button>
-  
-  <div id="resultado"></div>
-  
+    <label><strong>Origem:</strong>
+      <input type="text" id="cidadeOrigem" value="R2 Logística - Navegantes - SC">
+    </label>
+
+    <label><strong>CEP de destino:</strong>
+      <input type="text" id="cepDestino" placeholder="Digite o CEP">
+    </label>
+    <button id="buscarCidade">Buscar Cidade</button>
+
+    <label><strong>Cidade detectada:</strong>
+      <input type="text" id="cidadeDestino" readonly>
+    </label>
+
+    <label><strong>Pneu:</strong>
+      <select id="pneuSelect"></select>
+    </label>
+
+    <label><strong>Quantidade:</strong>
+      <input type="number" id="quantidade" value="1">
+    </label>
+
+    <label><strong>Custo por unidade (R$):</strong>
+      <input type="number" id="custoPneu" value="100">
+    </label>
+
+    <button id="btnCalcular">Calcular Frete</button>
+
+    <h2>Resultado:</h2>
+    <pre id="resultado"></pre>
+  </div>
+
   <script>
-    // Objeto com dados técnicos dos pneus: peso (kg) e volume (m³) unitário de cada medida
-    const dadosPneus = {
-      "1100-20": { peso: 52.0, volume: 0.230 },     // Exemplos de valores, deve-se usar os fornecidos
-      "11L16":   { peso: 30.0, volume: 0.120 },
-      "12.4-24": { peso: 46.0, volume: 0.210 },
-      "12.4-28": { peso: 52.0, volume: 0.240 },
-      "12.4-32": { peso: 58.0, volume: 0.270 },
-      "12.4-36": { peso: 64.0, volume: 0.300 },
-      "14.9-24": { peso: 60.0, volume: 0.280 },
-      "14.9-28": { peso: 68.0, volume: 0.320 },
-      "14.9-30": { peso: 70.0, volume: 0.330 },
-      "15.5-38": { peso: 80.0, volume: 0.420 },
-      "16.9-28": { peso: 78.0, volume: 0.380 },
-      "16.9-30": { peso: 82.0, volume: 0.400 },
-      "16.9-34": { peso: 90.0, volume: 0.450 },
-      "165/70R13": { peso: 7.5, volume: 0.035 },
-      "165/70R14": { peso: 8.0, volume: 0.038 },
-      "175/65R14": { peso: 8.5, volume: 0.040 },
-      "175/70R13": { peso: 7.8, volume: 0.037 },
-      "175/70R14": { peso: 8.2, volume: 0.039 },
-      "175/75R16C": { peso: 11.0, volume: 0.045 },
-      "185/70R14": { peso: 9.0, volume: 0.041 },
-      "185/70R15": { peso: 9.5, volume: 0.045 },
-      "185/75R16C": { peso: 12.0, volume: 0.050 },
-      "185/80R14C": { peso: 11.5, volume: 0.048 },
-      "195/50R15": { peso: 8.7, volume: 0.034 },
-      "195/55R15": { peso: 9.0, volume: 0.035 },
-      "195/55R16": { peso: 9.3, volume: 0.037 },
-      "195/60R15": { peso: 9.5, volume: 0.039 },
-      "195/60R16": { peso: 10.0, volume: 0.041 },
-      "195/65R15": { peso: 9.8, volume: 0.042 },
-      "195/70R15C": { peso: 14.0, volume: 0.055 },
-      "205/40R17": { peso: 9.5, volume: 0.036 },
-      "205/55R16": { peso: 10.0, volume: 0.040 },
-      "205/60R15": { peso: 10.2, volume: 0.043 },
-      "205/60R16": { peso: 10.5, volume: 0.045 },
-      "205/65R15": { peso: 10.8, volume: 0.048 },
-      "205/65R16": { peso: 11.0, volume: 0.050 },
-      "205/70R15": { peso: 12.0, volume: 0.053 },
-      "205/75R16C": { peso: 15.0, volume: 0.060 },
-      "215/55R17": { peso: 11.0, volume: 0.045 },
-      "215/60R16": { peso: 11.5, volume: 0.050 },
-      "215/65R16": { peso: 12.0, volume: 0.053 },
-      "215/70R15": { peso: 12.5, volume: 0.056 },
-      "215/75R17.5": { peso: 20.0, volume: 0.080 },
-      "225/55R17": { peso: 12.5, volume: 0.050 },
-      "225/60R18": { peso: 13.0, volume: 0.058 },
-      "225/70R15": { peso: 14.0, volume: 0.060 },
-      "225/70R19.5": { peso: 22.0, volume: 0.090 },
-      "225/75R16": { peso: 15.5, volume: 0.065 },
-      "225/75R16C": { peso: 15.0, volume: 0.063 },
-      "235/55R19": { peso: 14.0, volume: 0.060 },
-      "235/60R16": { peso: 12.8, volume: 0.055 },
-      "235/70R16": { peso: 15.0, volume: 0.070 },
-      "235/75R17.5": { peso: 23.0, volume: 0.095 },
-      "235/85R16": { peso: 18.0, volume: 0.080 },
-      "245/70R16": { peso: 17.0, volume: 0.075 },
-      "25x8.50-14": { peso: 10.0, volume: 0.040 },
-      "265/60R18": { peso: 18.0, volume: 0.080 },
-      "265/65R17": { peso: 19.0, volume: 0.085 },
-      "265/70R16": { peso: 18.5, volume: 0.090 },
-      "265/75R16": { peso: 20.0, volume: 0.100 },
-      "275/80R22.5": { peso: 35.0, volume: 0.150 },
-      "285/50R20": { peso: 20.0, volume: 0.090 },
-      "285/70R17": { peso: 22.0, volume: 0.100 },
-      "295/80R22.5": { peso: 38.0, volume: 0.170 },
-      "300-15": { peso: 14.0, volume: 0.055 },
-      "30x9.5R15": { peso: 18.0, volume: 0.075 },
-      "31x10.5R15": { peso: 20.0, volume: 0.085 },
-      "32x11.5R15": { peso: 22.0, volume: 0.095 },
-      "33x12.5R15": { peso: 24.0, volume: 0.105 },
-      "35x12.5R15": { peso: 26.0, volume: 0.115 },
-      "600-9": { peso: 10.0, volume: 0.025 },
-      "650-10": { peso: 12.0, volume: 0.030 },
-      "700-12": { peso: 18.0, volume: 0.045 },
-      "700-15": { peso: 25.0, volume: 0.060 },
-      "700-16": { peso: 26.0, volume: 0.065 },
-      "750-16": { peso: 28.0, volume: 0.070 },
-      "7.50-18C": { peso: 30.0, volume: 0.075 },
-      "7.50-20": { peso: 32.0, volume: 0.080 },
-      "8.25-16": { peso: 34.0, volume: 0.090 },
-      "8.25-20": { peso: 40.0, volume: 0.110 },
-      "8.25-R16C": { peso: 36.0, volume: 0.095 },
-      "8.50-12": { peso: 14.0, volume: 0.040 },
-      "9.00-20": { peso: 45.0, volume: 0.130 },
-      "9.5L-15": { peso: 16.0, volume: 0.060 },
-      "900-16": { peso: 30.0, volume: 0.100 },
-      "900-20": { peso: 50.0, volume: 0.150 },
-      "9.00R20": { peso: 48.0, volume: 0.140 },
-      "9.5R17.5": { peso: 20.0, volume: 0.075 },
-      "90/90-18 (Moto)": { peso: 4.0, volume: 0.010 }
-      // ... (todas as medidas fornecidas preenchidas) ...
+    const pneus = {
+      "165/70R13": { dimensoes: [0.549, 0.549, 0.165], peso: 6.2 },
+"165/70R14": { dimensoes: [0.58, 0.58, 0.165], peso: 7.0 },
+"175/70 Rr13": { dimensoes: [0.575, 0.575, 0.175], peso: 6.97 },
+"175/65 R14": { dimensoes: [0.6, 0.6, 0.177], peso: 6.5 },
+"185/70 R14": { dimensoes: [0.615, 0.615, 0.185], peso: 7.0 },
+"175/70 R14": { dimensoes: [0.6, 0.6, 0.17], peso: 6.5 },
+"175/80R14": { dimensoes: [0.63, 0.63, 0.17], peso: 8.75 },
+"185 r14c": { dimensoes: [0.66, 0.66, 0.2], peso: 8.0 },
+"185/65 r15": { dimensoes: [0.62, 0.62, 0.185], peso: 7.7 },
+"185/65r14": { dimensoes: [0.596, 0.596, 0.185], peso: 7.8 },
+"195/55R15": { dimensoes: [0.59, 0.59, 0.195], peso: 8.0 },
+"195/60R15": { dimensoes: [0.615, 0.615, 0.195], peso: 7.8 },
+"195/65 R15": { dimensoes: [0.634, 0.634, 0.195], peso: 8.4 },
+"185/60 r15": { dimensoes: [0.603, 0.603, 0.185], peso: 7.0 },
+"195/55R16": { dimensoes: [0.62, 0.62, 0.195], peso: 8.4 },
+"205/60r16": { dimensoes: [0.65, 0.65, 0.205], peso: 9.6 },
+"205/60R15": { dimensoes: [0.6, 0.6, 0.21], peso: 12.0 },
+"215/75R16": { dimensoes: [0.73, 0.73, 0.215], peso: 14.3 },
+"12.5/80-18": { dimensoes: [0.01, 0.01, 0.31], peso: 40.0 },
+"10.16.5": { dimensoes: [0.71, 0.71, 0.27], peso: 25.0 },
+"1300/24": { dimensoes: [0.013, 0.013, 0.24], peso: 73.0 },
+"215/65 R16": { dimensoes: [0.68, 0.21, 0.68], peso: 10.05 },
+"1000X20": { dimensoes: [0.01, 0.01, 0.26], peso: 46.0 },
+"215/65R16": { dimensoes: [0.69, 0.69, 0.22], peso: 10.3 },
+"265/70 r16": { dimensoes: [0.777, 0.265, 0.777], peso: 17.49 },
+"275/80 R22,5": { dimensoes: [0.01, 0.01, 0.28], peso: 48.55 },
+"205/75 R16": { dimensoes: [0.72, 0.72, 0.2], peso: 15.0 },
+"295/80 R22.5": { dimensoes: [0.011, 0.011, 0.3], peso: 54.0 },
+"205/75 r16c": { dimensoes: [0.714, 0.714, 0.205], peso: 15.7 },
+"90/90-19": { dimensoes: [0.64, 0.64, 0.09], peso: 3.67 },
+"195/70 R15": { dimensoes: [0.69, 0.69, 0.19], peso: 10.9 },
+"195/75 R16": { dimensoes: [0.698, 0.698, 0.095], peso: 14.9 },
+"215/80R16": { dimensoes: [0.75, 0.75, 0.21], peso: 15.9 },
+"225/65R17": { dimensoes: [0.72, 0.72, 0.23], peso: 13.0 },
+"225/65 R16C": { dimensoes: [0.7, 0.7, 0.23], peso: 15.8 },
+"225/75R16": { dimensoes: [0.74, 0.74, 0.225], peso: 17.7 },
+"245/70 R16": { dimensoes: [0.75, 0.75, 0.245], peso: 15.5 },
+"255/70R16": { dimensoes: [0.75, 0.75, 0.255], peso: 17.0 },
+"205/70 R15C": { dimensoes: [0.668, 0.668, 0.205], peso: 13.0 },
+"900/20": { dimensoes: [0.965, 0.965, 0.228], peso: 38.2 },
+"205/55r16": { dimensoes: [0.63, 0.63, 0.205], peso: 9.0 },
+"14.00x24": { dimensoes: [0.013, 0.013, 0.3], peso: 82.0 },
+"12.4-24": { dimensoes: [0.012, 0.012, 0.31], peso: 49.0 },
+"14.9-26": { dimensoes: [1.32, 1.32, 0.378], peso: 60.0 },
+"14.9-28": { dimensoes: [1.38, 1.38, 0.378], peso: 75.58 },
+"14.9-24": { dimensoes: [1.253, 1.253, 0.396], peso: 54.7 },
+"19.5-24": { dimensoes: [1.308, 1.308, 0.495], peso: 86.6 },
+"17.5/25": { dimensoes: [1.25, 1.25, 0.37], peso: 90.0 },
+"18.4-34": { dimensoes: [0.016, 0.016, 0.47], peso: 115.0 },
+"18.04/30": { dimensoes: [0.015, 0.015, 0.477], peso: 101.0 },
+"12.16-5": { dimensoes: [0.715, 0.715, 0.275], peso: 35.0 },
+"235/75 r15": { dimensoes: [0.734, 0.734, 0.235], peso: 14.47 },
+"245/75R16": { dimensoes: [0.774, 0.774, 0.245], peso: 16.5 },
+"16.9-24": { dimensoes: [1.332, 1.332, 0.449], peso: 77.8 },
+"23.1-26": { dimensoes: [1.605, 0.587, 1.605], peso: 155.95 },
+"23.1-30": { dimensoes: [1.7, 1.7, 0.57], peso: 148.0 },
+"10.16-5": { dimensoes: [0.92, 0.92, 0.254], peso: 28.3 },
+"6.00-16": { dimensoes: [0.72, 0.72, 0.16], peso: 11.0 },
+"700-16": { dimensoes: [0.76, 0.76, 0.18], peso: 16.8 },
+"750-16": { dimensoes: [0.79, 0.79, 0.2], peso: 20.0 },
+"265/70R16": { dimensoes: [0.777, 0.777, 0.265], peso: 17.0 },
+"16.9-28": { dimensoes: [1.42, 0.43, 1.42], peso: 86.0 },
+"285/70R19,5": { dimensoes: [0.89, 0.89, 0.28], peso: 62.0 },
+"235/55 R18": { dimensoes: [0.72, 0.72, 0.24], peso: 19.0 },
+"235/65R16": { dimensoes: [0.76, 0.76, 0.24], peso: 16.5 },
+"235/85 r16": { dimensoes: [0.81, 0.81, 0.23], peso: 20.0 },
+"13.6-38": { dimensoes: [1.57, 1.57, 0.36], peso: 77.0 },
+"265/65R17": { dimensoes: [0.74, 0.74, 0.21], peso: 19.1 },
+"225/70R16": { dimensoes: [0.72, 0.72, 0.22], peso: 13.5 },
+"225/55 R18": { dimensoes: [0.75, 0.75, 0.3], peso: 11.96 },
+"225/60 R18": { dimensoes: [0.74, 0.74, 0.24], peso: 13.0 },
+"110/90-17 (Moto)": { dimensoes: [0.635, 0.635, 0.113], peso: 4.3 },
+"16.9-30": { dimensoes: [1.621, 1.621, 0.429], peso: 61.0 },
+"185/60R14": { dimensoes: [0.6, 0.6, 0.185], peso: 7.7 },
+"23.5-25": { dimensoes: [1.617, 0.597, 1.617], peso: 386.0 },
+"265/70 r17": { dimensoes: [0.8, 0.8, 0.265], peso: 19.0 },
+"265/75R16": { dimensoes: [0.8, 0.8, 0.26], peso: 23.0 },
+"235/70R16": { dimensoes: [0.74, 0.74, 0.235], peso: 20.0 },
+"10.5/80-18": { dimensoes: [0.883, 0.883, 0.266], peso: 21.0 },
+"185/70R13": { dimensoes: [0.6, 0.6, 0.18], peso: 7.0 },
+"13.00-24": { dimensoes: [1.23, 1.23, 0.74], peso: 74.0 },
+"1100-22": { dimensoes: [1.07, 1.07, 0.27], peso: 50.0 },
+"265/60 R18": { dimensoes: [0.78, 0.78, 0.27], peso: 17.4 },
+"205/55 R17": { dimensoes: [0.65, 0.65, 0.21], peso: 11.0 },
+"12.00R20": { dimensoes: [0.011, 0.011, 0.3], peso: 74.6 },
+"750-18": { dimensoes: [0.838, 0.838, 0.19], peso: 25.0 },
+"900-16": { dimensoes: [0.855, 0.855, 0.256], peso: 23.0 },
+"20.5-25": { dimensoes: [1.32, 1.32, 0.5], peso: 132.0 },
+"195/60R16": { dimensoes: [0.64, 0.64, 0.19], peso: 8.6 },
     };
-    
-    // Objeto com a tabela de frete (Logdi) por estado: faixas de peso e valores R$/kg, excedente (R$/ton), e percentuais de frete-valor
-    const tabelaFrete = {
-      "AC": { faixas: [30, 50, 70, 100], valores: [139.94, 159.15, 203.06, 274.40], excedente: 2318.40, adValorem: 0.0051 },
-      "AL": { faixas: [30, 50, 70, 100], valores: [118.00, 134.20, 171.23, 231.38], excedente: 1982.40, adValorem: 0.0051 },
-      "AM": { faixas: [30, 50, 70, 100], valores: [139.94, 159.15, 203.06, 274.40], excedente: 2318.40, adValorem: 0.0068 },
-      "AP": { faixas: [30, 50, 70, 100], valores: [99.10, 112.69, 143.79, 194.30], excedente: 1713.60, adValorem: 0.0051 },
-      "BA": { faixas: [30, 50, 70, 100], valores: [113.47, 129.04, 164.64, 222.49], excedente: 1892.80, adValorem: 0.0051 },
-      "CE": { faixas: [30, 50, 70, 100], valores: [130.86, 148.83, 189.88, 256.59], excedente: 2049.60, adValorem: 0.0063 },
-      "DF": { faixas: [30, 50, 70, 100], valores: [92.67, 105.39, 134.46, 182.20], excedente: 1686.20, adValorem: 0.0042 },
-      "ES": { faixas: [30, 50, 70, 100], valores: [76.71, 87.24, 111.29, 150.39], excedente: 1366.40, adValorem: 0.0049 },
-      "GO": { faixas: [30, 50, 70, 100], valores: [76.71, 87.24, 111.29, 150.39], excedente: 1276.80, adValorem: 0.0049 },
-      "MA": { faixas: [30, 50, 70, 100], valores: [105.15, 119.58, 152.57, 206.17], excedente: 1915.20, adValorem: 0.0046 },
-      "MG": { faixas: [30, 50, 70, 100], valores: [64.90, 73.81, 94.17, 127.27], excedente: 1008.00, adValorem: 0.0035 },
-      "MS": { faixas: [30, 50, 70, 100], valores: [85.48, 97.22, 124.03, 167.61], excedente: 1579.20, adValorem: 0.0063 },
-      "MT": { faixas: [30, 50, 70, 100], valores: [95.09, 108.14, 137.96, 186.44], excedente: 1758.40, adValorem: 0.0063 },
-      "PA": { faixas: [30, 50, 70, 100], valores: [99.10, 112.69, 143.79, 194.30], excedente: 1713.60, adValorem: 0.0051 },
-      "PB": { faixas: [30, 50, 70, 100], valores: [120.28, 136.79, 174.52, 235.83], excedente: 2016.00, adValorem: 0.0051 },
-      "PE": { faixas: [30, 50, 70, 100], valores: [118.00, 134.20, 171.23, 231.38], excedente: 1982.40, adValorem: 0.0051 },
-      "PI": { faixas: [30, 50, 70, 100], valores: [148.27, 168.62, 215.13, 290.71], excedente: 2318.40, adValorem: 0.0057 },
-      "PR": { faixas: [30, 50, 70, 100], valores: [58.96, 67.05, 87.79, 115.61], excedente: 1019.20, adValorem: 0.0049 },
-      "RJ": { faixas: [30, 50, 70, 100], valores: [63.24, 71.92, 91.76, 124.00], excedente: 1243.20, adValorem: 0.0049 },
-      "RN": { faixas: [30, 50, 70, 100], valores: [120.28, 136.79, 174.52, 235.83], excedente: 2016.00, adValorem: 0.0040 },
-      "RO": { faixas: [30, 50, 70, 100], valores: [125.57, 142.80, 182.20, 246.21], excedente: 1971.20, adValorem: 0.0057 },
-      "RR": { faixas: [30, 50, 70, 100], valores: [139.94, 159.15, 203.06, 274.40], excedente: 2318.40, adValorem: 0.0068 },
-      "RS": { faixas: [30, 50, 70, 100], valores: [53.75, 61.13, 78.00, 105.40], excedente: 896.00, adValorem: 0.0049 },
-      "SC": { faixas: [30, 50, 70, 100], valores: [48.55, 55.22, 70.44, 95.19], excedente: 784.00, adValorem: 0.0035 },
-      "SE": { faixas: [30, 50, 70, 100], valores: [113.47, 129.04, 164.64, 222.49], excedente: 1892.80, adValorem: 0.0051 },
-      "SP": { faixas: [30, 50, 70, 100], valores: [58.96, 67.05, 85.55, 115.61], excedente: 1220.80, adValorem: 0.0049 },
-      "TO": { faixas: [30, 50, 70, 100], valores: [118.00, 134.20, 171.23, 231.38], excedente: 1982.40, adValorem: 0.0090 }
-    };
-    
-    // Função principal de cálculo do frete
-    async function calcularFrete() {
-      const cepInput = document.getElementById("cep").value.trim();
-      const medida = document.getElementById("medida").value;
-      const quantidade = parseInt(document.getElementById("quantidade").value) || 0;
-      const valorUnit = parseFloat(document.getElementById("valorUnitario").value) || 0;
-      const resultadoDiv = document.getElementById("resultado");
-      resultadoDiv.innerHTML = ""; // limpa resultado anterior
-      
-      if (!cepInput || quantidade <= 0 || isNaN(valorUnit)) {
-        resultadoDiv.textContent = "Por favor, preencha CEP, quantidade e valor unitário corretamente.";
-        return;
-      }
-      
-      // Formatar CEP removendo traço se houver
-      const cep = cepInput.replace(/[^0-9]/g, "");
-      let estado = "";
-      let cidade = "";
-      
-      try {
-        // Tenta consulta ViaCEP
-        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-        if (response.ok) {
-          const dadosCEP = await response.json();
-          if (!dadosCEP.erro) {
-            estado = dadosCEP.uf || "";
-            cidade = dadosCEP.localidade || "";
-          }
-        }
-      } catch (e) {
-        // Em caso de erro na consulta, continuará para fallback
-      }
-      
-      // Fallback: determina estado pelos primeiros dígitos do CEP se não conseguiu via API
-      if (!estado) {
-        const prefix2 = parseInt(cep.substring(0, 2));
-        if (prefix2 >= 1 && prefix2 <= 19) estado = "SP";
-        else if (prefix2 >= 20 && prefix2 <= 28) estado = "RJ";
-        else if (prefix2 === 29) estado = "ES";
-        else if (prefix2 >= 30 && prefix2 <= 39) estado = "MG";
-        else if (prefix2 >= 40 && prefix2 <= 49) {
-          estado = (prefix2 === 49) ? "SE" : "BA";
-        }
-        else if (prefix2 >= 50 && prefix2 <= 56) estado = "PE";
-        else if (prefix2 === 57) estado = "AL";
-        else if (prefix2 === 58) estado = "PB";
-        else if (prefix2 === 59) estado = "RN";
-        else if (prefix2 >= 60 && prefix2 <= 62) estado = "CE";
-        else if (prefix2 === 63) estado = "PI";
-        else if (prefix2 === 64) estado = "PI";
-        else if (prefix2 === 65) estado = "MA";
-        else if (prefix2 >= 66 && prefix2 <= 68) {
-          // Faixa 689xx é AP, o restante PA
-          if (cep.substring(0, 3) === "689") estado = "AP";
-          else estado = "PA";
-        }
-        else if (prefix2 === 69) {
-          const prefix3 = parseInt(cep.substring(0, 3));
-          if (prefix3 === 699) estado = "AC";
-          else if (prefix3 === 693) estado = "RR";
-          else estado = "AM"; // 690-692, 694-698 -> AM
-        }
-        else if (prefix2 === 70 || prefix2 === 71 || prefix2 === 72) {
-          // 70000-72799 DF, 72800+ GO
-          const numCep = parseInt(cep);
-          if (numCep <= 72799999) estado = "DF";
-          else estado = "GO";
-        }
-        else if (prefix2 >= 73 && prefix2 <= 76) estado = "GO";
-        else if (prefix2 === 77) estado = "TO";
-        else if (prefix2 === 78) estado = "MT";
-        else if (prefix2 === 79) estado = "MS";
-        else if (prefix2 >= 80 && prefix2 <= 87) estado = "PR";
-        else if (prefix2 >= 88 && prefix2 <= 89) estado = "SC";
-        else if (prefix2 >= 90 && prefix2 <= 99) estado = "RS";
-      }
-      
-      // Verifica se estado obtido está na tabela
-      if (!estado || !tabelaFrete[estado]) {
-        resultadoDiv.textContent = "Não foi possível determinar o estado do CEP informado.";
-        return;
-      }
-      
-      // Cálculo de pesos
-      const pesoUnit = dadosPneus[medida] ? dadosPneus[medida].peso : 0;
-      const volumeUnit = dadosPneus[medida] ? dadosPneus[medida].volume : 0;
-      const pesoReal = pesoUnit * quantidade;
-      const pesoCubado = volumeUnit * quantidade * 300;  // fator 300 kg/m³
-      const pesoTarifado = (pesoCubado > pesoReal) ? pesoCubado : pesoReal;
-      
-      // Determinação do frete peso pela tabela
-      const infoFrete = tabelaFrete[estado];
-      const faixas = infoFrete.faixas;
-      const valores = infoFrete.valores;
-      let fretePeso = 0;
-      if (pesoTarifado <= faixas[0]) {
-        fretePeso = pesoTarifado * valores[0];
-      } else if (pesoTarifado <= faixas[1]) {
-        fretePeso = pesoTarifado * valores[1];
-      } else if (pesoTarifado <= faixas[2]) {
-        fretePeso = pesoTarifado * valores[2];
-      } else if (pesoTarifado <= faixas[3]) {
-        fretePeso = pesoTarifado * valores[3];
-      } else {
-        // acima da última faixa (100kg): usa valor excedente por tonelada
-        const excessoTon = pesoTarifado / 1000; // peso em toneladas
-        fretePeso = excessoTon * infoFrete.excedente;
-      }
-      // Aplica frete mínimo de R$ 280 se necessário
-      if (fretePeso < 280) fretePeso = 280;
-      
-      // Cálculo das taxas adicionais
-      // Pedágio: R$4,69 por fração de 100kg
-      const fracoes100 = Math.ceil(pesoTarifado / 100);
-      const pedagio = 4.69 * fracoes100;
-      // GRIS: 0,2% do valor mercadoria, mínimo R$4,97
-      const valorMercadoria = valorUnit * quantidade;
-      let gris = valorMercadoria * 0.002;
-      if (gris < 4.97) gris = 4.97;
-      // TAS: R$4,70 (taxa de segurança)
-      const tas = 4.70;
-      // Despacho: R$17,45 (taxa fixa de despacho)
-      const despacho = 17.45;
-      // TRT: R$82,00 (taxa de restrição de trânsito)
-      const trt = 82.00;
-      // Frete Valor: percentual ad valorem sobre valor da mercadoria
-      const percentAd = infoFrete.adValorem || 0;  // percentual já em decimal (ex: 0.0051 para 0,51%)
-      const freteValor = valorMercadoria * percentAd;
-      
-      // Total final
-      const total = fretePeso + pedagio + gris + tas + despacho + trt + freteValor;
-      
-      // Monta a saída formatada
-      let saida = "";
-      saida += "Destino: ";
-      if (cidade) {
-        saida += cidade + " - " + estado + "\\n";
-      } else {
-        saida += estado + "\\n";
-      }
-      saida += "Medida: " + medida + "\\n";
-      saida += "Peso Real: " + pesoReal.toFixed(1) + " kg\\n";
-      saida += "Peso Cubado: " + pesoCubado.toFixed(1) + " kg\\n";
-      saida += "Peso Tarifado: " + pesoTarifado.toFixed(1) + " kg\\n";
-      saida += "Frete Peso: R$ " + fretePeso.toFixed(2) + "\\n";
-      saida += "Pedágio: R$ " + pedagio.toFixed(2) + "\\n";
-      saida += "GRIS: R$ " + gris.toFixed(2) + "\\n";
-      saida += "TAS: R$ " + tas.toFixed(2) + "\\n";
-      saida += "Despacho: R$ " + despacho.toFixed(2) + "\\n";
-      saida += "TRT: R$ " + trt.toFixed(2) + "\\n";
-      saida += "Frete Valor: R$ " + freteValor.toFixed(2) + "\\n";
-      saida += "Total: R$ " + total.toFixed(2);
-      
-      // Exibe no div resultado (convertendo quebras de linha para <br>)
-      resultadoDiv.innerHTML = "<pre style='white-space:pre-wrap;'>" + saida + "</pre>";
-    }
-    
-    function gerarPDF() {
-      alert("Função de geração de PDF não implementada neste exemplo.");
-    }
-  </script>
 
+const tabelasFrete = {
+  AC: { faixa: [{limite:30,valorKg:148.2}, {limite:50,valorKg:168.6}, {limite:70,valorKg:215.1}, {limite:100,valorKg:290.7}], valorExcedente: 2318.4, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  AL: { AL1: { cidades: ["Coqueiro Seco", "Maceió", "Marechal Deodoro", "Pilar", "Rio Largo", "Santa Luzia do Norte", "São Miguel dos Campos", "Satuba"],
+    faixa: [{limite:30, valorKg:83.2}, {limite:50,valorKg:94.6}, {limite:70,valorKg:120.7}, {limite:100,valorKg:163.1}], valorExcedente: 1534.4, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  default: {  faixa: [{ limite:30,valorKg:118.0}, {limite:50,valorKg:134.2}, {limite:70,valorKg:171.2}, {limite:100,valorKg:231.3}], valorExcedente: 1971.2, gris: 0.002, grisMin: 4.97, adVal: 0.0051, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69} },
+  AM: { faixa: [{limite:30,valorKg:300.0}, {limite:50,valorKg:400.0}, {limite:70,valorKg:440.0}, {limite:100,valorKg:590.0}], valorExcedente: 4320.0, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  AP: { faixa: [{limite:30,valorKg:300.0}, {limite:50,valorKg:400.0}, {limite:70,valorKg:440.0}, {limite:100,valorKg:590.0}], valorExcedente: 4330.0, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  BA: { faixa: [{limite:30,valorKg:113.4}, {limite:50,valorKg:129.0}, {limite:70,valorKg:164.6}, {limite:100,valorKg:222.4}], valorExcedente: 1892.8, gris: 0.002, grisMin: 4.97, adVal: 0.0051, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  BA: { faixa: [{limite:30,valorKg:71.8}, {limite:50,valorKg:81.7}, {limite:70,valorKg:104.2}, {limite:100,valorKg:140.9}], valorExcedente: 1321.6, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  BA: { faixa: [{limite:30,valorKg:92.6}, {limite:50,valorKg:105.3}, {limite:70,valorKg:134.4}, {limite:100,valorKg:181.7}], valorExcedente: 1545.6, gris: 0.002, grisMin: 4.97, adVal: 0.0051, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  CE: { faixa: [{limite:30,valorKg:130.8}, {limite:50,valorKg:148.8}, {limite:70,valorKg:189.8}, {limite:100,valorKg:256.5}], valorExcedente: 2049.6, gris: 0.002, grisMin: 4.97, adVal: 0.0051, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  CE: { faixa: [{limite:30,valorKg:91.5}, {limite:50,valorKg:104.0}, {limite:70,valorKg:132.8}, {limite:100,valorKg:179.4}], valorExcedente: 1691.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  DF: { faixa: [{limite:30,valorKg:71.8}, {limite:50,valorKg:81.7}, {limite:70,valorKg:104.2}, {limite:100,valorKg:140.9}], valorExcedente: 1075.2, gris: 0.002, grisMin: 4.97, adVal: 0.0042, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  ES: { faixa: [{limite:30,valorKg:76.7}, {limite:50,valorKg:87.2}, {limite:70,valorKg:111.2}, {limite:100,valorKg:150.3}], valorExcedente: 1366.4, gris: 0.002, grisMin: 4.97, adVal: 0.0049, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  ES: { faixa: [{limite:30,valorKg:64.9}, {limite:50,valorKg:73.8}, {limite:70,valorKg:94.1}, {limite:100,valorKg:127.2}], valorExcedente: 1052.8, gris: 0.002, grisMin: 4.97, adVal: 0.0035, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  GO: { faixa: [{limite:30,valorKg:76.7}, {limite:50,valorKg:87.2}, {limite:70,valorKg:111.2}, {limite:100,valorKg:150.3}], valorExcedente: 1276.8, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  GO: { faixa: [{limite:30,valorKg:64.9}, {limite:50,valorKg:73.8}, {limite:70,valorKg:94.1}, {limite:100,valorKg:127.2}], valorExcedente: 1075.2, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  MA: { faixa: [{limite:30,valorKg:148.2}, {limite:50,valorKg:168.6}, {limite:70,valorKg:215.1}, {limite:100,valorKg:290.7}], valorExcedente: 2318.4, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  MA: { faixa: [{limite:30,valorKg:105.1}, {limite:50,valorKg:119.5}, {limite:70,valorKg:152.5}, {limite:100,valorKg:206.1}], valorExcedente: 1915.2, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  MG: { faixa: [{limite:30,valorKg:76.7}, {limite:50,valorKg:87.2}, {limite:70,valorKg:111.2}, {limite:100,valorKg:150.3}], valorExcedente: 1243.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  MG: { faixa: [{limite:30,valorKg:64.9}, {limite:50,valorKg:73.8}, {limite:70,valorKg:94.1}, {limite:100,valorKg:127.2}], valorExcedente: 1008.0, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  MG: { faixa: [{limite:30,valorKg:71.8}, {limite:50,valorKg:81.7}, {limite:70,valorKg:104.2}, {limite:100,valorKg:140.9}], valorExcedente: 1075.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  MS: { faixa: [{limite:30,valorKg:85.4}, {limite:50,valorKg:97.2}, {limite:70,valorKg:124.0}, {limite:100,valorKg:167.6}], valorExcedente: 1579.2, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  MT: { faixa: [{limite:30,valorKg:113.4}, {limite:50,valorKg:129.0}, {limite:70,valorKg:164.6}, {limite:100,valorKg:222.4}], valorExcedente: 1960.0, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PA: { faixa: [{limite:30,valorKg:139.9}, {limite:50,valorKg:159.1}, {limite:70,valorKg:203.0}, {limite:100,valorKg:274.0}], valorExcedente: 2094.4, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PA: { faixa: [{limite:30,valorKg:99.1}, {limite:50,valorKg:112.6}, {limite:70,valorKg:143.7}, {limite:100,valorKg:194.3}], valorExcedente: 1713.6, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PA: { faixa: [{limite:30,valorKg:125.5}, {limite:50,valorKg:142.8}, {limite:70,valorKg:182.2}, {limite:100,valorKg:246.2}], valorExcedente: 1971.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PB: { faixa: [{limite:30,valorKg:120.2}, {limite:50,valorKg:136.7}, {limite:70,valorKg:174.5}, {limite:100,valorKg:235.8}], valorExcedente: 2016.0, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PB: { faixa: [{limite:30,valorKg:90.0}, {limite:50,valorKg:102.0}, {limite:70,valorKg:130.6}, {limite:100,valorKg:176.5}], valorExcedente: 1657.6, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PE: { faixa: [{limite:30,valorKg:118.0}, {limite:50,valorKg:134.2}, {limite:70,valorKg:171.2}, {limite:100,valorKg:231.3}], valorExcedente: 1982.4, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PE: { faixa: [{limite:30,valorKg:85.4}, {limite:50,valorKg:97.2}, {limite:70,valorKg:124.0}, {limite:100,valorKg:167.6}], valorExcedente: 1579.2, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PI: { faixa: [{limite:30,valorKg:148.2}, {limite:50,valorKg:168.6}, {limite:70,valorKg:215.1}, {limite:100,valorKg:290.7}], valorExcedente: 2318.4, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PI: { faixa: [{limite:30,valorKg:105.1}, {limite:50,valorKg:119.5}, {limite:70,valorKg:152.5}, {limite:100,valorKg:206.1}], valorExcedente: 1915.2, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PR: { faixa: [{limite:30,valorKg:58.9}, {limite:50,valorKg:67.0},{limite:70,valorKg:87.7},{limite:100,valorKg:115.6}], valorExcedente: 1019.2, gris: 0.002, grisMin: 4.97, adVal: 0.0049, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PR: { faixa: [{limite:30,valorKg:48.55}, {limite:50,valorKg:55.2},{limite:70,valorKg:70.4},{limite:100,valorKg:95.2}], valorExcedente: 560.0, gris: 0.002, grisMin: 4.97, adVal: 0.0035, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PR: { faixa: [{limite:30,valorKg:53.7}, {limite:50,valorKg:61.1},{limite:70,valorKg:78.0},{limite:100,valorKg:105.3}], valorExcedente: 806.4, gris: 0.002, grisMin: 4.97, adVal: 0.0049, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RJ: { faixa: [{limite:30,valorKg:63.2}, {limite:50,valorKg:71.9}, {limite:70,valorKg:91.7}, {limite:100,valorKg:124.0}], valorExcedente: 1243.2, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RJ: { faixa: [{limite:30,valorKg:117.2}, {limite:50,valorKg:133.3}, {limite:70,valorKg:170.1}, {limite:100,valorKg:229.9}], valorExcedente: 1971.2, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RN: { faixa: [{limite:30,valorKg:74.0}, {limite:50,valorKg:79.0}, {limite:70,valorKg:89.0}, {limite:100,valorKg:109.0}], valorExcedente: 1490.0, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RO: { faixa: [{limite:30,valorKg:75.0}, {limite:50,valorKg:80.0}, {limite:70,valorKg:90.0}, {limite:100,valorKg:110.0}], valorExcedente: 1500.0, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RR: { faixa: [{limite:30,valorKg:376.0}, {limite:50,valorKg:551.0}, {limite:70,valorKg:801.0}, {limite:100,valorKg:1511.0}], valorExcedente: 5510.0, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RS: { faixa: [{limite:30,valorKg:76.7}, {limite:50,valorKg:87.2}, {limite:70,valorKg:111.2}, {limite:100,valorKg:150.3}], valorExcedente: 1243.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RS: { faixa: [{limite:30,valorKg:58.96}, {limite:50,valorKg:67.0}, {limite:70,valorKg:85.5}, {limite:100,valorKg:115.6}], valorExcedente: 851.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RS: { faixa: [{limite:30,valorKg:71.8}, {limite:50,valorKg:81.7}, {limite:70,valorKg:104.2}, {limite:100,valorKg:140.9}], valorExcedente: 996.8, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SC: { faixa: [{limite:30,valorKg:64.9}, {limite:50,valorKg:73.8}, {limite:70,valorKg:94.1}, {limite:100,valorKg:127.2}], valorExcedente: 1008.0, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SC: { faixa: [{limite:30,valorKg:58.9}, {limite:50,valorKg:67.0}, {limite:70,valorKg:85.5}, {limite:100,valorKg:115.6}], valorExcedente: 884.8, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SC: { faixa: [{limite:30,valorKg:53.75}, {limite:50,valorKg:61.1}, {limite:70,valorKg:77.8}, {limite:100,valorKg:105.3}], valorExcedente: 582.4, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SE: { faixa: [{limite:30,valorKg:113.4}, {limite:50,valorKg:129.0}, {limite:70,valorKg:164.6}, {limite:100,valorKg:222.4}], valorExcedente: 1780.8, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SE: { faixa: [{limite:30,valorKg:80.1}, {limite:50,valorKg:91.1}, {limite:70,valorKg:116.3}, {limite:100,valorKg:157.2}], valorExcedente: 1478.4, gris: 0.002, grisMin: 4.97, adVal: 0.005, tde: 280, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SP: { faixa: [{limite:30,valorKg:58.9}, {limite:50,valorKg:67.0}, {limite:70,valorKg:85.5}, {limite:100,valorKg:115.6}], valorExcedente: 1220.8, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SP: { faixa: [{limite:30,valorKg:71.8}, {limite:50,valorKg:81.7}, {limite:70,valorKg:104.2}, {limite:100,valorKg:140.9}], valorExcedente: 1321.6, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SP: { faixa: [{limite:30,valorKg:76.7}, {limite:50,valorKg:87.2}, {limite:70,valorKg:111.2}, {limite:100,valorKg:150.3}], valorExcedente: 1411.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SP: { faixa: [{limite:30,valorKg:48.5}, {limite:50,valorKg:55.2}, {limite:70,valorKg:70.4}, {limite:100,valorKg:95.1}], valorExcedente: 784.0, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SP: { faixa: [{limite:30,valorKg:95.0}, {limite:50,valorKg:108.1}, {limite:70,valorKg:137.9}, {limite:100,valorKg:186.4}], valorExcedente: 1758.4, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SP: { faixa: [{limite:30,valorKg:53.7}, {limite:50,valorKg:61.1}, {limite:70,valorKg:78.0}, {limite:100,valorKg:105.4}], valorExcedente: 896.0, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  TO: { faixa: [{limite:30,valorKg:118.0}, {limite:50,valorKg:134.2}, {limite:70,valorKg:171.2}, {limite:100,valorKg:231.3}], valorExcedente: 1982.4, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  TO: { faixa: [{limite:30,valorKg:85.4}, {limite:50,valorKg:97.2}, {limite:70,valorKg:124.0}, {limite:100,valorKg:167.6}], valorExcedente: 1579.2, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  TO: { faixa: [{limite:30,valorKg:101.7}, {limite:50,valorKg:115.7}, {limite:70,valorKg:147.6}, {limite:100,valorKg:234.7}], valorExcedente: 1713.6, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 }
+};
+
+ for (const [modelo, dados] of Object.entries(pneus)) {
+      const option = document.createElement('option');
+      option.value = modelo;
+      option.textContent = modelo;
+      document.getElementById('pneuSelect').appendChild(option);
+    }
+
+    function consultarCEP() {
+      const cep = document.getElementById('cepDestino').value.replace(/\D/g, '');
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.erro) {
+            document.getElementById('cidadeDestino').value = 'CEP inválido';
+          } else {
+            document.getElementById('cidadeDestino').value = `${data.localidade} - ${data.uf}`;
+          }
+        })
+        .catch(() => {
+          document.getElementById('cidadeDestino').value = 'Erro ao buscar CEP';
+        });
+    }
+
+   function calcularFrete() {
+  const origem = document.getElementById('cidadeOrigem').value;
+  const destino = document.getElementById('cidadeDestino').value;
+  const modelo = document.getElementById('pneuSelect').value;
+  const qtd = parseInt(document.getElementById('quantidade').value);
+  const custoUnitario = parseFloat(document.getElementById('custoPneu').value);
+  const resultado = document.getElementById('resultado');
+
+  if (!modelo || !pneus[modelo] || !destino || isNaN(qtd) || isNaN(custoUnitario)) {
+    resultado.innerHTML = 'Preencha todos os campos corretamente.';
+    return;
+  }
+
+  const pneu = pneus[modelo];
+  const pesoTotal = pneu.peso * qtd;
+  const volume = pneu.dimensoes.reduce((a, b) => a * b, 1) * qtd;
+  const pesoCubado = volume * 300;
+  const pesoConsiderado = Math.max(pesoTotal, pesoCubado);
+
+  // Determina o estado do destino
+  const estadoDestino = destino.split(' - ')[1]?.trim().toUpperCase();
+  let tabela = tabelasFrete[estadoDestino];
+
+  // Se for Alagoas, checa se é AL1
+  if (estadoDestino === 'AL' && tabelasFrete.AL?.AL1) {
+    const cidade = destino.split(' - ')[0].trim().toLowerCase();
+    const match = tabelasFrete.AL.AL1.cidades.find(c => cidade === c.toLowerCase());
+    tabela = match ? tabelasFrete.AL.AL1 : tabelasFrete.AL.default;
+  }
+
+  if (!tabela) {
+    resultado.innerHTML = 'Tabela de frete não encontrada para o estado.';
+    return;
+  }
+
+  // 🟡 CALCULA FRETE PESO
+  let fretePeso = 0;
+  const excedentePorKg = tabela.valorExcedente / 1000;
+
+  for (const faixa of tabela.faixa) {
+    if (pesoConsiderado <= faixa.limite) {
+      fretePeso = faixa.valorKg; // Faixa com valor fixo
+      break;
+    }
+  }
+
+  if (fretePeso === 0) {
+    fretePeso = pesoConsiderado * excedentePorKg;
+  }
+
+  // 💰 CUSTOS
+  const valorNota = custoUnitario * qtd;
+
+  const adValorem = valorNota * tabela.adVal;
+  const grisPercentual = valorNota * (tabela.gris || 0.002);
+  const gris = Math.max(tabela.grisMin || 4.97, grisPercentual);
+
+  const despacho = tabela.despacho || 17.45;
+  const tas = tabela.tas || 4.7;
+  const pedagio = (tabela.pedagioPor100Kg || 4.69) * Math.ceil(pesoConsiderado / 100);
+
+  const freteTotal = fretePeso + adValorem + gris + despacho + tas + pedagio;
+
+  // 🧾 RESULTADO
+  resultado.innerHTML = `
+    <strong>Modelo:</strong> ${modelo}<br>
+    <strong>Origem:</strong> ${origem}<br>
+    <strong>Destino:</strong> ${destino}<br>
+    <strong>Quantidade:</strong> ${qtd}<br>
+    <strong>Peso real total:</strong> ${pesoTotal.toFixed(2)} kg<br>
+    <strong>Peso cubado:</strong> ${pesoCubado.toFixed(2)} kg<br>
+    <strong>Peso considerado:</strong> ${pesoConsiderado.toFixed(2)} kg<br><br>
+
+    <strong>Frete Peso:</strong> R$ ${fretePeso.toFixed(2)}<br>
+    <strong>Ad Valorem (${(tabela.adVal * 100).toFixed(2)}%):</strong> R$ ${adValorem.toFixed(2)}<br>
+    <strong>GRIS (mín R$ ${tabela.grisMin.toFixed(2)}):</strong> R$ ${gris.toFixed(2)}<br>
+    <strong>Despacho:</strong> R$ ${despacho.toFixed(2)}<br>
+    <strong>TAS:</strong> R$ ${tas.toFixed(2)}<br>
+    <strong>Pedágio:</strong> R$ ${pedagio.toFixed(2)}<br><br>
+    <strong>Frete unitário:</strong> <span style="color: red; font-weight: bold;">R$ ${(freteTotal / qtd).toFixed(2)}</span><br>
+
+    <strong><u>Frete Total:</u></strong> <strong>R$ ${freteTotal.toFixed(2)}</strong>
+  `;
+}
+
+    window.onload = function () {
+      document.getElementById('cepDestino').addEventListener('blur', consultarCEP);
+      document.getElementById('buscarCidade').addEventListener('click', consultarCEP);
+      document.getElementById('btnCalcular').addEventListener('click', calcularFrete);
+    };
+  </script>
 </body>
 </html>
