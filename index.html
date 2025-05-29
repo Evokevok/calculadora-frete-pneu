@@ -189,37 +189,6 @@
 "195/60R16": { dimensoes: [0.64, 0.64, 0.19], peso: 8.6 },
     };
 
-    for (const [modelo, dados] of Object.entries(pneus)) {
-  const option = document.createElement('option');
-  option.value = modelo;
-  option.textContent = modelo;
-  document.getElementById('pneuSelect').appendChild(option);
-}
-
-function consultarCEP() {
-  const cep = document.getElementById('cepDestino').value.replace(/\D/g, '');
-  fetch(`https://viacep.com.br/ws/${cep}/json/`)
-    .then(res => res.json())
-    .then(data => {
-      if (data.erro) {
-        document.getElementById('cidadeDestino').value = 'CEP inválido';
-      } else {
-        document.getElementById('cidadeDestino').value = `${data.localidade} - ${data.uf}`; // 👍
-      }
-    })
-    .catch(() => {
-      document.getElementById('cidadeDestino').value = 'Erro ao buscar CEP';
-    });
-}
-    .catch(() => {
-      document.getElementById('cidadeDestino').value = 'Erro ao buscar CEP';
-    });
-}
-window.onload = function () {
-  document.getElementById('cepDestino').addEventListener('blur', consultarCEP);
-  document.getElementById('buscarCidade').addEventListener('click', consultarCEP);
-}; // ✅ Finaliza a função corretamente
-
 const tabelasFrete = {
   AC: { faixa: [{limite:30,valorKg:148.2}, {limite:50,valorKg:168.6}, {limite:70,valorKg:215.1}, {limite:100,valorKg:290.7}], valorExcedente: 2318.4, gris: 0.002, grisMin: 4.97, adVal: 0.005, tde: 280, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   AL: { AL1: { cidades: ["Coqueiro Seco", "Maceió", "Marechal Deodoro", "Pilar", "Rio Largo", "Santa Luzia do Norte", "São Miguel dos Campos", "Satuba"],
