@@ -249,12 +249,16 @@ const tabelasFrete = {
   TO: { faixa: [{limite:30,valorKg:101.7}, {limite:50,valorKg:115.7}, {limite:70,valorKg:147.6}, {limite:100,valorKg:234.7}], valorExcedente: 1713.6, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 }
 };
 
- for (const [modelo, dados] of Object.entries(pneus)) {
-      const option = document.createElement('option');
-      option.value = modelo;
-      option.textContent = modelo;
-      document.getElementById('pneuSelect').appendChild(option);
-    }
+ const selectPneu = document.getElementById('pneuSelect');
+
+Object.keys(pneus)
+  .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+  .forEach(modelo => {
+    const option = document.createElement('option');
+    option.value = modelo;
+    option.textContent = modelo;
+    selectPneu.appendChild(option);
+  });
 
     function consultarCEP() {
       const cep = document.getElementById('cepDestino').value.replace(/\D/g, '');
