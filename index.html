@@ -309,7 +309,7 @@ const tabelasFrete = {
       const adValorem = valorNota * (tabela?.adVal || 0.004);
       const despacho = tabela?.despacho || 17.45;
       const tas = tabela?.tas || 4.70;
-      const gris = Math.max(tabela?.grisMin || 4.97, valorNota * (tabela?.gris || 0.002));
+      const gris = Math.max(4.97, valorMercadoria * 0.002); // 0,2% ou mínimo R$4,97
       const pedagio = (tabela?.pedagioPor100Kg || 4.69) * Math.ceil(pesoParaFrete / 100);
 
       const freteTotal = fretePeso + adValorem + despacho + tas + gris + pedagio;
