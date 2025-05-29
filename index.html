@@ -272,64 +272,89 @@ const tabelasFrete = {
         });
     }
 
-    function calcularFrete() {
-      const origem = document.getElementById('cidadeOrigem').value;
-      const destino = document.getElementById('cidadeDestino').value;
-      const modelo = document.getElementById('pneuSelect').value;
-      const qtd = parseInt(document.getElementById('quantidade').value);
-      const custoUnitario = parseFloat(document.getElementById('custoPneu').value);
-      const resultado = document.getElementById('resultado');
+   function calcularFrete() {
+  const origem = document.getElementById('cidadeOrigem').value;
+  const destino = document.getElementById('cidadeDestino').value;
+  const modelo = document.getElementById('pneuSelect').value;
+  const qtd = parseInt(document.getElementById('quantidade').value);
+  const custoUnitario = parseFloat(document.getElementById('custoPneu').value);
+  const resultado = document.getElementById('resultado');
 
-      if (!modelo || !pneus[modelo] || !destino || isNaN(qtd) || isNaN(custoUnitario)) {
-        resultado.innerHTML = 'Preencha todos os campos corretamente.';
-        return;
-      }
+  if (!modelo || !pneus[modelo] || !destino || isNaN(qtd) || isNaN(custoUnitario)) {
+    resultado.innerHTML = 'Preencha todos os campos corretamente.';
+    return;
+  }
 
-      const pneu = pneus[modelo];
-      const pesoTotal = pneu.peso * qtd;
-      const volume = pneu.dimensoes.reduce((a, b) => a * b) * qtd;
-      const pesoCubado = volume * 300;
-      const pesoParaFrete = Math.max(pesoTotal, pesoCubado);
+  const pneu = pneus[modelo];
+  const pesoTotal = pneu.peso * qtd;
+  const volume = pneu.dimensoes.reduce((a, b) => a * b, 1) * qtd;
+  const pesoCubado = volume * 300;
+  const pesoConsiderado = Math.max(pesoTotal, pesoCubado);
 
-      const estadoDestino = destino.split(' - ')[1]?.trim().toUpperCase();
-      const tabela = tabelasFrete[estadoDestino];
+  // Determina o estado do destino
+  const estadoDestino = destino.split(' - ')[1]?.trim().toUpperCase();
+  let tabela = tabelasFrete[estadoDestino];
 
-      let valorKg = 15.56;
-      if (tabela) {
-        for (const faixa of tabela.faixa) {
-          if (pesoParaFrete <= faixa.limite) {
-            valorKg = faixa.valorKg;
-            break;
-          }
-        }
-      }
+  // Se for Alagoas, checa se é AL1
+  if (estadoDestino === 'AL' && tabelasFrete.AL?.AL1) {
+    const cidade = destino.split(' - ')[0].trim().toLowerCase();
+    const match = tabelasFrete.AL.AL1.cidades.find(c => cidade === c.toLowerCase());
+    tabela = match ? tabelasFrete.AL.AL1 : tabelasFrete.AL.default;
+  }
 
-      const fretePeso = pesoParaFrete * valorKg;
-      const valorNota = custoUnitario * qtd;
-      const adValorem = valorNota * (tabela?.adVal || 0.004);
-      const despacho = tabela?.despacho || 17.45;
-      const tas = tabela?.tas || 4.70;
-      const gris = Math.max(tabela?.grisMin || 4.97, valorNota * (tabela?.gris || 0.002));
-      const pedagio = (tabela?.pedagioPor100Kg || 4.69) * Math.ceil(pesoParaFrete / 100);
+  if (!tabela) {
+    resultado.innerHTML = 'Tabela de frete não encontrada para o estado.';
+    return;
+  }
 
-      const freteTotal = fretePeso + adValorem + despacho + tas + gris + pedagio;
+  // 🟡 CALCULA FRETE PESO
+  let fretePeso = 0;
+  const excedentePorKg = tabela.valorExcedente / 1000;
 
-      resultado.innerHTML = `
-        <strong>Modelo:</strong> ${modelo}<br>
-        <strong>Origem:</strong> ${origem}<br>
-        <strong>Destino:</strong> ${destino}<br>
-        <strong>Peso real total:</strong> ${pesoTotal.toFixed(2)} kg<br>
-        <strong>Peso cubado:</strong> ${pesoCubado.toFixed(2)} kg<br>
-        <strong>Peso considerado:</strong> ${pesoParaFrete.toFixed(2)} kg<br><br>
-        <strong>Frete peso:</strong> R$ ${fretePeso.toFixed(2)}<br>
-        <strong>Ad valorem:</strong> R$ ${adValorem.toFixed(2)}<br>
-        <strong>Despacho:</strong> R$ ${despacho.toFixed(2)}<br>
-        <strong>GRIS:</strong> R$ ${gris.toFixed(2)}<br>
-        <strong>Pedágio:</strong> R$ ${pedagio.toFixed(2)}<br>
-        <strong>TAS:</strong> R$ ${tas.toFixed(2)}<br><br>
-        <strong><u>Frete total:</u></strong> <strong>R$ ${freteTotal.toFixed(2)}</strong>
-      `;
+  for (const faixa of tabela.faixa) {
+    if (pesoConsiderado <= faixa.limite) {
+      fretePeso = faixa.valorKg; // Faixa com valor fixo
+      break;
     }
+  }
+
+  if (fretePeso === 0) {
+    fretePeso = pesoConsiderado * excedentePorKg;
+  }
+
+  // 💰 CUSTOS
+  const valorNota = custoUnitario * qtd;
+
+  const adValorem = valorNota * (tabela.adVal || 0.0051);
+  const grisPercentual = valorNota * (tabela.gris || 0.002);
+  const gris = Math.max(tabela.grisMin || 4.97, grisPercentual);
+
+  const despacho = tabela.despacho || 17.45;
+  const tas = tabela.tas || 4.7;
+  const pedagio = (tabela.pedagioPor100Kg || 4.69) * Math.ceil(pesoConsiderado / 100);
+
+  const freteTotal = fretePeso + adValorem + gris + despacho + tas + pedagio;
+
+  // 🧾 RESULTADO
+  resultado.innerHTML = `
+    <strong>Modelo:</strong> ${modelo}<br>
+    <strong>Origem:</strong> ${origem}<br>
+    <strong>Destino:</strong> ${destino}<br>
+    <strong>Quantidade:</strong> ${qtd}<br>
+    <strong>Peso real total:</strong> ${pesoTotal.toFixed(2)} kg<br>
+    <strong>Peso cubado:</strong> ${pesoCubado.toFixed(2)} kg<br>
+    <strong>Peso considerado:</strong> ${pesoConsiderado.toFixed(2)} kg<br><br>
+
+    <strong>Frete Peso:</strong> R$ ${fretePeso.toFixed(2)}<br>
+    <strong>Ad Valorem (0,51%):</strong> R$ ${adValorem.toFixed(2)}<br>
+    <strong>GRIS (mín R$ ${tabela.grisMin.toFixed(2)}):</strong> R$ ${gris.toFixed(2)}<br>
+    <strong>Despacho:</strong> R$ ${despacho.toFixed(2)}<br>
+    <strong>TAS:</strong> R$ ${tas.toFixed(2)}<br>
+    <strong>Pedágio:</strong> R$ ${pedagio.toFixed(2)}<br><br>
+
+    <strong><u>Frete Total:</u></strong> <strong>R$ ${freteTotal.toFixed(2)}</strong>
+  `;
+}
 
     window.onload = function () {
       document.getElementById('cepDestino').addEventListener('blur', consultarCEP);
