@@ -325,7 +325,7 @@ const tabelasFrete = {
   // 💰 CUSTOS
   const valorNota = custoUnitario * qtd;
 
-  const adValorem = valorNota * (tabela.adVal || 0.0051);
+  const adValorem = valorNota * tabela.adVal;
   const grisPercentual = valorNota * (tabela.gris || 0.002);
   const gris = Math.max(tabela.grisMin || 4.97, grisPercentual);
 
