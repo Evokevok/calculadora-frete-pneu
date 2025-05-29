@@ -26,7 +26,7 @@
     h1 {
       text-align: center;
       color: #333;
-      margin-top: 30px;
+      margin-top: 140px;
     }
     label {
       font-weight: bold;
@@ -68,7 +68,7 @@
     <label><strong>CEP de destino:</strong>
       <input type="text" id="cepDestino" placeholder="Digite o CEP">
     </label>
-    <button onclick="consultarCEP()">Buscar Cidade</button>
+    <button id="buscarCidade">Buscar Cidade</button>
 
     <label><strong>Cidade detectada:</strong>
       <input type="text" id="cidadeDestino" readonly>
@@ -186,132 +186,171 @@
     };
 
     for (const [modelo, dados] of Object.entries(pneus)) {
-      const option = document.createElement('option');
-      option.value = modelo;
-      option.textContent = modelo;
-      document.getElementById('pneuSelect').appendChild(option);
-    }
+  const option = document.createElement('option');
+  option.value = modelo;
+  option.textContent = modelo;
+  document.getElementById('pneuSelect').appendChild(option);
+}
 
-    function consultarCEP() {
-      const cep = document.getElementById('cepDestino').value.replace(/\D/g, '');
-      fetch(`https://viacep.com.br/ws/${cep}/json/`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.erro) {
-            document.getElementById('cidadeDestino').value = 'CEP inválido';
-          } else {
-           
-            document.getElementById('cidadeDestino').value = `${data.localidade} - ${data.uf}`;
+function consultarCEP() {
+  const cep = document.getElementById('cepDestino').value.replace(/\D/g, '');
+  fetch(https://viacep.com.br/ws/${cep}/json/)
+    .then(res => res.json())
+    .then(data => {
+      if (data.erro) {
+        document.getElementById('cidadeDestino').value = 'CEP inválido';
+      } else {
+        document.getElementById('cidadeDestino').value = ${data.localidade} - ${data.uf};
+      }
+    })
+    .catch(() => {
+      document.getElementById('cidadeDestino').value = 'Erro ao buscar CEP';
+    });
+}
+window.onload = function () {
+  document.getElementById('cepDestino').addEventListener('blur', consultarCEP);
+  document.getElementById('buscarCidade').addEventListener('click', consultarCEP);
+}; // ✅ Finaliza a função corretamente
 
-          }
-        })
-        .catch(() => {
-          document.getElementById('cidadeDestino').value = 'Erro ao buscar CEP';
-        });
-     }
-      document.getElementById('cepDestino').addEventListener('blur', consultarCEP);
-      
 const tabelasFrete = {
-  AL: { faixa: [{limite:30,valorKg:118.00},{limite:50,valorKg:134.20},{limite:70,valorKg:171.23},{limite:100,valorKg:231.38}], valorExcedente:1971.20, gris:0.002, grisMin:4.97, adVal:0.0051, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  BA: { faixa: [{limite:30,valorKg:113.47},{limite:50,valorKg:129.04},{limite:70,valorKg:164.64},{limite:100,valorKg:222.49}], valorExcedente:1892.80, gris:0.002, grisMin:4.97, adVal:0.0051, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  CE: { faixa: [{limite:30,valorKg:130.86},{limite:50,valorKg:148.83},{limite:70,valorKg:189.88},{limite:100,valorKg:256.59}], valorExcedente:2049.60, gris:0.002, grisMin:4.97, adVal:0.0051, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  DF: { faixa: [{limite:30,valorKg:71.86},{limite:50,valorKg:81.73},{limite:70,valorKg:104.27},{limite:100,valorKg:140.91}], valorExcedente:1075.20, gris:0.002, grisMin:4.97, adVal:0.0042, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  MG: { faixa: [{limite:30,valorKg:76.71},{limite:50,valorKg:87.24},{limite:70,valorKg:111.29},{limite:100,valorKg:150.39}], valorExcedente:1243.20, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  PE: { faixa: [{limite:30,valorKg:118.00},{limite:50,valorKg:134.20},{limite:70,valorKg:171.23},{limite:100,valorKg:231.38}], valorExcedente:1982.40, gris:0.002, grisMin:4.97, adVal:0.0051, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  RJ: { faixa: [{limite:30,valorKg:63.24},{limite:50,valorKg:71.92},{limite:70,valorKg:91.76},{limite:100,valorKg:124.00}], valorExcedente:1243.20, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  SP: { faixa: [{limite:30,valorKg:76.71},{limite:50,valorKg:87.24},{limite:70,valorKg:111.29},{limite:100,valorKg:150.39}], valorExcedente:1411.20, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  TO: { faixa: [{limite:30,valorKg:118.00},{limite:50,valorKg:134.20},{limite:70,valorKg:171.23},{limite:100,valorKg:231.38}], valorExcedente:1982.40, gris:0.002, grisMin:4.97, adVal:0.0090, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  AC: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  AM: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  AP: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  ES: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  MA: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  MS: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  MT: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  PA: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  PB: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  PI: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  PR: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  RN: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  RO: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  RR: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  RS: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  SC: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
-  SE: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
+  AC: { faixa: [{limite:30,valorKg:148.2}, {limite:50,valorKg:168.6}, {limite:70,valorKg:215.1}, {limite:100,valorKg:290.7}], valorExcedente: 2318.4, gris: 0.002, grisMin: 4.97, adVal: 0.005, tde: 280, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  AL: { AL1: { cidades: ["Coqueiro Seco", "Maceió", "Marechal Deodoro", "Pilar", "Rio Largo", "Santa Luzia do Norte", "São Miguel dos Campos", "Satuba"],
+    faixa: [{limite:30, valorKg:83.2}, {limite:50,valorKg:94.6}, {limite:70,valorKg:120.7}, {limite:100,valorKg:163.1}], valorExcedente: 1534.4, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  default: {  faixa: [{ limite:30,valorKg:118.0}, {limite:50,valorKg:134.2}, {limite:70,valorKg:171.2}, {limite:100,valorKg:231.3}], valorExcedente: 1971.2, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69} },
+  AM: { faixa: [{limite:30,valorKg:300.0}, {limite:50,valorKg:400.0}, {limite:70,valorKg:440.0}, {limite:100,valorKg:590.0}], valorExcedente: 4320.0, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  AP: { faixa: [{limite:30,valorKg:300.0}, {limite:50,valorKg:400.0}, {limite:70,valorKg:440.0}, {limite:100,valorKg:590.0}], valorExcedente: 4330.0, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  BA: { faixa: [{limite:30,valorKg:113.4}, {limite:50,valorKg:129.0}, {limite:70,valorKg:164.6}, {limite:100,valorKg:222.4}], valorExcedente: 1892.8, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  BA: { faixa: [{limite:30,valorKg:71.8}, {limite:50,valorKg:81.7}, {limite:70,valorKg:104.2}, {limite:100,valorKg:140.9}], valorExcedente: 1321.6, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  BA: { faixa: [{limite:30,valorKg:92.6}, {limite:50,valorKg:105.3}, {limite:70,valorKg:134.4}, {limite:100,valorKg:181.7}], valorExcedente: 1545.6, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  CE: { faixa: [{limite:30,valorKg:130.8}, {limite:50,valorKg:148.8}, {limite:70,valorKg:189.8}, {limite:100,valorKg:256.5}], valorExcedente: 2049.6, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  CE: { faixa: [{limite:30,valorKg:91.5}, {limite:50,valorKg:104.0}, {limite:70,valorKg:132.8}, {limite:100,valorKg:179.4}], valorExcedente: 1691.2, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  DF: { faixa: [{limite:30,valorKg:71.8}, {limite:50,valorKg:81.7}, {limite:70,valorKg:104.2}, {limite:100,valorKg:140.9}], valorExcedente: 1075.2, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  ES: { faixa: [{limite:30,valorKg:76.7}, {limite:50,valorKg:87.2}, {limite:70,valorKg:111.2}, {limite:100,valorKg:150.3}], valorExcedente: 1366.4, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  ES: { faixa: [{limite:30,valorKg:64.9}, {limite:50,valorKg:73.8}, {limite:70,valorKg:94.1}, {limite:100,valorKg:127.2}], valorExcedente: 1052.8, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  GO: { faixa: [{limite:30,valorKg:76.7}, {limite:50,valorKg:87.2}, {limite:70,valorKg:111.2}, {limite:100,valorKg:150.3}], valorExcedente: 1276.8, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  GO: { faixa: [{limite:30,valorKg:64.9}, {limite:50,valorKg:73.8}, {limite:70,valorKg:94.1}, {limite:100,valorKg:127.2}], valorExcedente: 1075.2, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  MA: { faixa: [{limite:30,valorKg:148.2}, {limite:50,valorKg:168.6}, {limite:70,valorKg:215.1}, {limite:100,valorKg:290.7}], valorExcedente: 2318.4, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  MA: { faixa: [{limite:30,valorKg:105.1}, {limite:50,valorKg:119.5}, {limite:70,valorKg:152.5}, {limite:100,valorKg:206.1}], valorExcedente: 1915.2, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  MG: { faixa: [{limite:30,valorKg:76.7}, {limite:50,valorKg:87.2}, {limite:70,valorKg:111.2}, {limite:100,valorKg:150.3}], valorExcedente: 1243.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  MG: { faixa: [{limite:30,valorKg:64.9}, {limite:50,valorKg:73.8}, {limite:70,valorKg:94.1}, {limite:100,valorKg:127.2}], valorExcedente: 1008.0, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  MG: { faixa: [{limite:30,valorKg:71.8}, {limite:50,valorKg:81.7}, {limite:70,valorKg:104.2}, {limite:100,valorKg:140.9}], valorExcedente: 1075.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  MS: { faixa: [{limite:30,valorKg:85.4}, {limite:50,valorKg:97.2}, {limite:70,valorKg:124.0}, {limite:100,valorKg:167.6}], valorExcedente: 1579.2, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  MT: { faixa: [{limite:30,valorKg:113.4}, {limite:50,valorKg:129.0}, {limite:70,valorKg:164.6}, {limite:100,valorKg:222.4}], valorExcedente: 1960.0, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PA: { faixa: [{limite:30,valorKg:139.9}, {limite:50,valorKg:159.1}, {limite:70,valorKg:203.0}, {limite:100,valorKg:274.0}], valorExcedente: 2094.4, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PA: { faixa: [{limite:30,valorKg:99.1}, {limite:50,valorKg:112.6}, {limite:70,valorKg:143.7}, {limite:100,valorKg:194.3}], valorExcedente: 1713.6, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PA: { faixa: [{limite:30,valorKg:125.5}, {limite:50,valorKg:142.8}, {limite:70,valorKg:182.2}, {limite:100,valorKg:246.2}], valorExcedente: 1971.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PB: { faixa: [{limite:30,valorKg:120.2}, {limite:50,valorKg:136.7}, {limite:70,valorKg:174.5}, {limite:100,valorKg:235.8}], valorExcedente: 2016.0, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PB: { faixa: [{limite:30,valorKg:90.0}, {limite:50,valorKg:102.0}, {limite:70,valorKg:130.6}, {limite:100,valorKg:176.5}], valorExcedente: 1657.6, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PE: { faixa: [{limite:30,valorKg:118.0}, {limite:50,valorKg:134.2}, {limite:70,valorKg:171.2}, {limite:100,valorKg:231.3}], valorExcedente: 1982.4, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PE: { faixa: [{limite:30,valorKg:85.4}, {limite:50,valorKg:97.2}, {limite:70,valorKg:124.0}, {limite:100,valorKg:167.6}], valorExcedente: 1579.2, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PI: { faixa: [{limite:30,valorKg:148.2}, {limite:50,valorKg:168.6}, {limite:70,valorKg:215.1}, {limite:100,valorKg:290.7}], valorExcedente: 2318.4, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PI: { faixa: [{limite:30,valorKg:105.1}, {limite:50,valorKg:119.5}, {limite:70,valorKg:152.5}, {limite:100,valorKg:206.1}], valorExcedente: 1915.2, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PR: { faixa: [{limite:30,valorKg:58.9}, {limite:50,valorKg:67.0},{limite:70,valorKg:87.7},{limite:100,valorKg:115.6}], valorExcedente: 1019.2, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PR: { faixa: [{limite:30,valorKg:48.55}, {limite:50,valorKg:55.2},{limite:70,valorKg:70.4},{limite:100,valorKg:95.2}], valorExcedente: 560.0, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PR: { faixa: [{limite:30,valorKg:53.7}, {limite:50,valorKg:61.1},{limite:70,valorKg:78.0},{limite:100,valorKg:105.3}], valorExcedente: 806.4, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RJ: { faixa: [{limite:30,valorKg:63.2}, {limite:50,valorKg:71.9}, {limite:70,valorKg:91.7}, {limite:100,valorKg:124.0}], valorExcedente: 1243.2, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RJ: { faixa: [{limite:30,valorKg:117.2}, {limite:50,valorKg:133.3}, {limite:70,valorKg:170.1}, {limite:100,valorKg:229.9}], valorExcedente: 1971.2, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RN: { faixa: [{limite:30,valorKg:74.0}, {limite:50,valorKg:79.0}, {limite:70,valorKg:89.0}, {limite:100,valorKg:109.0}], valorExcedente: 1490.0, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RO: { faixa: [{limite:30,valorKg:75.0}, {limite:50,valorKg:80.0}, {limite:70,valorKg:90.0}, {limite:100,valorKg:110.0}], valorExcedente: 1500.0, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RR: { faixa: [{limite:30,valorKg:376.0}, {limite:50,valorKg:551.0}, {limite:70,valorKg:801.0}, {limite:100,valorKg:1511.0}], valorExcedente: 5510.0, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RS: { faixa: [{limite:30,valorKg:76.7}, {limite:50,valorKg:87.2}, {limite:70,valorKg:111.2}, {limite:100,valorKg:150.3}], valorExcedente: 1243.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RS: { faixa: [{limite:30,valorKg:58.96}, {limite:50,valorKg:67.0}, {limite:70,valorKg:85.5}, {limite:100,valorKg:115.6}], valorExcedente: 851.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RS: { faixa: [{limite:30,valorKg:71.8}, {limite:50,valorKg:81.7}, {limite:70,valorKg:104.2}, {limite:100,valorKg:140.9}], valorExcedente: 996.8, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SC: { faixa: [{limite:30,valorKg:64.9}, {limite:50,valorKg:73.8}, {limite:70,valorKg:94.1}, {limite:100,valorKg:127.2}], valorExcedente: 1008.0, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SC: { faixa: [{limite:30,valorKg:58.9}, {limite:50,valorKg:67.0}, {limite:70,valorKg:85.5}, {limite:100,valorKg:115.6}], valorExcedente: 884.8, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SC: { faixa: [{limite:30,valorKg:53.75}, {limite:50,valorKg:61.1}, {limite:70,valorKg:77.8}, {limite:100,valorKg:105.3}], valorExcedente: 582.4, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SE: { faixa: [{limite:30,valorKg:113.4}, {limite:50,valorKg:129.0}, {limite:70,valorKg:164.6}, {limite:100,valorKg:222.4}], valorExcedente: 1780.8, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SE: { faixa: [{limite:30,valorKg:80.1}, {limite:50,valorKg:91.1}, {limite:70,valorKg:116.3}, {limite:100,valorKg:157.2}], valorExcedente: 1478.4, gris: 0.002, grisMin: 4.97, adVal: 0.005, tde: 280, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SP: { faixa: [{limite:30,valorKg:58.9}, {limite:50,valorKg:67.0}, {limite:70,valorKg:85.5}, {limite:100,valorKg:115.6}], valorExcedente: 1220.8, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SP: { faixa: [{limite:30,valorKg:71.8}, {limite:50,valorKg:81.7}, {limite:70,valorKg:104.2}, {limite:100,valorKg:140.9}], valorExcedente: 1321.6, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SP: { faixa: [{limite:30,valorKg:76.7}, {limite:50,valorKg:87.2}, {limite:70,valorKg:111.2}, {limite:100,valorKg:150.3}], valorExcedente: 1411.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SP: { faixa: [{limite:30,valorKg:48.5}, {limite:50,valorKg:55.2}, {limite:70,valorKg:70.4}, {limite:100,valorKg:95.1}], valorExcedente: 784.0, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SP: { faixa: [{limite:30,valorKg:95.0}, {limite:50,valorKg:108.1}, {limite:70,valorKg:137.9}, {limite:100,valorKg:186.4}], valorExcedente: 1758.4, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SP: { faixa: [{limite:30,valorKg:53.7}, {limite:50,valorKg:61.1}, {limite:70,valorKg:78.0}, {limite:100,valorKg:105.4}], valorExcedente: 896.0, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  TO: { faixa: [{limite:30,valorKg:118.0}, {limite:50,valorKg:134.2}, {limite:70,valorKg:171.2}, {limite:100,valorKg:231.3}], valorExcedente: 1982.4, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  TO: { faixa: [{limite:30,valorKg:85.4}, {limite:50,valorKg:97.2}, {limite:70,valorKg:124.0}, {limite:100,valorKg:167.6}], valorExcedente: 1579.2, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  TO: { faixa: [{limite:30,valorKg:101.7}, {limite:50,valorKg:115.7}, {limite:70,valorKg:147.6}, {limite:100,valorKg:234.7}], valorExcedente: 1713.6, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 }
 };
 
-function calcularFrete() {
-  const modelo = document.getElementById('pneuSelect').value;
-  const cidadeCompleta = document.getElementById('cidadeDestino').value;
-  const qtd = parseInt(document.getElementById('quantidade').value);
-  const custoUn = parseFloat(document.getElementById('custoPneu').value);
+    function calcularFrete() {
   const origem = document.getElementById('cidadeOrigem').value;
+  const destino = document.getElementById('cidadeDestino').value;
+  const modelo = document.getElementById('pneuSelect').value;
+  const qtd = parseInt(document.getElementById('quantidade').value);
+  const custoUnitario = parseFloat(document.getElementById('custoPneu').value);
   const resultado = document.getElementById('resultado');
 
-  if (!modelo || !pneus[modelo] || !cidadeCompleta || isNaN(qtd) || isNaN(custoUn)) {
+  if (!modelo || !pneus[modelo] || !destino || isNaN(qtd) || isNaN(custoUnitario)) {
     resultado.innerHTML = 'Preencha todos os campos corretamente.';
     return;
   }
 
   const pneu = pneus[modelo];
   const pesoTotal = pneu.peso * qtd;
-  const volume = pneu.dimensoes.reduce((a, b) => a * b, 1) * qtd;
+  const volume = pneu.dimensoes.reduce((a, b) => a * b) * qtd;
   const pesoCubado = volume * 300;
-  const pesoFrete = Math.max(pesoTotal, pesoCubado);
+  const pesoParaFrete = Math.max(pesoTotal, pesoCubado);
 
-  const estadoDestino = cidadeCompleta.split(' - ')[1]?.trim().toUpperCase();
-  let tabela;
+  // Tabela base fictícia
+  const valorKg = 15.56; // Exemplo: R$ 15,56 por kg — substitua pelo valor real da faixa
+  const fretePeso = pesoParaFrete * valorKg;
 
-  // AL1 (Maceió, Rio Largo etc.)
-  if (estadoDestino === 'AL') {
-    const cidadeMatch = tabelasFrete.AL.AL1.cidades.find(c =>
-      cidadeCompleta.toLowerCase().includes(c.toLowerCase())
-    );
-    tabela = cidadeMatch ? tabelasFrete.AL.AL1 : tabelasFrete.AL.default;
-  } else {
-    tabela = tabelasFrete[estadoDestino];
-  }
+  const valorNota = custoUnitario * qtd;
+  const adValorem = valorNota * 0.004; // 0,4%
+  const despacho = 17.45;
+  const tas = 4.70;
+  const gris = Math.max(14.00, valorNota * 0.002); // mínimo R$ 14
+  const pedagio = 4.69 * Math.ceil(pesoParaFrete / 100);
 
-  if (!tabela) {
-    resultado.innerHTML = `Tabela de frete não disponível para o estado: ${estadoDestino}`;
-    return;
-  }
+  const freteTotal = fretePeso + adValorem + despacho + tas + gris + pedagio;
 
-  let valorKg = 0;
-  for (const faixa of tabela.faixa) {
-    if (pesoFrete <= faixa.limite) {
-      valorKg = faixa.valorKg;
-      break;
-    }
-  }
-  if (valorKg === 0) {
-    valorKg = tabela.valorExcedente / 1000;
-  }
-
-  const fretePeso = pesoFrete * valorKg;
-  const valorTotalNota = custoUn * qtd;
-  const gris = Math.max(tabela.grisMin, valorTotalNota * tabela.gris);
-  const adValorem = valorTotalNota * tabela.adVal;
-  const pedagio = tabela.pedagioPor100Kg * Math.ceil(pesoFrete / 100);
-  const freteTotal = fretePeso + tabela.despacho + tabela.tas + gris + adValorem + pedagio;
-
-  resultado.innerHTML = `
+  resultado.innerHTML = 
     <strong>Modelo:</strong> ${modelo}<br>
     <strong>Origem:</strong> ${origem}<br>
-    <strong>Destino:</strong> ${cidadeCompleta}<br><br>
+    <strong>Destino:</strong> ${destino}<br>
     <strong>Peso real total:</strong> ${pesoTotal.toFixed(2)} kg<br>
     <strong>Peso cubado:</strong> ${pesoCubado.toFixed(2)} kg<br>
-    <strong>Peso considerado:</strong> ${pesoFrete.toFixed(2)} kg<br><br>
+    <strong>Peso considerado:</strong> ${pesoParaFrete.toFixed(2)} kg<br><br>
     <strong>Frete peso:</strong> R$ ${fretePeso.toFixed(2)}<br>
     <strong>Ad valorem:</strong> R$ ${adValorem.toFixed(2)}<br>
+    <strong>Despacho:</strong> R$ ${despacho.toFixed(2)}<br>
     <strong>GRIS:</strong> R$ ${gris.toFixed(2)}<br>
-    <strong>Despacho:</strong> R$ ${tabela.despacho.toFixed(2)}<br>
-    <strong>TAS:</strong> R$ ${tabela.tas.toFixed(2)}<br>
-    <strong>Pedágio:</strong> R$ ${pedagio.toFixed(2)}<br><br>
+    <strong>Pedágio:</strong> R$ ${pedagio.toFixed(2)}<br>
+    <strong>TAS:</strong> R$ ${tas.toFixed(2)}<br><br>
     <strong><u>Frete total:</u></strong> <strong>R$ ${freteTotal.toFixed(2)}</strong>
-  `;
+  ;
 }
 
-// Listener para o botão
+
 document.getElementById('btnCalcular').addEventListener('click', calcularFrete);
 
+document.getElementById('destino').addEventListener('blur', function () {
+  const cep = this.value.replace(/[^0-9]/g, '');
+  if (cep.length === 8) {
+    fetch(https://viacep.com.br/ws/${cep}/json/)
+      .then(res => res.json())
+      .then(data => {
+        if (!data.erro) {
+          let info = Destino: ${data.localidade} - ${data.uf};
+          const localidadeEl = document.getElementById('localidade');
+          if (localidadeEl) {
+            localidadeEl.textContent = info;
+          } else {
+            const novoEl = document.createElement('div');
+            novoEl.id = 'localidade';
+           novoEl.style.marginTop = '10px';
+novoEl.style.fontWeight = 'bold';
+novoEl.style.color = 'red';
+novoEl.textContent = info;
+            document.getElementById('destino').insertAdjacentElement('afterend', novoEl);
+          }
+        } else {
+          alert('CEP inválido.');
+        }
+      })
+      .catch(() => {
+        alert('Erro ao buscar o CEP.');
+      });
+  }
+});
+</script> >>
