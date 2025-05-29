@@ -312,7 +312,7 @@ const tabelasFrete = {
     valorKg = tabela.valorExcedente / 1000;
   }
 
-  let fretePeso = pesoFrete * valorKg;
+  let fretePeso = pesoFrete * (valorKg / 10); // Corrige se sua tabela for R$/10kg
   const valor = custoUn * qtd;
   const gris = Math.max(tabela.grisMin, valor * tabela.gris);
 
