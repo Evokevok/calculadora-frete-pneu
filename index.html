@@ -306,14 +306,6 @@ Object.keys(pneus)
     const match = tabelasFrete.AL.AL1.cidades.find(c => cidade === c.toLowerCase());
     tabela = match ? tabelasFrete.AL.AL1 : tabelasFrete.AL.default;
   }
-     } else if (estadoDestino === 'ES') {
-  const cidadeMatch = tabelasFrete.ES.ES1.cidades.find(c =>
-    cidade.toLowerCase().includes(c.toLowerCase())
-  );
-  tabela = cidadeMatch ? tabelasFrete.ES.ES1 : tabelasFrete.ES.default;
-} else {
-  tabela = tabelasFrete[estadoDestino];
-}
 
   if (!tabela) {
     resultado.innerHTML = 'Tabela de frete não encontrada para o estado.';
