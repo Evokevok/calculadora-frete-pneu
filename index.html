@@ -272,7 +272,7 @@ const tabelasFrete = {
   TO: { faixa: [{limite:30,valorKg:101.7}, {limite:50,valorKg:115.7}, {limite:70,valorKg:147.6}, {limite:100,valorKg:234.7}], valorExcedente: 1713.6, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 }
 };
 
-  async function calcularFrete() {
+async function calcularFrete() {
   const modelo = document.getElementById('pneuSelect').value;
 
   if (!modelo || !pneus[modelo]) {
@@ -312,7 +312,7 @@ const tabelasFrete = {
     valorKg = tabela.valorExcedente / 1000;
   }
 
-  let fretePeso = pesoFrete * (valorKg / 10); // Corrige se sua tabela for R$/10kg
+  let fretePeso = pesoFrete * (valorKg / 10);
   const valor = custoUn * qtd;
   const gris = Math.max(tabela.grisMin, valor * tabela.gris);
 
@@ -331,7 +331,7 @@ const tabelasFrete = {
                    + (valor * tabela.adVal)
                    + pedagio;
 
-  document.getElementById('resultado').textContent = `
+  document.getElementById('resultado').textContent = 
 Modelo: ${modelo}
 Origem: ${origem}
 Destino: ${cidade}
@@ -339,8 +339,9 @@ Peso total: ${pesoRealTotal.toFixed(2)} kg
 Peso cubado: ${pesoCubadoTotal.toFixed(2)} kg
 Peso considerado: ${pesoFrete.toFixed(2)} kg
 Valor do frete estimado: R$ ${freteTotal.toFixed(2)}
-  `;
+  ;
 }
 </script>
 </body>
 </html>
+
