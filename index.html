@@ -312,7 +312,7 @@ async function calcularFrete() {
     valorKg = tabela.valorExcedente / 1000;
   }
 
-  let fretePeso = pesoFrete * (valorKg / 10);
+  let fretePeso = pesoFrete * valorKg;
   const valor = custoUn * qtd;
   const gris = Math.max(tabela.grisMin, valor * tabela.gris);
 
@@ -344,4 +344,3 @@ Valor do frete estimado: R$ ${freteTotal.toFixed(2)}
 </script>
 </body>
 </html>
-
