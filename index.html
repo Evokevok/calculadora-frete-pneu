@@ -329,9 +329,6 @@ const tabelasFrete = {
   ;
 }
 
-
-document.getElementById('btnCalcular').addEventListener('click', calcularFrete);
-
 document.getElementById('destino').addEventListener('blur', function () {
   const cep = this.value.replace(/[^0-9]/g, '');
   if (cep.length === 8) {
