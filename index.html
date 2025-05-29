@@ -238,33 +238,42 @@ const tabelasFrete = {
   SE: { faixa: [{limite:30,valorKg:100.00},{limite:50,valorKg:115.00},{limite:70,valorKg:140.00},{limite:100,valorKg:185.00}], valorExcedente:1600.00, gris:0.002, grisMin:4.97, adVal:0.0049, tde:280, trt:82, tas:4.7, despacho:17.45, pedagioPor100Kg:4.69 },
 };
 
-async function calcularFrete() {
+function calcularFrete() {
   const modelo = document.getElementById('pneuSelect').value;
-
-  if (!modelo || !pneus[modelo]) {
-    alert('Selecione um modelo de pneu válido.');
-    return;
-  }
-
+  const cidadeCompleta = document.getElementById('cidadeDestino').value;
   const qtd = parseInt(document.getElementById('quantidade').value);
-  const origem = document.getElementById('cidadeOrigem').value;
-  const destino = document.getElementById('cepDestino').value;
   const custoUn = parseFloat(document.getElementById('custoPneu').value);
-  const cidade = document.getElementById('cidadeDestino').value;
+  const origem = document.getElementById('cidadeOrigem').value;
+  const resultado = document.getElementById('resultado');
 
-  const estadoDestino = cidade.split(' - ')[1];
-  const tabela = tabelasFrete[estadoDestino];
-
-  if (!tabela) {
-    alert("Tabela de frete não disponível para o estado: " + estadoDestino);
+  if (!modelo || !pneus[modelo] || !cidadeCompleta || isNaN(qtd) || isNaN(custoUn)) {
+    resultado.innerHTML = 'Preencha todos os campos corretamente.';
     return;
   }
 
   const pneu = pneus[modelo];
-  const pesoRealTotal = pneu.peso * qtd;
-  const volume = pneu.dimensoes.reduce((acc, val) => acc * val, 1) * qtd;
-  const pesoCubadoTotal = volume * 300;
-  const pesoFrete = Math.max(pesoRealTotal, pesoCubadoTotal);
+  const pesoTotal = pneu.peso * qtd;
+  const volume = pneu.dimensoes.reduce((a, b) => a * b, 1) * qtd;
+  const pesoCubado = volume * 300;
+  const pesoFrete = Math.max(pesoTotal, pesoCubado);
+
+  const estadoDestino = cidadeCompleta.split(' - ')[1]?.trim().toUpperCase();
+  let tabela;
+
+  // AL1 (Maceió, Rio Largo etc.)
+  if (estadoDestino === 'AL') {
+    const cidadeMatch = tabelasFrete.AL.AL1.cidades.find(c =>
+      cidadeCompleta.toLowerCase().includes(c.toLowerCase())
+    );
+    tabela = cidadeMatch ? tabelasFrete.AL.AL1 : tabelasFrete.AL.default;
+  } else {
+    tabela = tabelasFrete[estadoDestino];
+  }
+
+  if (!tabela) {
+    resultado.innerHTML = `Tabela de frete não disponível para o estado: ${estadoDestino}`;
+    return;
+  }
 
   let valorKg = 0;
   for (const faixa of tabela.faixa) {
@@ -273,40 +282,34 @@ async function calcularFrete() {
       break;
     }
   }
-
   if (valorKg === 0) {
     valorKg = tabela.valorExcedente / 1000;
   }
 
-  let fretePeso = pesoFrete * valorKg;
-  const valor = custoUn * qtd;
-  const gris = Math.max(tabela.grisMin, valor * tabela.gris);
+  const fretePeso = pesoFrete * valorKg;
+  const valorTotalNota = custoUn * qtd;
+  const gris = Math.max(tabela.grisMin, valorTotalNota * tabela.gris);
+  const adValorem = valorTotalNota * tabela.adVal;
+  const pedagio = tabela.pedagioPor100Kg * Math.ceil(pesoFrete / 100);
+  const freteTotal = fretePeso + tabela.despacho + tabela.tas + gris + adValorem + pedagio;
 
-  let usarFreteMinimo = false;
-  if (fretePeso < (tabela.tde + tabela.trt)) {
-    fretePeso = 0;
-    usarFreteMinimo = true;
-  }
-
-  const pedagio = tabela.pedagioPor100Kg * (pesoFrete / 100);
-
-  const freteTotal = (usarFreteMinimo ? (tabela.tde + tabela.trt) : fretePeso)
-                   + tabela.despacho
-                   + tabela.tas
-                   + gris
-                   + (valor * tabela.adVal)
-                   + pedagio;
-
-  document.getElementById('resultado').textContent = 
-Modelo: ${modelo}
-Origem: ${origem}
-Destino: ${cidade}
-Peso total: ${pesoRealTotal.toFixed(2)} kg
-Peso cubado: ${pesoCubadoTotal.toFixed(2)} kg
-Peso considerado: ${pesoFrete.toFixed(2)} kg
-Valor do frete estimado: R$ ${freteTotal.toFixed(2)}
-  ;
+  resultado.innerHTML = `
+    <strong>Modelo:</strong> ${modelo}<br>
+    <strong>Origem:</strong> ${origem}<br>
+    <strong>Destino:</strong> ${cidadeCompleta}<br><br>
+    <strong>Peso real total:</strong> ${pesoTotal.toFixed(2)} kg<br>
+    <strong>Peso cubado:</strong> ${pesoCubado.toFixed(2)} kg<br>
+    <strong>Peso considerado:</strong> ${pesoFrete.toFixed(2)} kg<br><br>
+    <strong>Frete peso:</strong> R$ ${fretePeso.toFixed(2)}<br>
+    <strong>Ad valorem:</strong> R$ ${adValorem.toFixed(2)}<br>
+    <strong>GRIS:</strong> R$ ${gris.toFixed(2)}<br>
+    <strong>Despacho:</strong> R$ ${tabela.despacho.toFixed(2)}<br>
+    <strong>TAS:</strong> R$ ${tabela.tas.toFixed(2)}<br>
+    <strong>Pedágio:</strong> R$ ${pedagio.toFixed(2)}<br><br>
+    <strong><u>Frete total:</u></strong> <strong>R$ ${freteTotal.toFixed(2)}</strong>
+  `;
 }
-</script>
-</body>
-</html>
+
+// Listener para o botão
+document.getElementById('btnCalcular').addEventListener('click', calcularFrete);
+
