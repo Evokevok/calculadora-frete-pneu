@@ -249,74 +249,93 @@ const tabelasFrete = {
   TO: { faixa: [{limite:30,valorKg:101.7}, {limite:50,valorKg:115.7}, {limite:70,valorKg:147.6}, {limite:100,valorKg:234.7}], valorExcedente: 1713.6, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 }
 };
 
-  function calcularFrete() {
-    const origem = document.getElementById('cidadeOrigem').value;
-    const destino = document.getElementById('cidadeDestino').value;
-    const modelo = document.getElementById('pneuSelect').value;
-    const qtd = parseInt(document.getElementById('quantidade').value);
-    const custoUnitario = parseFloat(document.getElementById('custoPneu').value);
-    const resultado = document.getElementById('resultado');
-
-    if (!modelo || !pneus[modelo] || !destino || isNaN(qtd) || isNaN(custoUnitario)) {
-      resultado.innerHTML = 'Preencha todos os campos corretamente.';
-      return;
+ for (const [modelo, dados] of Object.entries(pneus)) {
+      const option = document.createElement('option');
+      option.value = modelo;
+      option.textContent = modelo;
+      document.getElementById('pneuSelect').appendChild(option);
     }
 
-    const pneu = pneus[modelo];
-    const pesoTotal = pneu.peso * qtd;
-    const volume = pneu.dimensoes.reduce((a, b) => a * b) * qtd;
-    const pesoCubado = volume * 300;
-    const pesoParaFrete = Math.max(pesoTotal, pesoCubado);
+    function consultarCEP() {
+      const cep = document.getElementById('cepDestino').value.replace(/\D/g, '');
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.erro) {
+            document.getElementById('cidadeDestino').value = 'CEP inválido';
+          } else {
+            document.getElementById('cidadeDestino').value = `${data.localidade} - ${data.uf}`;
+          }
+        })
+        .catch(() => {
+          document.getElementById('cidadeDestino').value = 'Erro ao buscar CEP';
+        });
+    }
 
-    const valorKg = 15.56; // Exemplo
-    const fretePeso = pesoParaFrete * valorKg;
+    function calcularFrete() {
+      const origem = document.getElementById('cidadeOrigem').value;
+      const destino = document.getElementById('cidadeDestino').value;
+      const modelo = document.getElementById('pneuSelect').value;
+      const qtd = parseInt(document.getElementById('quantidade').value);
+      const custoUnitario = parseFloat(document.getElementById('custoPneu').value);
+      const resultado = document.getElementById('resultado');
 
-    const valorNota = custoUnitario * qtd;
-    const adValorem = valorNota * 0.004;
-    const despacho = 17.45;
-    const tas = 4.70;
-    const gris = Math.max(14.00, valorNota * 0.002);
-    const pedagio = 4.69 * Math.ceil(pesoParaFrete / 100);
+      if (!modelo || !pneus[modelo] || !destino || isNaN(qtd) || isNaN(custoUnitario)) {
+        resultado.innerHTML = 'Preencha todos os campos corretamente.';
+        return;
+      }
 
-    const freteTotal = fretePeso + adValorem + despacho + tas + gris + pedagio;
+      const pneu = pneus[modelo];
+      const pesoTotal = pneu.peso * qtd;
+      const volume = pneu.dimensoes.reduce((a, b) => a * b) * qtd;
+      const pesoCubado = volume * 300;
+      const pesoParaFrete = Math.max(pesoTotal, pesoCubado);
 
-    resultado.innerHTML = `
-      <strong>Modelo:</strong> ${modelo}<br>
-      <strong>Origem:</strong> ${origem}<br>
-      <strong>Destino:</strong> ${destino}<br>
-      <strong>Peso real total:</strong> ${pesoTotal.toFixed(2)} kg<br>
-      <strong>Peso cubado:</strong> ${pesoCubado.toFixed(2)} kg<br>
-      <strong>Peso considerado:</strong> ${pesoParaFrete.toFixed(2)} kg<br><br>
-      <strong>Frete peso:</strong> R$ ${fretePeso.toFixed(2)}<br>
-      <strong>Ad valorem:</strong> R$ ${adValorem.toFixed(2)}<br>
-      <strong>Despacho:</strong> R$ ${despacho.toFixed(2)}<br>
-      <strong>GRIS:</strong> R$ ${gris.toFixed(2)}<br>
-      <strong>Pedágio:</strong> R$ ${pedagio.toFixed(2)}<br>
-      <strong>TAS:</strong> R$ ${tas.toFixed(2)}<br><br>
-      <strong><u>Frete total:</u></strong> <strong>R$ ${freteTotal.toFixed(2)}</strong>
-    `;
-  }
+      const estadoDestino = destino.split(' - ')[1]?.trim().toUpperCase();
+      const tabela = tabelasFrete[estadoDestino];
 
-  function consultarCEP() {
-    const cep = document.getElementById('cepDestino').value.replace(/\D/g, '');
-    fetch(`https://viacep.com.br/ws/${cep}/json/`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.erro) {
-          document.getElementById('cidadeDestino').value = 'CEP inválido';
-        } else {
-          document.getElementById('cidadeDestino').value = `${data.localidade} - ${data.uf}`;
+      let valorKg = 15.56;
+      if (tabela) {
+        for (const faixa of tabela.faixa) {
+          if (pesoParaFrete <= faixa.limite) {
+            valorKg = faixa.valorKg;
+            break;
+          }
         }
-      })
-      .catch(() => {
-        document.getElementById('cidadeDestino').value = 'Erro ao buscar CEP';
-      });
-  }
+      }
 
-  window.onload = function () {
-    document.getElementById('cepDestino').addEventListener('blur', consultarCEP);
-    document.getElementById('buscarCidade').addEventListener('click', consultarCEP);
-    document.getElementById('btnCalcular').addEventListener('click', calcularFrete);
-  };
-</script>
+      const fretePeso = pesoParaFrete * valorKg;
+      const valorNota = custoUnitario * qtd;
+      const adValorem = valorNota * (tabela?.adVal || 0.004);
+      const despacho = tabela?.despacho || 17.45;
+      const tas = tabela?.tas || 4.70;
+      const gris = Math.max(tabela?.grisMin || 4.97, valorNota * (tabela?.gris || 0.002));
+      const pedagio = (tabela?.pedagioPor100Kg || 4.69) * Math.ceil(pesoParaFrete / 100);
 
+      const freteTotal = fretePeso + adValorem + despacho + tas + gris + pedagio;
+
+      resultado.innerHTML = `
+        <strong>Modelo:</strong> ${modelo}<br>
+        <strong>Origem:</strong> ${origem}<br>
+        <strong>Destino:</strong> ${destino}<br>
+        <strong>Peso real total:</strong> ${pesoTotal.toFixed(2)} kg<br>
+        <strong>Peso cubado:</strong> ${pesoCubado.toFixed(2)} kg<br>
+        <strong>Peso considerado:</strong> ${pesoParaFrete.toFixed(2)} kg<br><br>
+        <strong>Frete peso:</strong> R$ ${fretePeso.toFixed(2)}<br>
+        <strong>Ad valorem:</strong> R$ ${adValorem.toFixed(2)}<br>
+        <strong>Despacho:</strong> R$ ${despacho.toFixed(2)}<br>
+        <strong>GRIS:</strong> R$ ${gris.toFixed(2)}<br>
+        <strong>Pedágio:</strong> R$ ${pedagio.toFixed(2)}<br>
+        <strong>TAS:</strong> R$ ${tas.toFixed(2)}<br><br>
+        <strong><u>Frete total:</u></strong> <strong>R$ ${freteTotal.toFixed(2)}</strong>
+      `;
+    }
+
+    window.onload = function () {
+      document.getElementById('cepDestino').addEventListener('blur', consultarCEP);
+      document.getElementById('buscarCidade').addEventListener('click', consultarCEP);
+      document.getElementById('btnCalcular').addEventListener('click', calcularFrete);
+    };
+  </script>
+</body>
+</html>
