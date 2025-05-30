@@ -308,7 +308,7 @@ Object.keys(pneus)
   }
      // Se for Espirito Santo, checa se é E1
 if (estadoDestino === 'ES' && tabelasFrete.ES?.ES1) {
-  const cidade = cidadeDestino.split(' - ')[0].trim().toLowerCase();
+  const cidade = destino.split(' - ')[0].trim().toLowerCase();
   const match = tabelasFrete.ES.ES1.cidades.find(c => cidade === c.toLowerCase());
   tabela = match ? tabelasFrete.ES.ES1 : tabelasFrete.ES.default;
 }
