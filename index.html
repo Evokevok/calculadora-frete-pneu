@@ -299,6 +299,9 @@ Object.keys(pneus)
   // Determina o estado do destino
   const estadoDestino = destino.split(' - ')[1]?.trim().toUpperCase();
   let tabela = tabelasFrete[estadoDestino];
+     
+  // 👉 Função para normalizar (remove acentos, deixa minúsculo)
+const normalize = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
   // Se for Alagoas, checa se é AL1
   if (estadoDestino === 'AL' && tabelasFrete.AL?.AL1) {
