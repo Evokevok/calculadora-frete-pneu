@@ -307,11 +307,11 @@ Object.keys(pneus)
     tabela = match ? tabelasFrete.AL.AL1 : tabelasFrete.AL.default;
   }
      // Se for Espirito Santo, checa se é E1
-  if (estadoDestino === 'ES' && tabelasFrete.ES?.ES1) {
-    const cidade = destino.split(' - ')[0].trim().toLowerCase();
-    const match = tabelasFrete.ES.ES1.cidades.find(c => cidade === c.toLowerCase());
-    tabela = match ? tabelasFrete.ES.ES1 : tabelasFrete.ES.default;
-  }
+if (estadoDestino === 'ES' && tabelasFrete.ES?.ES1) {
+  const cidade = cidadeDestino.split(' - ')[0].trim().toLowerCase();
+  const match = tabelasFrete.ES.ES1.cidades.find(c => cidade === c.toLowerCase());
+  tabela = match ? tabelasFrete.ES.ES1 : tabelasFrete.ES.default;
+}
 
   if (!tabela) {
     resultado.innerHTML = 'Tabela de frete não encontrada para o estado.';
