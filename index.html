@@ -331,7 +331,7 @@ if (estadoDestino === 'MA' && tabelasFrete.MA?.MA1) {
   tabela = match ? tabelasFrete.MA.MA1 : tabelasFrete.MA.default;
 }
       // Se for Piaui, checa se é PI1
-if (estadoDestino === 'PI' && tabelasFrete.MA?.PI1) {
+if (estadoDestino === 'PI' && tabelasFrete.PI?.PI1) {
   const cidade = destino.split(' - ')[0].trim().toLowerCase();
   const match = tabelasFrete.PI.PI1.cidades.find(c => cidade === c.toLowerCase());
   tabela = match ? tabelasFrete.PI.PI1 : tabelasFrete.PI.default;
