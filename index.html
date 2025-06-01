@@ -220,8 +220,9 @@ const tabelasFrete = {
   PA: { faixa: [{limite:30,valorKg:139.9}, {limite:50,valorKg:159.1}, {limite:70,valorKg:203.0}, {limite:100,valorKg:274.0}], valorExcedente: 2094.4, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   PA: { faixa: [{limite:30,valorKg:99.1}, {limite:50,valorKg:112.6}, {limite:70,valorKg:143.7}, {limite:100,valorKg:194.3}], valorExcedente: 1713.6, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   PA: { faixa: [{limite:30,valorKg:125.5}, {limite:50,valorKg:142.8}, {limite:70,valorKg:182.2}, {limite:100,valorKg:246.2}], valorExcedente: 1971.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
-  PB: { faixa: [{limite:30,valorKg:120.2}, {limite:50,valorKg:136.7}, {limite:70,valorKg:174.5}, {limite:100,valorKg:235.8}], valorExcedente: 2016.0, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
-  PB: { faixa: [{limite:30,valorKg:90.0}, {limite:50,valorKg:102.0}, {limite:70,valorKg:130.6}, {limite:100,valorKg:176.5}], valorExcedente: 1657.6, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PB: { PB1: { cidades: ["LUCENA", "MAMANGUAPE", "MARI", "MULUNGU", "RIO TINTO", "SANTA RITA","ALHANDRA", "BAYEUX", "CAAPORA", "CABEDELO","CONDE", "CRUZ DO ESPIRITO SANTO","ITABAIANA", "ITATUBA", "JOAO PESSOA"],
+    faixa: [{limite:30,valorKg:90.0}, {limite:50,valorKg:102.0}, {limite:70,valorKg:130.6}, {limite:100,valorKg:176.5}], valorExcedente: 1657.6, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  default: {  faixa: [{limite:30,valorKg:120.2}, {limite:50,valorKg:136.7}, {limite:70,valorKg:174.5}, {limite:100,valorKg:235.8}], valorExcedente: 2016.0, gris: 0.0049, grisMin: 4.97, adVal: 0.0051, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69} },MA: { faixa: [{limite:30,valorKg:148.2}, {limite:50,valorKg:168.6}, {limite:70,valorKg:215.1}, {limite:100,valorKg:290.7}], valorExcedente: 2318.4, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   PE: { PE1: { cidades: ["MORENO", "OLINDA", "PAULISTA", "RECIFE", "SAO LOURENCO DA MATA", "ABREU E LIMA","ALAGOINHA", "ALTINHO", "CABO DE SANTO AGOSTINHO", "CAMARAGIBE","IGARASSU", "IPOJUCA","ITAPISSUMA", "JABOATAO DOS GUARARAPES"],
     faixa: [{limite:30,valorKg:85.4}, {limite:50,valorKg:97.2}, {limite:70,valorKg:124.0}, {limite:100,valorKg:167.6}], valorExcedente: 1579.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   default: {  faixa: [{limite:30,valorKg:118.0}, {limite:50,valorKg:134.2}, {limite:70,valorKg:171.2}, {limite:100,valorKg:231.3}], valorExcedente: 1982.4, gris: 0.0049, grisMin: 4.97, adVal: 0.0051, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69} },MA: { faixa: [{limite:30,valorKg:148.2}, {limite:50,valorKg:168.6}, {limite:70,valorKg:215.1}, {limite:100,valorKg:290.7}], valorExcedente: 2318.4, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
@@ -349,6 +350,12 @@ if (estadoDestino === 'PE' && tabelasFrete.PE?.PE1) {
   const cidade = destino.split(' - ')[0].trim().toLowerCase();
   const match = tabelasFrete.PE.PE1.cidades.find(c => cidade === c.toLowerCase());
   tabela = match ? tabelasFrete.PE.PE1 : tabelasFrete.PE.default;
+}
+        // Se for Paraiba, checa se é PB1
+if (estadoDestino === 'PB' && tabelasFrete.PB?.PB1) {
+  const cidade = destino.split(' - ')[0].trim().toLowerCase();
+  const match = tabelasFrete.PB.PB1.cidades.find(c => cidade === c.toLowerCase());
+  tabela = match ? tabelasFrete.PB.PB1 : tabelasFrete.PB.default;
 }
 
   if (!tabela) {
