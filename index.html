@@ -232,8 +232,10 @@ const tabelasFrete = {
   PR: { faixa: [{limite:30,valorKg:58.9}, {limite:50,valorKg:67.0},{limite:70,valorKg:87.7},{limite:100,valorKg:115.6}], valorExcedente: 1019.2, gris: 0.002, grisMin: 4.97, adVal: 0.0049, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   PR: { faixa: [{limite:30,valorKg:48.55}, {limite:50,valorKg:55.2},{limite:70,valorKg:70.4},{limite:100,valorKg:95.2}], valorExcedente: 560.0, gris: 0.002, grisMin: 4.97, adVal: 0.0035, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   PR: { faixa: [{limite:30,valorKg:53.7}, {limite:50,valorKg:61.1},{limite:70,valorKg:78.0},{limite:100,valorKg:105.3}], valorExcedente: 806.4, gris: 0.002, grisMin: 4.97, adVal: 0.0049, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
-  RJ: { faixa: [{limite:30,valorKg:63.2}, {limite:50,valorKg:71.9}, {limite:70,valorKg:91.7}, {limite:100,valorKg:124.0}], valorExcedente: 1243.2, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
-  RJ: { faixa: [{limite:30,valorKg:117.2}, {limite:50,valorKg:133.3}, {limite:70,valorKg:170.1}, {limite:100,valorKg:229.9}], valorExcedente: 1971.2, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  RJ: { RJ1: { cidades: ["MESQUITA", "NILOPOLIS", "NITEROI", "NOVA IGUACU", "RIO DE JANEIRO", "SAO JOAO DE MERITI", "BELFORD ROXO", "ITABORAI"],
+    faixa: [{limite:30,valorKg:57.12}, {limite:50,valorKg:64.95}, {limite:70,valorKg:82.87}, {limite:100,valorKg:111.99}], valorExcedente: 985.6, gris: 0.002, grisMin: 4.97, adVal: 0.0035, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  default: {  faixa: [{limite:30,valorKg:63.24}, {limite:50,valorKg:71.92}, {limite:70,valorKg:91.76}, {limite:100,valorKg:124.0}], valorExcedente: 1243.2, gris: 0.0049, grisMin: 4.97, adVal: 0.0051, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69} },MA: { faixa: [{limite:30,valorKg:148.2}, {limite:50,valorKg:168.6}, {limite:70,valorKg:215.1}, {limite:100,valorKg:290.7}], valorExcedente: 2318.4, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SP: { faixa: [{limite:30,valorKg:58.9}, {limite:50,valorKg:67.0}, {limite:70,valorKg:85.5}, {limite:100,valorKg:115.6}], valorExcedente: 1220.8, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   RN: { faixa: [{limite:30,valorKg:74.0}, {limite:50,valorKg:79.0}, {limite:70,valorKg:89.0}, {limite:100,valorKg:109.0}], valorExcedente: 1490.0, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   RO: { faixa: [{limite:30,valorKg:75.0}, {limite:50,valorKg:80.0}, {limite:70,valorKg:90.0}, {limite:100,valorKg:110.0}], valorExcedente: 1500.0, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   RR: { faixa: [{limite:30,valorKg:376.0}, {limite:50,valorKg:551.0}, {limite:70,valorKg:801.0}, {limite:100,valorKg:1511.0}], valorExcedente: 5510.0, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
@@ -244,8 +246,8 @@ const tabelasFrete = {
   SC: { faixa: [{limite:30,valorKg:58.9}, {limite:50,valorKg:67.0}, {limite:70,valorKg:85.5}, {limite:100,valorKg:115.6}], valorExcedente: 884.8, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   SC: { faixa: [{limite:30,valorKg:53.75}, {limite:50,valorKg:61.1}, {limite:70,valorKg:77.8}, {limite:100,valorKg:105.3}], valorExcedente: 582.4, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   SE: { SE1: { cidades: ["MALHADOR", "NOSSA SENHORA DO SOCORRO", "SANTA ROSA DE LIMA", "SANTO AMARO DAS BROTAS", "SAO CRISTOVAO", "SIRIRI","ARACAJU", "BARRA DOS COQUEIROS", "DIVINA PASTORA", "GENERAL MAYNARD"],
-    faixa: [{limite:30,valorKg:80.1}, {limite:50,valorKg:91.1}, {limite:70,valorKg:116.3}, {limite:100,valorKg:157.2}], valorExcedente: 1478.4, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
-  default: {  faixa: [{limite:30,valorKg:113.4}, {limite:50,valorKg:129.0}, {limite:70,valorKg:164.6}, {limite:100,valorKg:222.4}], valorExcedente: 1780.8, gris: 0.0049, grisMin: 4.97, adVal: 0.0051, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69} },MA: { faixa: [{limite:30,valorKg:148.2}, {limite:50,valorKg:168.6}, {limite:70,valorKg:215.1}, {limite:100,valorKg:290.7}], valorExcedente: 2318.4, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+    faixa: [{limite:30,valorKg:80.18}, {limite:50,valorKg:91.19}, {limite:70,valorKg:116.35}, {limite:100,valorKg:157.23}], valorExcedente: 1478.4, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  default: {  faixa: [{limite:30,valorKg:113.47}, {limite:50,valorKg:129.04}, {limite:70,valorKg:164.64}, {limite:100,valorKg:222.49}], valorExcedente: 1780.8, gris: 0.0049, grisMin: 4.97, adVal: 0.0051, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69} },MA: { faixa: [{limite:30,valorKg:148.2}, {limite:50,valorKg:168.6}, {limite:70,valorKg:215.1}, {limite:100,valorKg:290.7}], valorExcedente: 2318.4, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   SP: { faixa: [{limite:30,valorKg:58.9}, {limite:50,valorKg:67.0}, {limite:70,valorKg:85.5}, {limite:100,valorKg:115.6}], valorExcedente: 1220.8, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   SP: { faixa: [{limite:30,valorKg:71.8}, {limite:50,valorKg:81.7}, {limite:70,valorKg:104.2}, {limite:100,valorKg:140.9}], valorExcedente: 1321.6, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   SP: { faixa: [{limite:30,valorKg:76.7}, {limite:50,valorKg:87.2}, {limite:70,valorKg:111.2}, {limite:100,valorKg:150.3}], valorExcedente: 1411.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
@@ -363,6 +365,12 @@ if (estadoDestino === 'SE' && tabelasFrete.SE?.SE1) {
   const cidade = destino.split(' - ')[0].trim().toLowerCase();
   const match = tabelasFrete.SE.SE1.cidades.find(c => cidade === c.toLowerCase());
   tabela = match ? tabelasFrete.SE.SE1 : tabelasFrete.SE.default;
+}
+      // Se for Rio de Janeiro, checa se é RJ1
+if (estadoDestino === 'RJ' && tabelasFrete.RJ?.RJ1) {
+  const cidade = destino.split(' - ')[0].trim().toLowerCase();
+  const match = tabelasFrete.RJ.RJ1.cidades.find(c => cidade === c.toLowerCase());
+  tabela = match ? tabelasFrete.RJ.RJ1 : tabelasFrete.RJ.default;
 }
 
   if (!tabela) {
