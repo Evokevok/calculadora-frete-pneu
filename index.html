@@ -373,20 +373,6 @@ if (estadoDestino === 'RJ' && tabelasFrete.RJ?.RJ1) {
   const match = tabelasFrete.RJ.RJ1.cidades.find(c => cidade === c.toLowerCase());
   tabela = match ? tabelasFrete.RJ.RJ1 : tabelasFrete.RJ.default;
 }
-     
-   // Se for Tocantins, checa se é TO1
-if (estadoDestino === 'TO' && tabelasFrete.TO?.TO1) {
-  const matchTO1 = tabelasFrete.TO.TO1.cidades.find(c => normalize(c) === cidade);
-  const matchTO2 = tabelasFrete.TO.TO2?.cidades.find(c => normalize(c) === cidade);
-
-if (matchTO1) {
-  tabela = tabelasFrete.TO.TO1;
-} else if (matchTO2) {
-  tabela = tabelasFrete.TO.TO2;
-} else {
-  tabela = tabelasFrete.TO.default;
-}
-}
 
   if (!tabela) {
     resultado.innerHTML = 'Tabela de frete não encontrada para o estado.';
