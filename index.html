@@ -375,7 +375,7 @@ if (estadoDestino === 'MG') {
   const matchCE1 = tabelasFrete.MG.MG1.cidades.find(c => normalize(c) === cidade);
   const matchCE2 = tabelasFrete.MG.MG2.cidades.find(c => normalize(c) === cidade);
 
-  if (matchCE1) {
+  if (matchMG1) {
     tabela = tabelasFrete.MG.MG1;
   } else if (matchMG2) {
     tabela = tabelasFrete.MG.MG2;
