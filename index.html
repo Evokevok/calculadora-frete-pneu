@@ -367,6 +367,12 @@ if (estadoDestino === 'RJ' && tabelasFrete.RJ?.RJ1) {
   const match = tabelasFrete.RJ.RJ1.cidades.find(c => cidade === c.toLowerCase());
   tabela = match ? tabelasFrete.RJ.RJ1 : tabelasFrete.RJ.default;
 }
+     // Se for Minas Gerais, checa se é MG1
+if (estadoDestino === 'MG' && tabelasFrete.MG?.MG1) {
+  const cidade = destino.split(' - ')[0].trim().toLowerCase();
+  const match = tabelasFrete.MG.MG1.cidades.find(c => cidade === c.toLowerCase());
+  tabela = match ? tabelasFrete.MG.MG1 : tabelasFrete.MG.default;
+}
 
   if (!tabela) {
     resultado.innerHTML = 'Tabela de frete não encontrada para o estado.';
