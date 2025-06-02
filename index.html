@@ -370,10 +370,18 @@ if (estadoDestino === 'RJ' && tabelasFrete.RJ?.RJ1) {
   tabela = match ? tabelasFrete.RJ.RJ1 : tabelasFrete.RJ.default;
 }
      // Se for Minas Gerais, checa se é MG1
-if (estadoDestino === 'MG' && tabelasFrete.MG?.MG1) {
-  const cidade = destino.split(' - ')[0].trim().toLowerCase();
-  const match = tabelasFrete.MG.MG1.cidades.find(c => cidade === c.toLowerCase());
-  tabela = match ? tabelasFrete.MG.MG1 : tabelasFrete.MG.default;
+if (estadoDestino === 'MG') {
+  const cidade = normalize(destino.split(' - ')[0]);
+  const matchCE1 = tabelasFrete.MG.MG1.cidades.find(c => normalize(c) === cidade);
+  const matchCE2 = tabelasFrete.MG.MG2.cidades.find(c => normalize(c) === cidade);
+
+  if (matchCE1) {
+    tabela = tabelasFrete.MG.MG1;
+  } else if (matchMG2) {
+    tabela = tabelasFrete.MG.MG2;
+  } else {
+    tabela = tabelasFrete.MG.default;
+  }
 }
 
   if (!tabela) {
