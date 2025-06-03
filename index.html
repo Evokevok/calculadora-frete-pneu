@@ -214,9 +214,11 @@ const tabelasFrete = {
   default: {  faixa: [{limite:30,valorKg:148.27}, {limite:50,valorKg:168.6}, {limite:70,valorKg:215.13}, {limite:100,valorKg:290.71}], valorExcedente: 2318.4, gris: 0.0049, grisMin: 4.97, adVal: 0.0057, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69} },  
   MS: { faixa: [{limite:30,valorKg:85.4}, {limite:50,valorKg:97.2}, {limite:70,valorKg:124.0}, {limite:100,valorKg:167.6}], valorExcedente: 1579.2, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   MT: { faixa: [{limite:30,valorKg:113.4}, {limite:50,valorKg:129.0}, {limite:70,valorKg:164.6}, {limite:100,valorKg:222.4}], valorExcedente: 1960.0, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
-  PA: { faixa: [{limite:30,valorKg:139.9}, {limite:50,valorKg:159.1}, {limite:70,valorKg:203.0}, {limite:100,valorKg:274.0}], valorExcedente: 2094.4, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
-  PA: { faixa: [{limite:30,valorKg:99.1}, {limite:50,valorKg:112.6}, {limite:70,valorKg:143.7}, {limite:100,valorKg:194.3}], valorExcedente: 1713.6, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
-  PA: { faixa: [{limite:30,valorKg:125.5}, {limite:50,valorKg:142.8}, {limite:70,valorKg:182.2}, {limite:100,valorKg:246.2}], valorExcedente: 1971.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PA: { PA1: { cidades: ["BELEM"],
+    faixa: [{limite:30,valorKg:99.1}, {limite:50,valorKg:112.69}, {limite:70,valorKg:143.79}, {limite:100,valorKg:194.3}], valorExcedente: 1713.6, gris: 0.002, grisMin: 4.97, adVal: 0.0051, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  PA2: { cidades: ["BENEVIDES", "MARITUBA", "SANTA BARBARA DO PARA","SANTA IZABEL DO PARA","ANANINDEUA"],
+    faixa: [{limite:30,valorKg:125.57}, {limite:50,valorKg:142.8}, {limite:70,valorKg:182.2}, {limite:100,valorKg:246.21}], valorExcedente: 1971.2, gris: 0.002, grisMin: 4.97, adVal: 0.0057, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  default: {  faixa: [{limite:30,valorKg:139.94}, {limite:50,valorKg:159.15}, {limite:70,valorKg:203.06}, {limite:100,valorKg:274.40}], valorExcedente: 2094.4, gris: 0.0049, grisMin: 4.97, adVal: 0.0068, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69} },
   MG: { MG1: { cidades: ["BELO HORIZONTE", "BETIM", "CONTAGEM","IBIRITE","NOVA LIMA","RAPOSOS","RIBEIRAO DAS NEVES","RIO ACIMA","SABARA","VESPASIANO"],
     faixa: [{limite:30,valorKg:64.9}, {limite:50,valorKg:73.81}, {limite:70,valorKg:94.17}, {limite:100,valorKg:127.27}], valorExcedente: 1008.0, gris: 0.002, grisMin: 4.97, adVal: 0.0035, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   MG2: { cidades: ["BRUMADINHO", "IGARAPE", "JUIZ DE FORA","MARIO CAMPOS","OURO FINO","POUSO ALEGRE","SANTA LUZIA","SARZEDO","SETE LAGOAS","UBERLANDIA"],
@@ -384,6 +386,20 @@ if (estadoDestino === 'MG' && tabelasFrete.MG?.MG1 && tabelasFrete.MG?.MG2) {
   }
 }
 
+      // Se for Para, checa se é PA1
+if (estadoDestino === 'PA' && tabelasFrete.PA?.PA1 && tabelasFrete.PA?.PA2) {
+  const cidade = normalize(destino.split(' - ')[0]);
+  const matchPA1 = tabelasFrete.PA.PA1.cidades.find(c => normalize(c) === cidade);
+  const matchPA2 = tabelasFrete.PA.PA2.cidades.find(c => normalize(c) === cidade);
+
+  if (matchPA1) {
+    tabela = tabelasFrete.PA.PA1;
+  } else if (matchPA2) {
+    tabela = tabelasFrete.PA.PA2;
+  } else {
+    tabela = tabelasFrete.PA.default;
+  }
+}
   if (!tabela) {
     resultado.innerHTML = 'Tabela de frete não encontrada para o estado.';
     return;
