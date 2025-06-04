@@ -456,8 +456,8 @@ if (estadoDestino === 'RS' && tabelasFrete.RS?.RS1 && tabelasFrete.RS?.RS2) {
      // Se for Parana, checa se é PR1
 if (estadoDestino === 'PR' && tabelasFrete.PR?.PR1 && tabelasFrete.PR?.PR2) {
   const cidade = normalize(destino.split(' - ')[0]);
-  const matchMG1 = tabelasFrete.PR.PR1.cidades.find(c => normalize(c) === cidade);
-  const matchMG2 = tabelasFrete.PR.PR2.cidades.find(c => normalize(c) === cidade);
+  const matchPR1 = tabelasFrete.PR.PR1.cidades.find(c => normalize(c) === cidade);
+  const matchPR2 = tabelasFrete.PR.PR2.cidades.find(c => normalize(c) === cidade);
 
   if (matchPR1) {
     tabela = tabelasFrete.PR.PR1;
