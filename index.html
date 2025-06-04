@@ -469,6 +469,20 @@ if (estadoDestino === 'PR' && tabelasFrete.PR?.PR1 && tabelasFrete.PR?.PR2) {
     tabela = tabelasFrete.PR.default;
   }
 }
+     // Se for Santa Catarina, checa se é SC1
+if (estadoDestino === 'SC' && tabelasFrete.SC?.SC1 && tabelasFrete.SC?.SC2) {
+  const cidade = normalize(destino.split(' - ')[0]);
+  const matchSC1 = tabelasFrete.SC.SC1.cidades.find(c => normalize(c) === cidade);
+  const matchSC2 = tabelasFrete.SC.SC2.cidades.find(c => normalize(c) === cidade);
+
+  if (matchSC1) {
+    tabela = tabelasFrete.SC.SC1;
+  } else if (matchSC2) {
+    tabela = tabelasFrete.SC.SC2;
+  } else {
+    tabela = tabelasFrete.SC.default;
+  }
+}
      
   if (!tabela) {
     resultado.innerHTML = 'Tabela de frete não encontrada para o estado.';
