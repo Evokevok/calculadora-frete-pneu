@@ -214,7 +214,11 @@ const tabelasFrete = {
     faixa: [{limite:30,valorKg:105.15}, {limite:50,valorKg:119.58}, {limite:70,valorKg:152.57}, {limite:100,valorKg:206.17}], valorExcedente: 1915.2, gris: 0.002, grisMin: 4.97, adVal: 0.0046, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   default: {  faixa: [{limite:30,valorKg:148.27}, {limite:50,valorKg:168.6}, {limite:70,valorKg:215.13}, {limite:100,valorKg:290.71}], valorExcedente: 2318.4, gris: 0.0049, grisMin: 4.97, adVal: 0.0057, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69} },  
   MS: { faixa: [{limite:30,valorKg:85.4}, {limite:50,valorKg:97.2}, {limite:70,valorKg:124.0}, {limite:100,valorKg:167.6}], valorExcedente: 1579.2, gris: 0.002, grisMin: 4.97, adVal: 0.0045, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
-  MT: { faixa: [{limite:30,valorKg:113.4}, {limite:50,valorKg:129.0}, {limite:70,valorKg:164.6}, {limite:100,valorKg:222.4}], valorExcedente: 1960.0, gris: 0.002, grisMin: 4.97, adVal: 0.005, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  MT: { MT1: { cidades: ["POXOREU", "PRIMAVERA DO LESTE", "ROSARIO OESTE","SANTO ANTONIO DO LEVERGER","SAO JOSE DOS QUATRO MARCOS","TANGARA DA SERRA"],
+    faixa: [{limite:30,valorKg:95.09}, {limite:50,valorKg:108.14}, {limite:70,valorKg:137.96}, {limite:100,valorKg:186.44}], valorExcedente: 1748.4, gris: 0.002, grisMin: 4.97, adVal: 0.0063, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  MT2: { cidades: ["RONDONOPOLIS", "VARZEA GRANDE", "CUIABA"],
+    faixa: [{limite:30,valorKg:76.71}, {limite:50,valorKg:87.24}, {limite:70,valorKg:111.29}, {limite:100,valorKg:150.39}], valorExcedente: 1411.2, gris: 0.002, grisMin: 4.97, adVal: 0.0049, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  default: {  faixa: [{limite:30,valorKg:113.47}, {limite:50,valorKg:129.04}, {limite:70,valorKg:164.64}, {limite:100,valorKg:222.49}], valorExcedente: 1960.0, gris: 0.0049, grisMin: 4.97, adVal: 0.0063, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69} },
   PI: { PI1: { cidades: ["Altos", "BENEDITINOS", "COIVARAS", "CURRALINHOS", "JOSE DE FREITAS", "LAGOA ALEGRE","LAGOA DO PIAUI", "MONSENHOR GIL", "TERESINA", "UNIAO"],
     faixa: [{limite:30,valorKg:105.1}, {limite:50,valorKg:119.5}, {limite:70,valorKg:152.5}, {limite:100,valorKg:206.1}], valorExcedente: 1915.2, gris: 0.002, grisMin: 4.97, adVal: 0.0046, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   default: {  faixa: [{limite:30,valorKg:148.2}, {limite:50,valorKg:168.6}, {limite:70,valorKg:215.1}, {limite:100,valorKg:290.7}], valorExcedente: 2318.4, gris: 0.0049, grisMin: 4.97, adVal: 0.0057, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69} },
@@ -368,7 +372,7 @@ if (estadoDestino === 'CE' && tabelasFrete.CE?.CE1) {
   const match = tabelasFrete.CE.CE1.cidades.find(c => cidade === c.toLowerCase());
   tabela = match ? tabelasFrete.CE.CE1 : tabelasFrete.CE.default;
 }
-      // Se for Ceara, checa se é PE1
+      // Se for Pernambuco, checa se é PE1
 if (estadoDestino === 'PE' && tabelasFrete.PE?.PE1) {
   const cidade = destino.split(' - ')[0].trim().toLowerCase();
   const match = tabelasFrete.PE.PE1.cidades.find(c => cidade === c.toLowerCase());
@@ -506,6 +510,21 @@ if (estadoDestino === 'SP' && tabelasFrete.SP?.SP1 && tabelasFrete.SP?.SP2) {
     tabela = tabelasFrete.SP.default;
   }
 }
+      // Se for Mato Grosso, checa se é MT1
+if (estadoDestino === 'MT' && tabelasFrete.MT?.MT1 && tabelasFrete.MT?.MT2) {
+  const cidade = normalize(destino.split(' - ')[0]);
+  const matchMT1 = tabelasFrete.MT.MT1.cidades.find(c => normalize(c) === cidade);
+  const matchMT2 = tabelasFrete.MT.MT2.cidades.find(c => normalize(c) === cidade);
+
+  if (matchMT1) {
+    tabela = tabelasFrete.MT.MT1;
+  } else if (matchMT2) {
+    tabela = tabelasFrete.MT.MT2;
+  } else {
+    tabela = tabelasFrete.MT.default;
+  }
+}
+ 
      
   if (!tabela) {
     resultado.innerHTML = 'Tabela de frete não encontrada para o estado.';
