@@ -453,6 +453,20 @@ if (estadoDestino === 'RS' && tabelasFrete.RS?.RS1 && tabelasFrete.RS?.RS2) {
     tabela = tabelasFrete.RS.default;
   }
 }
+     // Se for Parana, checa se é PR1
+if (estadoDestino === 'PR' && tabelasFrete.PR?.PR1 && tabelasFrete.PR?.PR2) {
+  const cidade = normalize(destino.split(' - ')[0]);
+  const matchMG1 = tabelasFrete.PR.PR1.cidades.find(c => normalize(c) === cidade);
+  const matchMG2 = tabelasFrete.PR.PR2.cidades.find(c => normalize(c) === cidade);
+
+  if (matchPR1) {
+    tabela = tabelasFrete.PR.PR1;
+  } else if (matchPR2) {
+    tabela = tabelasFrete.PR.PR2;
+  } else {
+    tabela = tabelasFrete.PR.default;
+  }
+}
      
   if (!tabela) {
     resultado.innerHTML = 'Tabela de frete não encontrada para o estado.';
