@@ -274,13 +274,14 @@ const tabelasFrete = {
   TO2: { cidades: ["LAJEADO", "MIRACEMA DO TOCANTINS", "MIRANORTE","PARAISO DO TOCANTINS","PORTO NACIONAL"],
     faixa: [{limite:30,valorKg:101.7}, {limite:50,valorKg:115.7}, {limite:70,valorKg:147.6}, {limite:100,valorKg:234.7}], valorExcedente: 1713.6, gris: 0.002, grisMin: 4.97, adVal: 0.007, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   default: {  faixa: [{limite:30,valorKg:118.0}, {limite:50,valorKg:134.2}, {limite:70,valorKg:171.2}, {limite:100,valorKg:231.3}], valorExcedente: 1982.4, gris: 0.0049, grisMin: 4.97, adVal: 0.009, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69} },
+  SP: { SP1: { cidades: ["BARROLANDIA", "BRASILANDIA DO TOCANTINS", "FATIMA","OLIVEIRA DE FATIMA","PALMAS"],
+    faixa: [{limite:30,valorKg:48.5}, {limite:50,valorKg:55.2}, {limite:70,valorKg:70.4}, {limite:100,valorKg:95.1}], valorExcedente: 784.0, gris: 0.002, grisMin: 4.97, adVal: 0.0035, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  SP2: { cidades: ["LAJEADO", "MIRACEMA DO TOCANTINS", "MIRANORTE","PARAISO DO TOCANTINS","PORTO NACIONAL"],
+    faixa: [{limite:30,valorKg:53.7}, {limite:50,valorKg:61.1}, {limite:70,valorKg:78.0}, {limite:100,valorKg:105.4}], valorExcedente: 896.0, gris: 0.002, grisMin: 4.97, adVal: 0.0049, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
+  default: {  faixa: [{limite:30,valorKg:95.0}, {limite:50,valorKg:108.1}, {limite:70,valorKg:137.9}, {limite:100,valorKg:186.4}], valorExcedente: 1758.4, gris: 0.0049, grisMin: 4.97, adVal: 0.0049, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69} },
   SP: { faixa: [{limite:30,valorKg:58.9}, {limite:50,valorKg:67.0}, {limite:70,valorKg:85.5}, {limite:100,valorKg:115.6}], valorExcedente: 1220.8, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
   SP: { faixa: [{limite:30,valorKg:71.8}, {limite:50,valorKg:81.7}, {limite:70,valorKg:104.2}, {limite:100,valorKg:140.9}], valorExcedente: 1321.6, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
-  SP: { faixa: [{limite:30,valorKg:76.7}, {limite:50,valorKg:87.2}, {limite:70,valorKg:111.2}, {limite:100,valorKg:150.3}], valorExcedente: 1411.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
-  SP: { faixa: [{limite:30,valorKg:48.5}, {limite:50,valorKg:55.2}, {limite:70,valorKg:70.4}, {limite:100,valorKg:95.1}], valorExcedente: 784.0, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
-  SP: { faixa: [{limite:30,valorKg:95.0}, {limite:50,valorKg:108.1}, {limite:70,valorKg:137.9}, {limite:100,valorKg:186.4}], valorExcedente: 1758.4, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 },
-  SP: { faixa: [{limite:30,valorKg:53.7}, {limite:50,valorKg:61.1}, {limite:70,valorKg:78.0}, {limite:100,valorKg:105.4}], valorExcedente: 896.0, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 }
-};
+  SP: { faixa: [{limite:30,valorKg:76.7}, {limite:50,valorKg:87.2}, {limite:70,valorKg:111.2}, {limite:100,valorKg:150.3}], valorExcedente: 1411.2, gris: 0.002, grisMin: 4.97, adVal: 0.004, trt: 82, tas: 4.7, despacho: 17.45, pedagioPor100Kg: 4.69 }
 
  const selectPneu = document.getElementById('pneuSelect');
 
@@ -493,6 +494,20 @@ if (estadoDestino === 'TO' && tabelasFrete.TO?.TO1 && tabelasFrete.TO?.TO2) {
     tabela = tabelasFrete.TO.TO2;
   } else {
     tabela = tabelasFrete.TO.default;
+  }
+}
+     // Se for São Paulo, checa se é SP1
+if (estadoDestino === 'SP' && tabelasFrete.SP?.SP1 && tabelasFrete.SP?.SP2) {
+  const cidade = normalize(destino.split(' - ')[0]);
+  const matchSP1 = tabelasFrete.SP.SP1.cidades.find(c => normalize(c) === cidade);
+  const matchSP2 = tabelasFrete.SP.SP2.cidades.find(c => normalize(c) === cidade);
+
+  if (matchSP1) {
+    tabela = tabelasFrete.SP.SP1;
+  } else if (matchSP2) {
+    tabela = tabelasFrete.SP.SP2;
+  } else {
+    tabela = tabelasFrete.SP.default;
   }
 }
      
