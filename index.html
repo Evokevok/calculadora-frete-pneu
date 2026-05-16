@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calculadora de Pneus Evok</title>
+  <title>Calculadora de Pneus Rinagro</title>
   <style>
     :root{
       --navy:#06194a; --navy2:#073b91; --blue:#075beb; --blue2:#004fe0; --light:#eef5ff;
@@ -15,23 +15,23 @@
     body:before,body:after{content:"";position:fixed;top:92px;width:330px;height:600px;opacity:.045;z-index:0;pointer-events:none;background-image:repeating-linear-gradient(45deg,transparent 0 20px,#0c63ff 21px 24px,transparent 25px 48px);}
     body:before{left:-120px;transform:rotate(-18deg)} body:after{right:-130px;transform:rotate(18deg)}
     .topbar{height:76px;background:linear-gradient(90deg,#061848,#073d93);display:flex;align-items:center;justify-content:space-between;padding:0 52px;color:white;box-shadow:0 8px 25px rgba(0,29,84,.2);position:relative;z-index:2}
-    .brand{display:flex;align-items:center;gap:18px}.logo{font-weight:950;font-style:italic;font-size:31px;letter-spacing:4px;line-height:1;color:#fff;text-shadow:2px 0 0 #67b5ff}.divider{height:34px;width:1px;background:rgba(255,255,255,.35)}.brand-title{font-size:18px;font-weight:800;letter-spacing:-.02em}.secure{display:flex;align-items:center;gap:12px;text-align:left;font-size:12px;color:rgba(255,255,255,.78)}.secure .shield{width:28px;height:28px;border:2px solid rgba(255,255,255,.65);border-radius:10px 10px 12px 12px;display:grid;place-items:center}.secure strong{display:block;color:white;font-size:14px;margin-bottom:2px}
+    .brand{display:flex;align-items:center;gap:18px}.logo{display:flex;align-items:center;justify-content:center}.rinagro-logo{width:190px;max-width:100%;height:44px}.rinagro-logo svg{display:block;width:100%;height:100%}.divider{height:34px;width:1px;background:rgba(255,255,255,.35)}.brand-title{font-size:18px;font-weight:800;letter-spacing:-.02em}.secure{display:flex;align-items:center;gap:12px;text-align:left;font-size:12px;color:rgba(255,255,255,.78)}.secure .shield{width:28px;height:28px;border:2px solid rgba(255,255,255,.65);border-radius:10px 10px 12px 12px;display:grid;place-items:center}.secure strong{display:block;color:white;font-size:14px;margin-bottom:2px}
     .page{width:min(1110px,calc(100% - 44px));margin:44px auto 24px;position:relative;z-index:1}.hero{text-align:center;margin:0 0 25px}.hero-icon{width:58px;height:58px;border-radius:16px;background:#eaf2ff;color:#075beb;display:grid;place-items:center;margin:0 auto 17px;font-size:31px;box-shadow:0 12px 26px rgba(0,91,234,.12)}.hero h1{margin:0;font-size:40px;line-height:1.05;font-weight:850;letter-spacing:-.045em}.hero p{margin:12px 0 0;font-size:16px;color:var(--muted)}
-    .form-card{width:min(900px,100%);margin:0 auto;background:rgba(255,255,255,.94);border:1px solid rgba(219,228,242,.9);border-radius:18px;box-shadow:var(--shadow);padding:31px 32px 30px}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px 24px;align-items:end}.field{display:grid;grid-template-columns:54px 1fr;gap:14px;align-items:end}.span-6{grid-column:span 6}.span-12{grid-column:span 12}.span-4{grid-column:span 4}.icon{width:54px;height:54px;border-radius:14px;background:#eaf2ff;color:#075beb;display:grid;place-items:center;font-size:22px;margin-bottom:0}.field label{display:block;font-size:14px;font-weight:850;margin:0 0 9px;color:#102452}input,select{width:100%;height:44px;border:1px solid #ced9eb;border-radius:8px;background:#fff;padding:0 13px;color:#152955;font-size:14px;outline:none;box-shadow:inset 0 1px 1px rgba(0,0,0,.015)}input:focus,select:focus{border-color:#0b5ded;box-shadow:0 0 0 4px rgba(11,93,237,.10)}input[readonly]{background:#f6f9ff;color:#273b6b}.btn{height:44px;border:0;border-radius:8px;background:linear-gradient(180deg,#1267ff,#004bdc);color:white;font-weight:850;font-size:14px;cursor:pointer;box-shadow:0 9px 18px rgba(0,81,224,.22);display:flex;align-items:center;justify-content:center;gap:9px;width:100%}.btn:hover{filter:brightness(.97)}.calc-btn{grid-column:span 12;margin-top:-1px}.no-icon{display:block}.no-icon .control{grid-column:auto}
+    .form-card{width:min(900px,100%);margin:0 auto;background:rgba(255,255,255,.94);border:1px solid rgba(219,228,242,.9);border-radius:18px;box-shadow:var(--shadow);padding:31px 32px 30px}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px 24px;align-items:end}.field{display:grid;grid-template-columns:54px 1fr;gap:14px;align-items:end}.span-6{grid-column:span 6}.span-12{grid-column:span 12}.span-4{grid-column:span 4}.icon{width:54px;height:54px;border-radius:14px;background:#eaf2ff;color:#075beb;display:grid;place-items:center;font-size:22px;margin-bottom:0}.field label{display:block;font-size:14px;font-weight:850;margin:0 0 9px;color:#102452}input,select{width:100%;height:44px;border:1px solid #ced9eb;border-radius:8px;background:#fff;padding:0 13px;color:#152955;font-size:14px;outline:none;box-shadow:inset 0 1px 1px rgba(0,0,0,.015)}input:focus,select:focus{border-color:#0b5ded;box-shadow:0 0 0 4px rgba(11,93,237,.10)}input[readonly]{background:#f6f9ff;color:#273b6b}select optgroup{font-weight:850;color:#102452}select option{font-weight:500;color:#152955}.btn{height:44px;border:0;border-radius:8px;background:linear-gradient(180deg,#1267ff,#004bdc);color:white;font-weight:850;font-size:14px;cursor:pointer;box-shadow:0 9px 18px rgba(0,81,224,.22);display:flex;align-items:center;justify-content:center;gap:9px;width:100%}.btn:hover{filter:brightness(.97)}.calc-btn{grid-column:span 12;margin-top:-1px}.no-icon{display:block}.no-icon .control{grid-column:auto}
     .result-wrap{width:min(900px,100%);margin:27px auto 0}.section-title{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:850;margin:0 0 14px 8px}.section-title .small-icon{color:#075beb;font-size:22px}.result-box{background:#fff;border:1px solid rgba(219,228,242,.9);border-radius:16px;box-shadow:var(--shadow2);padding:16px 18px 14px;min-height:136px}.result-placeholder{height:100px;display:grid;place-items:center;color:#7a86a0;font-weight:650}.result-main-card{display:grid;grid-template-columns:330px 1fr;align-items:stretch;gap:22px}.result-total-card{min-height:112px;border-radius:12px;background:linear-gradient(135deg,#0048d4,#075fec);color:white;padding:25px 28px;position:relative;overflow:hidden}.result-total-card:after{content:"🚚";position:absolute;right:25px;bottom:9px;font-size:76px;opacity:.08}.result-label{display:block;font-size:13px;color:rgba(255,255,255,.75);margin-bottom:9px}.result-total-card strong{display:block;font-size:36px;letter-spacing:-.04em;line-height:1}.success-pill{display:inline-flex;margin-top:16px;background:rgba(0,32,100,.35);border-radius:20px;padding:7px 11px;font-size:12px;color:#dcecff}.result-summary{display:grid;grid-template-columns:repeat(4,1fr);align-items:center}.summary-item{text-align:center;padding:8px 15px;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1px solid #dbe4f2}.summary-item:first-child{border-left:0}.summary-icon{width:36px;height:36px;border-radius:50%;background:#eaf2ff;color:#075beb;display:grid;place-items:center;font-weight:900;margin-bottom:8px}.summary-item small{display:block;color:#65728f;font-size:13px;margin-bottom:4px}.summary-item strong{font-size:14px;color:#102452}.summary-item em{font-style:normal;color:#65728f;font-size:13px;margin-top:2px}.info-strip{margin-top:14px;border-radius:9px;background:#eaf2ff;color:#65728f;font-size:13px;padding:12px 14px}.details-box{margin-top:12px;border:1px solid #e3eaf7;border-radius:12px;padding:12px 14px;background:#fbfdff}.details-box summary{cursor:pointer;font-weight:800;color:#102452}.details-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.details-grid div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #edf2fa;padding-bottom:8px}.details-grid span{color:#65728f}.details-grid strong{text-align:right}.red{color:#d11;font-weight:900}.freight-unit-summary{background:linear-gradient(180deg,#fff5f5,#fff);border-left:1px solid #fecaca!important;border-radius:12px;box-shadow:0 0 0 2px rgba(220,38,38,.12),0 10px 24px rgba(220,38,38,.12)}.freight-unit-summary .summary-icon{background:#ffe8e8;color:#dc2626}.freight-unit-summary small{color:#b91c1c;font-weight:900;text-transform:uppercase;letter-spacing:.02em}.freight-unit-summary strong{color:#dc2626!important;font-size:22px!important;font-weight:950!important;line-height:1.05}.freight-unit-summary:after{content:"FRETE UNITARIO";margin-top:6px;font-size:10px;font-weight:950;color:#dc2626;background:#fee2e2;border:1px solid #fecaca;border-radius:999px;padding:4px 8px}.footer-note{display:flex;align-items:center;justify-content:center;gap:8px;color:#7d879f;font-size:13px;margin:22px 0 0}
-    @media(max-width:860px){.topbar{height:auto;padding:18px 22px;align-items:flex-start}.secure{display:none}.brand-title{font-size:15px}.logo{font-size:25px}.page{width:min(100% - 28px,900px);margin-top:30px}.hero h1{font-size:30px}.form-card{padding:22px}.span-6,.span-4{grid-column:span 12}.field{grid-template-columns:48px 1fr}.icon{width:48px;height:48px}.result-main-card{grid-template-columns:1fr}.result-summary{grid-template-columns:repeat(2,1fr)}.summary-item{border-left:0;border-top:1px solid #dbe4f2}.summary-item:nth-child(-n+2){border-top:0}.details-grid{grid-template-columns:1fr}}
+    @media(max-width:860px){.topbar{height:auto;padding:18px 22px;align-items:flex-start}.secure{display:none}.brand-title{font-size:15px}.rinagro-logo{width:152px;height:36px}.page{width:min(100% - 28px,900px);margin-top:30px}.hero h1{font-size:30px}.form-card{padding:22px}.span-6,.span-4{grid-column:span 12}.field{grid-template-columns:48px 1fr}.icon{width:48px;height:48px}.result-main-card{grid-template-columns:1fr}.result-summary{grid-template-columns:repeat(2,1fr)}.summary-item{border-left:0;border-top:1px solid #dbe4f2}.summary-item:nth-child(-n+2){border-top:0}.details-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
   <header class="topbar">
-    <div class="brand"><div class="logo">EVOK</div><div class="divider"></div><div class="brand-title">Calculadora de Pneus Evok</div></div>
+    <div class="brand"><div class="logo rinagro-logo" aria-label="Logo Rinagro"><svg viewBox="0 0 360 84" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true"><g fill="#ffffff"><path d="M36 17c-10.5 0-19 8.5-19 19v11c0 16.6 13.4 30 30 30h4c1.5 0 2.8-1.2 2.8-2.8V62.9c0-1.5-1.2-2.8-2.8-2.8h-4c-7.2 0-13.1-5.9-13.1-13.1V36c0-1.1.9-2 2-2h11.2c1.5 0 2.8-1.2 2.8-2.8v-11c0-1.5-1.2-2.8-2.8-2.8H36Z"/><path d="M49.5 17c16.8 0 30.5 13.7 30.5 30.5S66.3 78 49.5 78h18.6c16.8 0 30.5-13.7 30.5-30.5S84.9 17 68.1 17H49.5Z" opacity=".95"/><path d="M49.8 39.2h16.8l15.7 15.5c1.3 1.3 1.3 3.4.1 4.7l-7.1 7.3c-1.3 1.3-3.4 1.3-4.8 0L49.8 46.3c-1.8-1.8-.5-7.1 0-7.1Z"/><path d="M128.9 67V17.7h22.7c7 0 12.5 2 16.4 5.9 3.9 3.9 5.9 9.1 5.9 15.5 0 6.5-2 11.6-6 15.5-4 3.9-9.4 5.8-16.4 5.8h-11.4V67h-11.2Zm11.2-15.7h10.8c3.7 0 6.6-1.1 8.6-3.2 2.1-2.1 3.1-5 3.1-8.7 0-3.7-1-6.6-3.1-8.7-2-2.1-4.9-3.2-8.6-3.2h-10.8v23.8Z"/><path d="M204.7 67.9c-7.5 0-13.5-2.3-18.1-6.9-4.5-4.6-6.8-10.9-6.8-18.8 0-7.8 2.3-14.1 6.8-18.7 4.6-4.6 10.6-6.9 18.1-6.9 7.5 0 13.5 2.3 18.1 6.9 4.5 4.6 6.8 10.8 6.8 18.7 0 7.9-2.3 14.1-6.8 18.8-4.5 4.6-10.6 6.9-18.1 6.9Zm0-10.1c4.1 0 7.3-1.4 9.7-4.1 2.4-2.8 3.6-6.6 3.6-11.4 0-4.8-1.2-8.6-3.6-11.3-2.4-2.7-5.6-4.1-9.7-4.1-4.1 0-7.4 1.4-9.8 4.1-2.4 2.7-3.6 6.5-3.6 11.3 0 4.9 1.2 8.7 3.6 11.4 2.4 2.8 5.7 4.1 9.8 4.1Z"/><path d="M239.6 67V17.7h22.2c6.8 0 12.2 1.8 16.1 5.5 4 3.7 5.9 8.6 5.9 14.9 0 4.3-1.1 8.1-3.2 11.3-2.1 3.2-5.2 5.5-9.2 6.9l13.2 10.7H267l-11.6-9.8h-4.6V67h-11.2Zm11.2-19h9.8c3.8 0 6.7-.8 8.6-2.5 1.9-1.7 2.9-4.2 2.9-7.5 0-3.2-1-5.6-2.9-7.3-1.9-1.6-4.8-2.4-8.6-2.4h-9.8V48Z"/><path d="M309.3 67V27.8H292V17.7h45.8v10.1h-17.3V67h-11.2Z"/></g></svg></div><div class="divider"></div><div class="brand-title">Calculadora de Pneus Rinagro</div></div>
     <div class="secure"><div class="shield">✓</div><div><strong>Cálculo rápido e seguro</strong><span>Resultados precisos para sua operação</span></div></div>
   </header>
 
   <main class="page">
     <section class="hero">
       <div class="hero-icon">◉</div>
-      <h1>Calculadora de Pneus Evok</h1>
+      <h1>Calculadora de Pneus Rinagro</h1>
       <p>Informe os dados abaixo para calcular o frete com rapidez e precisão.</p>
     </section>
 
@@ -367,14 +367,55 @@ const tabelasFrete = {
 
  const selectPneu = document.getElementById('pneuSelect');
 
-Object.keys(pneus)
-  .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
-  .forEach(modelo => {
-    const option = document.createElement('option');
+const pneusEmpilhadeira = new Set([
+  "600-9 (Agrícola)",
+  "600-10 (Agrícola)",
+  "650-10 (Agrícola)",
+  "700-12 (Agrícola)",
+  "8.25-15 (Agrícola)"
+]);
+
+function nomePneuLimpo(modelo) {
+  return modelo.replace(/\s*\((Moto|Agrícola|Empilhadeira|Industrial|Carga)\)\s*$/i, "");
+}
+
+function categoriaPneu(modelo) {
+  if (pneusEmpilhadeira.has(modelo)) return "Empilhadeira";
+  if (/\(Moto\)/i.test(modelo)) return "Moto";
+  if (/\(Agrícola\)/i.test(modelo)) return "Agrícola";
+  if (/C$|R17\.5|R19\.5|R22\.5/i.test(modelo)) return "Carga";
+  return "Passeio / SUV";
+}
+
+const ordemCategorias = ["Passeio / SUV", "Carga", "Empilhadeira", "Moto", "Agrícola"];
+const gruposPneus = ordemCategorias.reduce((acc, categoria) => {
+  acc[categoria] = [];
+  return acc;
+}, {});
+
+Object.keys(pneus).forEach(modelo => {
+  gruposPneus[categoriaPneu(modelo)].push(modelo);
+});
+
+ordemCategorias.forEach(categoria => {
+  const modelos = gruposPneus[categoria].sort((a, b) =>
+    nomePneuLimpo(a).localeCompare(nomePneuLimpo(b), undefined, { numeric: true })
+  );
+
+  if (!modelos.length) return;
+
+  const optgroup = document.createElement("optgroup");
+  optgroup.label = categoria;
+
+  modelos.forEach(modelo => {
+    const option = document.createElement("option");
     option.value = modelo;
-    option.textContent = modelo;
-    selectPneu.appendChild(option);
+    option.textContent = nomePneuLimpo(modelo);
+    optgroup.appendChild(option);
   });
+
+  selectPneu.appendChild(optgroup);
+});
 
     function consultarCEP() {
       const cep = document.getElementById('cepDestino').value.replace(/\D/g, '');
@@ -396,6 +437,7 @@ Object.keys(pneus)
   const origem = document.getElementById('cidadeOrigem').value;
   const destino = document.getElementById('cidadeDestino').value;
   const modelo = document.getElementById('pneuSelect').value;
+  const modeloExibicao = nomePneuLimpo(modelo);
   const qtd = parseInt(document.getElementById('quantidade').value);
   const custoUnitario = parseFloat(document.getElementById('custoPneu').value);
   const resultado = document.getElementById('resultado');
@@ -659,7 +701,7 @@ if (estadoDestino === 'MT' && tabelasFrete.MT?.MT1 && tabelasFrete.MT?.MT2) {
         <div class="summary-item">
           <span class="summary-icon">◉</span>
           <small>Pneu</small>
-          <strong>${modelo}</strong>
+          <strong>${modeloExibicao}</strong>
         </div>
         <div class="summary-item">
           <span class="summary-icon">⌖</span>
@@ -680,7 +722,7 @@ if (estadoDestino === 'MT' && tabelasFrete.MT?.MT1 && tabelasFrete.MT?.MT2) {
     <details class="details-box">
       <summary>Ver detalhes do cálculo</summary>
       <div class="details-grid">
-        <div><span>Modelo</span><strong>${modelo}</strong></div>
+        <div><span>Modelo</span><strong>${modeloExibicao}</strong></div>
         <div><span>Origem</span><strong>${origem}</strong></div>
         <div><span>Destino</span><strong>${destino}</strong></div>
         <div><span>Quantidade</span><strong>${qtd}</strong></div>
