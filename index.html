@@ -1,104 +1,62 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calculadora de Pneus Evok</title>
-  <script 
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKCV0EeLhjGGkio1-FrkBTbVBk-rP3Q74&libraries=geometry" 
-    async 
-    defer>
-  </script>
   <style>
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  margin: 0;
-  padding: 40px 0;
-  display: flex;
-  justify-content: center;
-}
-
-.container {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
-  width: 100%;
-  margin: auto;
-}
-    h1 {
-      text-align: center;
-      color: #333;
-      margin-top: 30px;
+    :root{
+      --navy:#06194a; --navy2:#073b91; --blue:#075beb; --blue2:#004fe0; --light:#eef5ff;
+      --text:#102452; --muted:#65728f; --border:#dbe4f2; --card:#fff; --bg:#f7faff;
+      --shadow:0 20px 50px rgba(15,37,80,.13); --shadow2:0 10px 28px rgba(15,37,80,.08);
     }
-    label {
-      font-weight: bold;
-      margin-top: 10px;
-      display: block;
-    }
-    input, select, button {
-      width: 100%;
-      padding: 10px;
-      margin: 5px 0 15px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-    button {
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    pre {
-      background: #f0f0f0;
-      padding: 15px;
-      border-radius: 8px;
-    }
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--text);background:linear-gradient(180deg,#fbfdff 0%,#f5f8ff 100%);overflow-x:hidden}
+    body:before,body:after{content:"";position:fixed;top:92px;width:330px;height:600px;opacity:.045;z-index:0;pointer-events:none;background-image:repeating-linear-gradient(45deg,transparent 0 20px,#0c63ff 21px 24px,transparent 25px 48px);}
+    body:before{left:-120px;transform:rotate(-18deg)} body:after{right:-130px;transform:rotate(18deg)}
+    .topbar{height:76px;background:linear-gradient(90deg,#061848,#073d93);display:flex;align-items:center;justify-content:space-between;padding:0 52px;color:white;box-shadow:0 8px 25px rgba(0,29,84,.2);position:relative;z-index:2}
+    .brand{display:flex;align-items:center;gap:18px}.logo{font-weight:950;font-style:italic;font-size:31px;letter-spacing:4px;line-height:1;color:#fff;text-shadow:2px 0 0 #67b5ff}.divider{height:34px;width:1px;background:rgba(255,255,255,.35)}.brand-title{font-size:18px;font-weight:800;letter-spacing:-.02em}.secure{display:flex;align-items:center;gap:12px;text-align:left;font-size:12px;color:rgba(255,255,255,.78)}.secure .shield{width:28px;height:28px;border:2px solid rgba(255,255,255,.65);border-radius:10px 10px 12px 12px;display:grid;place-items:center}.secure strong{display:block;color:white;font-size:14px;margin-bottom:2px}
+    .page{width:min(1110px,calc(100% - 44px));margin:44px auto 24px;position:relative;z-index:1}.hero{text-align:center;margin:0 0 25px}.hero-icon{width:58px;height:58px;border-radius:16px;background:#eaf2ff;color:#075beb;display:grid;place-items:center;margin:0 auto 17px;font-size:31px;box-shadow:0 12px 26px rgba(0,91,234,.12)}.hero h1{margin:0;font-size:40px;line-height:1.05;font-weight:850;letter-spacing:-.045em}.hero p{margin:12px 0 0;font-size:16px;color:var(--muted)}
+    .form-card{width:min(900px,100%);margin:0 auto;background:rgba(255,255,255,.94);border:1px solid rgba(219,228,242,.9);border-radius:18px;box-shadow:var(--shadow);padding:31px 32px 30px}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px 24px;align-items:end}.field{display:grid;grid-template-columns:54px 1fr;gap:14px;align-items:end}.span-6{grid-column:span 6}.span-12{grid-column:span 12}.span-4{grid-column:span 4}.icon{width:54px;height:54px;border-radius:14px;background:#eaf2ff;color:#075beb;display:grid;place-items:center;font-size:22px;margin-bottom:0}.field label{display:block;font-size:14px;font-weight:850;margin:0 0 9px;color:#102452}input,select{width:100%;height:44px;border:1px solid #ced9eb;border-radius:8px;background:#fff;padding:0 13px;color:#152955;font-size:14px;outline:none;box-shadow:inset 0 1px 1px rgba(0,0,0,.015)}input:focus,select:focus{border-color:#0b5ded;box-shadow:0 0 0 4px rgba(11,93,237,.10)}input[readonly]{background:#f6f9ff;color:#273b6b}.btn{height:44px;border:0;border-radius:8px;background:linear-gradient(180deg,#1267ff,#004bdc);color:white;font-weight:850;font-size:14px;cursor:pointer;box-shadow:0 9px 18px rgba(0,81,224,.22);display:flex;align-items:center;justify-content:center;gap:9px;width:100%}.btn:hover{filter:brightness(.97)}.calc-btn{grid-column:span 12;margin-top:-1px}.no-icon{display:block}.no-icon .control{grid-column:auto}
+    .result-wrap{width:min(900px,100%);margin:27px auto 0}.section-title{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:850;margin:0 0 14px 8px}.section-title .small-icon{color:#075beb;font-size:22px}.result-box{background:#fff;border:1px solid rgba(219,228,242,.9);border-radius:16px;box-shadow:var(--shadow2);padding:16px 18px 14px;min-height:136px}.result-placeholder{height:100px;display:grid;place-items:center;color:#7a86a0;font-weight:650}.result-main-card{display:grid;grid-template-columns:330px 1fr;align-items:stretch;gap:22px}.result-total-card{min-height:112px;border-radius:12px;background:linear-gradient(135deg,#0048d4,#075fec);color:white;padding:25px 28px;position:relative;overflow:hidden}.result-total-card:after{content:"🚚";position:absolute;right:25px;bottom:9px;font-size:76px;opacity:.08}.result-label{display:block;font-size:13px;color:rgba(255,255,255,.75);margin-bottom:9px}.result-total-card strong{display:block;font-size:36px;letter-spacing:-.04em;line-height:1}.success-pill{display:inline-flex;margin-top:16px;background:rgba(0,32,100,.35);border-radius:20px;padding:7px 11px;font-size:12px;color:#dcecff}.result-summary{display:grid;grid-template-columns:repeat(4,1fr);align-items:center}.summary-item{text-align:center;padding:8px 15px;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1px solid #dbe4f2}.summary-item:first-child{border-left:0}.summary-icon{width:36px;height:36px;border-radius:50%;background:#eaf2ff;color:#075beb;display:grid;place-items:center;font-weight:900;margin-bottom:8px}.summary-item small{display:block;color:#65728f;font-size:13px;margin-bottom:4px}.summary-item strong{font-size:14px;color:#102452}.summary-item em{font-style:normal;color:#65728f;font-size:13px;margin-top:2px}.info-strip{margin-top:14px;border-radius:9px;background:#eaf2ff;color:#65728f;font-size:13px;padding:12px 14px}.details-box{margin-top:12px;border:1px solid #e3eaf7;border-radius:12px;padding:12px 14px;background:#fbfdff}.details-box summary{cursor:pointer;font-weight:800;color:#102452}.details-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.details-grid div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #edf2fa;padding-bottom:8px}.details-grid span{color:#65728f}.details-grid strong{text-align:right}.red{color:#d11;font-weight:900}.footer-note{display:flex;align-items:center;justify-content:center;gap:8px;color:#7d879f;font-size:13px;margin:22px 0 0}
+    @media(max-width:860px){.topbar{height:auto;padding:18px 22px;align-items:flex-start}.secure{display:none}.brand-title{font-size:15px}.logo{font-size:25px}.page{width:min(100% - 28px,900px);margin-top:30px}.hero h1{font-size:30px}.form-card{padding:22px}.span-6,.span-4{grid-column:span 12}.field{grid-template-columns:48px 1fr}.icon{width:48px;height:48px}.result-main-card{grid-template-columns:1fr}.result-summary{grid-template-columns:repeat(2,1fr)}.summary-item{border-left:0;border-top:1px solid #dbe4f2}.summary-item:nth-child(-n+2){border-top:0}.details-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Calculadora de Pneus Evok</h1>
+  <header class="topbar">
+    <div class="brand"><div class="logo">EVOK</div><div class="divider"></div><div class="brand-title">Calculadora de Pneus Evok</div></div>
+    <div class="secure"><div class="shield">✓</div><div><strong>Cálculo rápido e seguro</strong><span>Resultados precisos para sua operação</span></div></div>
+  </header>
 
-    <label><strong>Origem:</strong>
-      <input type="text" id="cidadeOrigem" value="R2 Logística - Navegantes - SC">
-    </label>
+  <main class="page">
+    <section class="hero">
+      <div class="hero-icon">◉</div>
+      <h1>Calculadora de Pneus Evok</h1>
+      <p>Informe os dados abaixo para calcular o frete com rapidez e precisão.</p>
+    </section>
 
-    <label><strong>CEP de destino:</strong>
-      <input type="text" id="cepDestino" placeholder="Digite o CEP">
-    </label>
-    <button id="buscarCidade">Buscar Cidade</button>
+    <section class="form-card">
+      <div class="grid">
+        <div class="field span-6"><div class="icon">⌖</div><div><label for="cidadeOrigem">Origem</label><input type="text" id="cidadeOrigem" value="R2 Logística - Navegantes - SC"></div></div>
+        <div class="field span-6"><div class="icon">▣</div><div><label for="cepDestino">CEP de destino</label><input type="text" id="cepDestino" placeholder="Digite o CEP"></div></div>
+        <div class="span-6"></div><button class="btn span-6" id="buscarCidade" type="button">⌕ Buscar Cidade</button>
+        <div class="field span-12"><div class="icon">▥</div><div><label for="cidadeDestino">Cidade detectada</label><input type="text" id="cidadeDestino" readonly></div></div>
+        <div class="field span-4"><div class="icon">◎</div><div><label for="pneuSelect">Pneu</label><select id="pneuSelect"></select></div></div>
+        <div class="field span-4"><div class="icon">□</div><div><label for="quantidade">Quantidade</label><input type="number" id="quantidade" value="1" min="1"></div></div>
+        <div class="field span-4"><div class="icon">$</div><div><label for="custoPneu">Custo por unidade (R$)</label><input type="number" id="custoPneu" value="100" min="0" step="0.01"></div></div>
+        <button class="btn calc-btn" id="btnCalcular" type="button">▦ Calcular Frete</button>
+      </div>
+    </section>
 
-    <label><strong>Cidade detectada:</strong>
-      <input type="text" id="cidadeDestino" readonly>
-    </label>
-
-    <label><strong>Pneu:</strong>
-      <select id="pneuSelect"></select>
-    </label>
-
-    <label><strong>Quantidade:</strong>
-      <input type="number" id="quantidade" value="1">
-    </label>
-
-    <label><strong>Custo por unidade (R$):</strong>
-      <input type="number" id="custoPneu" value="100">
-    </label>
-
-    <button id="btnCalcular">Calcular Frete</button>
-
-    <h2>Resultado:</h2>
-    <pre id="resultado"></pre>
-  </div>
+    <section class="result-wrap">
+      <h2 class="section-title"><span class="small-icon">♙</span>Resultado</h2>
+      <div class="result-box" id="resultado"><div class="result-placeholder">Preencha os dados e clique em Calcular Frete.</div></div>
+      <div class="footer-note">⌘ Seus dados estão protegidos e não são armazenados.</div>
+    </section>
+  </main>
 
   <script>
-    const pneus = {
+const pneus = {
 "165/70 R13": { dimensoes: [0.549, 0.549, 0.165], peso: 6.2 },
 "165/70 R14": { dimensoes: [0.58, 0.58, 0.165], peso: 7.0 },
 "175/70 R13": { dimensoes: [0.575, 0.575, 0.175], peso: 6.97 },
@@ -685,23 +643,59 @@ if (estadoDestino === 'MT' && tabelasFrete.MT?.MT1 && tabelasFrete.MT?.MT2) {
 
   // 🧾 RESULTADO
   resultado.innerHTML = `
-    <strong>Modelo:</strong> ${modelo}<br>
-    <strong>Origem:</strong> ${origem}<br>
-    <strong>Destino:</strong> ${destino}<br>
-    <strong>Quantidade:</strong> ${qtd}<br>
-    <strong>Peso real total:</strong> ${pesoTotal.toFixed(2)} kg<br>
-    <strong>Peso cubado:</strong> ${pesoCubado.toFixed(2)} kg<br>
-    <strong>Peso considerado:</strong> ${pesoConsiderado.toFixed(2)} kg<br><br>
+    <div class="result-main-card">
+      <div class="result-total-card">
+        <span class="result-label">Valor total do frete</span>
+        <strong>R$ ${freteTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+        <span class="success-pill">✓ Cálculo realizado com sucesso</span>
+      </div>
 
-    <strong>Frete Peso:</strong> R$ ${fretePeso.toFixed(2)}<br>
-    <strong>Ad Valorem (${(tabela.adVal * 100).toFixed(2)}%):</strong> R$ ${adValorem.toFixed(2)}<br>
-    <strong>GRIS (mín R$ ${tabela.grisMin.toFixed(2)}):</strong> R$ ${gris.toFixed(2)}<br>
-    <strong>Despacho:</strong> R$ ${despacho.toFixed(2)}<br>
-    <strong>TAS:</strong> R$ ${tas.toFixed(2)}<br>
-    <strong>Pedágio:</strong> R$ ${pedagio.toFixed(2)}<br><br>
-    <strong>Frete unitário:</strong> <span style="color: red; font-weight: bold;">R$ ${(freteTotal / qtd).toFixed(2)}</span><br>
+      <div class="result-summary">
+        <div class="summary-item">
+          <span class="summary-icon">▣</span>
+          <small>Quantidade</small>
+          <strong>${qtd} pneu${qtd > 1 ? 's' : ''}</strong>
+        </div>
+        <div class="summary-item">
+          <span class="summary-icon">◉</span>
+          <small>Pneu</small>
+          <strong>${modelo}</strong>
+        </div>
+        <div class="summary-item">
+          <span class="summary-icon">⌖</span>
+          <small>Destino</small>
+          <strong>${destino}</strong>
+          <em>${document.getElementById('cepDestino').value.replace(/\D/g, '').replace(/(\d{5})(\d{3})/, '$1-$2')}</em>
+        </div>
+        <div class="summary-item">
+          <span class="summary-icon">$</span>
+          <small>Custo unitário</small>
+          <strong>R$ ${custoUnitario.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+        </div>
+      </div>
+    </div>
 
-    <strong><u>Frete Total:</u></strong> <strong>R$ ${freteTotal.toFixed(2)}</strong>
+    <div class="info-strip">ⓘ Este cálculo é uma estimativa. Valores finais podem variar conforme regras da transportadora.</div>
+
+    <details class="details-box">
+      <summary>Ver detalhes do cálculo</summary>
+      <div class="details-grid">
+        <div><span>Modelo</span><strong>${modelo}</strong></div>
+        <div><span>Origem</span><strong>${origem}</strong></div>
+        <div><span>Destino</span><strong>${destino}</strong></div>
+        <div><span>Quantidade</span><strong>${qtd}</strong></div>
+        <div><span>Peso real total</span><strong>${pesoTotal.toFixed(2)} kg</strong></div>
+        <div><span>Peso cubado</span><strong>${pesoCubado.toFixed(2)} kg</strong></div>
+        <div><span>Peso considerado</span><strong>${pesoConsiderado.toFixed(2)} kg</strong></div>
+        <div><span>Frete peso</span><strong>R$ ${fretePeso.toFixed(2)}</strong></div>
+        <div><span>Ad Valorem (${(tabela.adVal * 100).toFixed(2)}%)</span><strong>R$ ${adValorem.toFixed(2)}</strong></div>
+        <div><span>GRIS</span><strong>R$ ${gris.toFixed(2)}</strong></div>
+        <div><span>Despacho</span><strong>R$ ${despacho.toFixed(2)}</strong></div>
+        <div><span>TAS</span><strong>R$ ${tas.toFixed(2)}</strong></div>
+        <div><span>Pedágio</span><strong>R$ ${pedagio.toFixed(2)}</strong></div>
+        <div><span>Frete unitário</span><strong class="red">R$ ${(freteTotal / qtd).toFixed(2)}</strong></div>
+      </div>
+    </details>
   `;
 }
 
@@ -710,6 +704,7 @@ if (estadoDestino === 'MT' && tabelasFrete.MT?.MT1 && tabelasFrete.MT?.MT2) {
       document.getElementById('buscarCidade').addEventListener('click', consultarCEP);
       document.getElementById('btnCalcular').addEventListener('click', calcularFrete);
     };
+  
   </script>
 </body>
 </html>
